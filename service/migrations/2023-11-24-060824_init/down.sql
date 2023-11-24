@@ -1,0 +1,4 @@
+DROP TABLE IF EXISTS models;
+DROP TABLE IF EXISTS file_records;
+DROP TABLE IF EXISTS labels;
+DROP TABLE IF EXISTS model_labels;

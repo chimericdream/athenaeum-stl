@@ -1,0 +1,12 @@
+[package]
+name = "stllib_import"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+chrono = { version = "0.4.31", features = [] }
+diesel = { version = "2.1.4", features = ["chrono", "sqlite", "time"] }
+dotenvy = { version = "0.15.7", features = [] }
+libsqlite3-sys = { version = "0.27.0", features = ["bundled"] }
