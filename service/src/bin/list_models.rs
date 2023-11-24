@@ -1,6 +1,6 @@
 use self::models::*;
 use diesel::prelude::*;
-use stllib_import::*;
+use athenaeum_import::*;
 
 fn main() {
     use self::schema::models::dsl::*;

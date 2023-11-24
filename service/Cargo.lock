@@ -250,7 +250,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "stllib_import"
+name = "athenaeum_import"
 version = "0.1.0"
 dependencies = [
  "chrono",
