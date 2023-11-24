@@ -12,8 +12,6 @@ fn main() {
 
     println!("Displaying {} models", results.len());
     for model in results {
-        println!("{}", model.name);
-        println!("-----------\n");
-        println!("{}", model.id);
+        println!("{}: {}", model.id, model.name);
     }
 }

@@ -1,5 +1,6 @@
 #![allow(non_snake_case)]
 
+use crate::schema::models;
 use diesel::prelude::*;
 
 #[derive(Identifiable, Queryable, Selectable)]
@@ -21,6 +22,13 @@ pub struct Model {
 
     #[diesel(column_name = project_count)]
     pub projectCount: i32,
+}
+
+#[derive(Insertable)]
+#[diesel(table_name = models)]
+pub struct NewModel<'a> {
+    pub id: &'a str,
+    pub name: &'a str,
 }
 
 #[derive(Identifiable, Queryable, Selectable)]
