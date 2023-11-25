@@ -18,6 +18,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "athenaeum_import"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "diesel",
+ "dotenvy",
+ "libsqlite3-sys",
+ "uuid",
+]
+
+[[package]]
 name = "autocfg"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -247,17 +258,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn",
-]
-
-[[package]]
-name = "athenaeum_import"
-version = "0.1.0"
-dependencies = [
- "chrono",
- "diesel",
- "dotenvy",
- "libsqlite3-sys",
- "uuid",
 ]
 
 [[package]]

@@ -2,6 +2,7 @@
 name = "athenaeum_import"
 version = "0.1.0"
 edition = "2021"
+default-run = "athenaeum_import"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
