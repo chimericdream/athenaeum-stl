@@ -1,9 +1,9 @@
 use diesel::prelude::*;
-use athenaeum_import::*;
 use std::env::args;
+use athenaeum_import::db::establish_connection;
 
 fn main() {
-    use self::schema::models::dsl::*;
+    use athenaeum_import::db::schema::models::dsl::*;
 
     let target = args().nth(1).expect("Expected a target to match against");
     let pattern = format!("%{}%", target);

@@ -1,8 +1,7 @@
-use crate::schema::models;
 use diesel::prelude::*;
 
 #[derive(Identifiable, Queryable, Selectable)]
-#[diesel(table_name = crate::schema::models)]
+#[diesel(table_name = crate::db::schema::models)]
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]
 pub struct Model {
     pub id: String,
@@ -15,14 +14,14 @@ pub struct Model {
 }
 
 #[derive(Insertable)]
-#[diesel(table_name = models)]
+#[diesel(table_name = crate::db::schema::models)]
 pub struct NewModel<'a> {
     pub id: &'a str,
     pub name: &'a str,
 }
 
 #[derive(Identifiable, Queryable, Selectable)]
-#[diesel(table_name = crate::schema::file_records)]
+#[diesel(table_name = crate::db::schema::file_records)]
 #[diesel(belongs_to(Model))]
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]
 pub struct FileRecord {
@@ -35,7 +34,7 @@ pub struct FileRecord {
 }
 
 #[derive(Identifiable, Queryable, Selectable)]
-#[diesel(table_name = crate::schema::labels)]
+#[diesel(table_name = crate::db::schema::labels)]
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]
 pub struct Label {
     pub id: String,
@@ -43,7 +42,7 @@ pub struct Label {
 }
 
 #[derive(Queryable, Selectable)]
-#[diesel(table_name = crate::schema::model_labels)]
+#[diesel(table_name = crate::db::schema::model_labels)]
 #[diesel(belongs_to(Label))]
 #[diesel(belongs_to(Model))]
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]

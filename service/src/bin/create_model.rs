@@ -1,4 +1,4 @@
-use athenaeum_import::*;
+use athenaeum_import::db::{establish_connection, create_model};
 use std::io::{stdin};
 use uuid::Uuid;
 

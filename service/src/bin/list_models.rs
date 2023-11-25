@@ -1,9 +1,9 @@
-use self::models::*;
 use diesel::prelude::*;
-use athenaeum_import::*;
+use athenaeum_import::db::establish_connection;
+use athenaeum_import::db::types::Model;
 
 fn main() {
-    use self::schema::models::dsl::*;
+    use athenaeum_import::db::schema::models::dsl::*;
 
     let connection = &mut establish_connection();
     let results: Vec<Model> = models

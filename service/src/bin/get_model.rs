@@ -1,10 +1,10 @@
-use self::models::Model;
 use diesel::prelude::*;
-use athenaeum_import::*;
 use std::env::args;
+use athenaeum_import::db::establish_connection;
+use athenaeum_import::db::types::Model;
 
 fn main() {
-    use self::schema::models::dsl::models;
+    use athenaeum_import::db::schema::models::dsl::models;
 
     let model_id = args()
         .nth(1)
