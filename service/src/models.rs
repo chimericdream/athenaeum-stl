@@ -1,5 +1,3 @@
-#![allow(non_snake_case)]
-
 use crate::schema::models;
 use diesel::prelude::*;
 
@@ -10,18 +8,10 @@ pub struct Model {
     pub id: String,
     pub name: String,
     pub thumbnail: Option<String>,
-
-    #[diesel(column_name = imported_at)]
-    pub importedAt: String,
-
-    #[diesel(column_name = part_count)]
-    pub partCount: i32,
-
-    #[diesel(column_name = image_count)]
-    pub imageCount: i32,
-
-    #[diesel(column_name = project_count)]
-    pub projectCount: i32,
+    pub imported_at: String,
+    pub part_count: i32,
+    pub image_count: i32,
+    pub project_count: i32,
 }
 
 #[derive(Insertable)]
@@ -40,12 +30,8 @@ pub struct FileRecord {
     pub name: String,
     pub thumbnail: Option<String>,
     pub category: String,
-
-    #[diesel(column_name = imported_at)]
-    pub importedAt: String,
-
-    #[diesel(column_name = model_id)]
-    pub modelId: String,
+    pub imported_at: String,
+    pub model_id: String,
 }
 
 #[derive(Identifiable, Queryable, Selectable)]
@@ -62,8 +48,6 @@ pub struct Label {
 #[diesel(belongs_to(Model))]
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]
 pub struct ModelLabel {
-    #[diesel(column_name = model_id)]
-    pub modelId: String,
-    #[diesel(column_name = label_id)]
-    pub labelId: String,
+    pub model_id: String,
+    pub label_id: String,
 }
