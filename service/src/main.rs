@@ -1,7 +1,7 @@
-fn main() {}
-use athenaeum_import::{db};
+use athenaeum_import::{db, scanner};
 
 fn main() {
     println!("Hello, world!");
     db::init();
+    scanner::init();
 }
