@@ -1,16 +1,41 @@
+use diesel::sqlite::SqliteConnection;
+use diesel::prelude::*;
+use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
+use std::env;
+use std::error::Error;
+use self::types::{Model, NewModel};
+use std::io;
+use std::path::PathBuf;
+
 pub mod types;
 pub mod schema;
 
-use diesel::sqlite::SqliteConnection;
-use diesel::prelude::*;
-use dotenvy::dotenv;
-use std::env;
-use self::types::{Model, NewModel};
+pub const MIGRATIONS: EmbeddedMigrations = embed_migrations!("./migrations");
+
+fn get_exe_dir() -> io::Result<PathBuf> {
+    let mut dir = env::current_exe()?;
+    dir.pop();
+    Ok(dir)
+}
+
+fn run_migrations(conn: &mut SqliteConnection) -> Result<(), Box<dyn Error + Send + Sync + 'static>> {
+    conn.run_pending_migrations(MIGRATIONS)?;
+    Ok(())
+}
+
+pub fn init() {
+    println!("Initializing database...");
+
+    let connection = &mut establish_connection();
+    run_migrations(connection).expect("Failed to run migrations");
+}
 
 pub fn establish_connection() -> SqliteConnection {
-    dotenv().ok();
+    let mut db_loc = get_exe_dir().expect("Failed to get exe dir");
+    db_loc.push("athenaeum.db");
 
-    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+    let database_url = db_loc.to_str().unwrap();
+
     SqliteConnection::establish(&database_url)
         .unwrap_or_else(|_| panic!("Error connecting to {}", database_url))
 }
