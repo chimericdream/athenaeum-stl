@@ -1,5 +1,5 @@
-use athenaeum_import::db::{establish_connection, create_model};
-use std::io::{stdin};
+use athenaeum_import::db::{create_model, establish_connection};
+use std::io::stdin;
 use uuid::Uuid;
 
 fn main() {
@@ -8,10 +8,10 @@ fn main() {
     let mut name = String::new();
     let id = Uuid::new_v4().to_string();
 
-    println!("What would you like the name to be?");
+    log::info!("What would you like the name to be?");
     stdin().read_line(&mut name).unwrap();
     let clean_name = name.trim_end(); // Remove the trailing newline
 
     let model = create_model(connection, &id, clean_name);
-    println!("\nSaved model {} with id {}", clean_name, model.id);
+    log::info!("\nSaved model {} with id {}", clean_name, model.id);
 }

@@ -1,14 +1,14 @@
-use diesel::sqlite::SqliteConnection;
+use self::types::{Model, NewModel};
 use diesel::prelude::*;
+use diesel::sqlite::SqliteConnection;
 use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
 use std::env;
 use std::error::Error;
-use self::types::{Model, NewModel};
 use std::io;
 use std::path::PathBuf;
 
-pub mod types;
 pub mod schema;
+pub mod types;
 
 pub const MIGRATIONS: EmbeddedMigrations = embed_migrations!("./migrations");
 
@@ -18,13 +18,15 @@ fn get_exe_dir() -> io::Result<PathBuf> {
     Ok(dir)
 }
 
-fn run_migrations(conn: &mut SqliteConnection) -> Result<(), Box<dyn Error + Send + Sync + 'static>> {
+fn run_migrations(
+    conn: &mut SqliteConnection,
+) -> Result<(), Box<dyn Error + Send + Sync + 'static>> {
     conn.run_pending_migrations(MIGRATIONS)?;
     Ok(())
 }
 
 pub fn init() {
-    println!("Initializing database...");
+    log::info!("Initializing database...");
 
     let connection = &mut establish_connection();
     run_migrations(connection).expect("Failed to run migrations");

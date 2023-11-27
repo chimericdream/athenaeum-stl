@@ -41,9 +41,4 @@ diesel::joinable!(file_records -> models (model_id));
 diesel::joinable!(model_labels -> labels (label_id));
 diesel::joinable!(model_labels -> models (model_id));
 
-diesel::allow_tables_to_appear_in_same_query!(
-    file_records,
-    labels,
-    model_labels,
-    models,
-);
+diesel::allow_tables_to_appear_in_same_query!(file_records, labels, model_labels, models,);

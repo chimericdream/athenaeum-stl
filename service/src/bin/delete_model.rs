@@ -1,6 +1,6 @@
+use athenaeum_import::db::establish_connection;
 use diesel::prelude::*;
 use std::env::args;
-use athenaeum_import::db::establish_connection;
 
 fn main() {
     use athenaeum_import::db::schema::models::dsl::*;
@@ -13,5 +13,5 @@ fn main() {
         .execute(connection)
         .expect("Error deleting models");
 
-    println!("Deleted {} models", num_deleted);
+    log::info!("Deleted {} models", num_deleted);
 }

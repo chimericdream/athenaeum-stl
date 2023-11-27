@@ -1,17 +1,13 @@
-use diesel::prelude::*;
-use std::env::args;
 use athenaeum_import::db::establish_connection;
 use athenaeum_import::db::types::Model;
+use diesel::prelude::*;
+use std::env::args;
 
 fn main() {
     use athenaeum_import::db::schema::models::dsl::{models, name};
 
-    let id = args()
-        .nth(1)
-        .expect("rename_model requires a model id");
-    let new_name = args()
-        .nth(2)
-        .expect("rename_model requires a new name");
+    let id = args().nth(1).expect("rename_model requires a model id");
+    let new_name = args().nth(2).expect("rename_model requires a new name");
 
     let connection = &mut establish_connection();
 
@@ -20,5 +16,5 @@ fn main() {
         .returning(Model::as_returning())
         .get_result(connection)
         .unwrap();
-    println!("Updated model {}", model.name);
+    log::info!("Updated model {}", model.name);
 }
