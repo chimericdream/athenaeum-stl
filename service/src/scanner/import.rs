@@ -21,5 +21,21 @@ pub fn import_single_file(path: &PathBuf, model_id: &Uuid) {
 
     log::info!("Importing file {path:?} to {final_path:?}");
 
-    fs::rename(path, final_path).expect("Unable to move file");
+    let mut move_result = fs::rename(path, &final_path);
+    let mut retry_count = 0;
+    while move_result.is_err() && retry_count < 5 {
+        log::warn!("Failed to move {path:?} to {final_path:?}. Retrying in 5 seconds...");
+        std::thread::sleep(std::time::Duration::from_secs(5));
+        move_result = fs::rename(path, &final_path);
+        retry_count += 1;
+    }
+
+    if move_result.is_err() {
+        log::error!("Failed to move {path:?} to {final_path:?} after 5 retries. Giving up.");
+    }
+
+    // let _ = retry(Exponential::from_millis(1000).take(5), || {
+    //     fs::rename(path, &final_path).expect("Unable to move file");
+    //     Ok::<(), ()>(())
+    // });
 }

@@ -40,23 +40,23 @@ pub fn add_file_to_model(name: &str, model_id: &Uuid, category: FileCategory) {
                 .set(models::image_count.eq(models::image_count + 1))
                 .filter(models::id.eq(&model_id.hyphenated().to_string()))
                 .execute(connection)
-                .expect("Error updating model image");
+                .expect("Error updating file count on model");
         },
         FileCategory::Part => {
             diesel::update(models::table)
                 .set(models::part_count.eq(models::part_count + 1))
                 .filter(models::id.eq(&model_id.hyphenated().to_string()))
                 .execute(connection)
-                .expect("Error updating model image");
+                .expect("Error updating file count on model");
         },
         FileCategory::Project => {
             diesel::update(models::table)
                 .set(models::project_count.eq(models::project_count + 1))
                 .filter(models::id.eq(&model_id.hyphenated().to_string()))
                 .execute(connection)
-                .expect("Error updating model image");
+                .expect("Error updating file count on model");
         }
-    }
+    };
 
     log::info!("\nSaved file {} with id {}", name, record.id);
 }

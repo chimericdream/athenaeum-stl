@@ -3,7 +3,7 @@ extern crate rocket;
 
 use std::thread;
 
-use athenaeum_import::{db, scanner};
+use athenaeum_import::{db, logger, scanner};
 
 #[get("/")]
 fn index() -> &'static str {
@@ -12,6 +12,8 @@ fn index() -> &'static str {
 
 #[launch]
 fn rocket() -> _ {
+    logger::init().expect("Failed to initialize logger");
+
     db::init();
 
     thread::spawn(|| {
