@@ -33,9 +33,4 @@ pub fn import_single_file(path: &PathBuf, model_id: &Uuid) {
     if move_result.is_err() {
         log::error!("Failed to move {path:?} to {final_path:?} after 5 retries. Giving up.");
     }
-
-    // let _ = retry(Exponential::from_millis(1000).take(5), || {
-    //     fs::rename(path, &final_path).expect("Unable to move file");
-    //     Ok::<(), ()>(())
-    // });
 }
