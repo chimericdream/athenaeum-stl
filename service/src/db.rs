@@ -2,21 +2,14 @@ use self::types::{Model, NewModel};
 use diesel::prelude::*;
 use diesel::sqlite::SqliteConnection;
 use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
-use std::env;
 use std::error::Error;
-use std::io;
-use std::path::PathBuf;
+use crate::util::get_exe_dir;
 
 pub mod schema;
 pub mod types;
+pub mod models;
 
 pub const MIGRATIONS: EmbeddedMigrations = embed_migrations!("./migrations");
-
-fn get_exe_dir() -> io::Result<PathBuf> {
-    let mut dir = env::current_exe()?;
-    dir.pop();
-    Ok(dir)
-}
 
 fn run_migrations(
     conn: &mut SqliteConnection,
