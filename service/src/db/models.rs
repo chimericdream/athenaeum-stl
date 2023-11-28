@@ -18,3 +18,10 @@ pub fn add_model_to_db(name: &str, id: &Uuid) {
 
     log::info!("\nSaved model {} with id {}", name, model.id);
 }
+
+pub fn list_models() -> Result<Vec<Model>, diesel::result::Error> {
+    use crate::db::schema::models::dsl::*;
+
+    let connection = &mut establish_connection();
+    models.load(connection)
+}

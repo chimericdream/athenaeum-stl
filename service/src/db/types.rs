@@ -1,8 +1,10 @@
 use diesel::prelude::*;
+use rocket::serde::{Serialize};
 
-#[derive(Identifiable, Queryable, Selectable)]
+#[derive(Identifiable, Queryable, Selectable, Serialize)]
 #[diesel(table_name = crate::db::schema::models)]
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]
+#[serde(crate = "rocket::serde")]
 pub struct Model {
     pub id: String,
     pub name: String,
