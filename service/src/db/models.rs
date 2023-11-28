@@ -1,27 +1,20 @@
-use std::path::PathBuf;
-use std::fs;
-use crate::util::{ensure_tree, get_library_dir};
-use uuid::{Context, Timestamp, Uuid};
+use uuid::Uuid;
+use diesel::prelude::*;
+use crate::db::{establish_connection};
+use crate::db::types::{Model, NewModel};
 
-pub fn import_single_file(path: &PathBuf) {
-    let file_name = path.file_name().unwrap().to_str().unwrap();
+pub fn add_model_to_db(name: &str, id: &Uuid) {
+    let connection = &mut establish_connection();
 
-    let model_id: Uuid = Uuid::new_v7(Timestamp::now(Context::new_random()));
+    use crate::db::schema::models;
 
-    let folder_1 = model_id.simple().to_string()[0..2].to_string();
-    let folder_2 = model_id.simple().to_string()[2..4].to_string();
+    let new_model = NewModel { id: &id.hyphenated().to_string(), name: &name };
 
-    let library_dir = get_library_dir().expect("Failed to get library dir");
+    let model = diesel::insert_into(models::table)
+        .values(&new_model)
+        .returning(Model::as_returning())
+        .get_result(connection)
+        .expect("Error saving new model");
 
-    let mut final_path = library_dir.clone();
-    final_path.push(folder_1);
-    final_path.push(folder_2);
-    final_path.push(model_id.hyphenated().to_string());
-    final_path.push(file_name);
-
-    ensure_tree(&final_path).expect(format!("Failed to create destination directory '{}' for new file '{}'", path.to_str().unwrap(), file_name).as_str());
-
-    log::info!("Importing file {path:?} to {final_path:?}");
-
-    fs::rename(path, final_path).expect("Unable to move file");
+    log::info!("\nSaved model {} with id {}", name, model.id);
 }

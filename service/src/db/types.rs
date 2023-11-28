@@ -33,6 +33,15 @@ pub struct FileRecord {
     pub model_id: String,
 }
 
+#[derive(Insertable)]
+#[diesel(table_name = crate::db::schema::file_records)]
+pub struct NewFileRecord<'a> {
+    pub id: &'a str,
+    pub name: &'a str,
+    pub category: &'a str,
+    pub model_id: &'a str,
+}
+
 #[derive(Identifiable, Queryable, Selectable)]
 #[diesel(table_name = crate::db::schema::labels)]
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]

@@ -1,10 +1,13 @@
+mod import;
+
 use notify::{Config, Event, RecommendedWatcher, RecursiveMode, Watcher};
 use std::fs::{DirBuilder, rename};
 use std::io;
-use std::path::Path;
-use std::path::PathBuf;
-use crate::db::models::import_single_file;
-use crate::util::{ensure_tree, get_ignore_dir, get_import_dir, get_library_dir};
+use std::path::{Path, PathBuf};
+use crate::db::model_files::{add_file_to_model, FileCategory};
+use crate::db::models::add_model_to_db;
+use self::import::import_single_file;
+use crate::util::{ensure_tree, get_ignore_dir, get_import_dir, get_library_dir, make_id};
 
 fn create_dir(dir: &PathBuf) -> io::Result<()> {
     DirBuilder::new().recursive(true).create(&dir)?;
@@ -86,7 +89,14 @@ fn check_file_for_import(path: &PathBuf) {
 
 fn import_file(path: &PathBuf) {
     log::info!("Importing file: {path:?}");
-    import_single_file(path);
+
+    let model_id = make_id();
+
+    let file_name = path.file_name().unwrap().to_str().unwrap();
+
+    import_single_file(path, &model_id);
+    add_model_to_db(&file_name, &model_id);
+    add_file_to_model(&file_name, &model_id, FileCategory::Part);
 }
 
 fn ignore_file(path: &PathBuf) {

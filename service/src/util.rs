@@ -2,6 +2,11 @@ use std::env;
 use std::io;
 use std::path::PathBuf;
 use std::fs::{create_dir_all};
+use uuid::{Uuid};
+
+pub fn make_id() -> Uuid {
+    Uuid::new_v4()
+}
 
 pub fn get_exe_dir() -> io::Result<PathBuf> {
     let mut dir = env::current_exe()?;
