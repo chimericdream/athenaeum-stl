@@ -4,7 +4,7 @@ use notify::{Config, Event, RecommendedWatcher, RecursiveMode, Watcher};
 use std::fs::{DirBuilder, rename};
 use std::{fs, io};
 use std::path::{Path, PathBuf};
-use self::import::import_single_file;
+use self::import::{import_directory, import_single_file};
 use crate::util::{ensure_tree, get_ignore_dir, get_import_dir, get_library_dir, make_id};
 
 fn create_dir(dir: &PathBuf) -> io::Result<()> {
@@ -67,6 +67,8 @@ fn watch<P: AsRef<Path>>(path: P) -> notify::Result<()> {
         match res {
             Ok(event) => {
                 if event.kind.is_create() {
+                    // Wait a couple of seconds before we try to import, in case the file/directory is still being written
+                    std::thread::sleep(std::time::Duration::from_secs(2));
                     check_event(event);
                 }
             },
@@ -119,7 +121,7 @@ fn check_dir_for_import(path: &PathBuf) {
 fn import_dir(path: &PathBuf) {
     log::info!("Importing directory: {path:?}");
 
-    // import::import_directory(path, &make_id());
+    import_directory(path, &make_id());
 }
 
 fn ignore_dir(path: &PathBuf) {
