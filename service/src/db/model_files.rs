@@ -7,7 +7,8 @@ use crate::util::make_id;
 pub enum FileCategory {
     Image,
     Part,
-    Project
+    Project,
+    Support
 }
 
 pub fn add_file_to_model(name: &str, model_id: &Uuid, category: FileCategory) {
@@ -23,7 +24,8 @@ pub fn add_file_to_model(name: &str, model_id: &Uuid, category: FileCategory) {
         category: match category {
             FileCategory::Image => "image",
             FileCategory::Part => "part",
-            FileCategory::Project => "project"
+            FileCategory::Project => "project",
+            FileCategory::Support => "support",
         },
         model_id: &model_id.hyphenated().to_string()
     };
@@ -52,6 +54,13 @@ pub fn add_file_to_model(name: &str, model_id: &Uuid, category: FileCategory) {
         FileCategory::Project => {
             diesel::update(models::table)
                 .set(models::project_count.eq(models::project_count + 1))
+                .filter(models::id.eq(&model_id.hyphenated().to_string()))
+                .execute(connection)
+                .expect("Error updating file count on model");
+        },
+        FileCategory::Support => {
+            diesel::update(models::table)
+                .set(models::support_file_count.eq(models::support_file_count + 1))
                 .filter(models::id.eq(&model_id.hyphenated().to_string()))
                 .execute(connection)
                 .expect("Error updating file count on model");

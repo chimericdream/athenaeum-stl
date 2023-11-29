@@ -1,11 +1,11 @@
 use std::path::PathBuf;
 use std::fs;
 use crate::util::{ensure_tree, get_library_dir};
+use crate::db::model_files::{add_file_to_model, FileCategory};
+use crate::db::models::add_model_to_db;
 use uuid::{Uuid};
 
-pub fn import_single_file(path: &PathBuf, model_id: &Uuid) {
-    let file_name = path.file_name().unwrap().to_str().unwrap();
-
+fn ensure_model_dir(path: &PathBuf, model_id: &Uuid) -> PathBuf {
     let folder_1 = model_id.simple().to_string()[0..2].to_string();
     let folder_2 = model_id.simple().to_string()[2..4].to_string();
 
@@ -15,11 +15,44 @@ pub fn import_single_file(path: &PathBuf, model_id: &Uuid) {
     final_path.push(folder_1);
     final_path.push(folder_2);
     final_path.push(model_id.hyphenated().to_string());
+
+    let id_str = model_id.hyphenated().to_string();
+    let path_str = path.to_str().unwrap();
+
+    ensure_tree(&final_path).expect(format!("Failed to create destination directory '{}' for new directory '{}'", path_str, id_str).as_str());
+
+    final_path
+}
+
+pub fn import_single_file(path: &PathBuf, model_id: &Uuid) {
+    let file_name = path.file_name().unwrap().to_str().unwrap();
+
+    let mut final_path = ensure_model_dir(path, model_id);
     final_path.push(file_name);
 
-    ensure_tree(&final_path).expect(format!("Failed to create destination directory '{}' for new file '{}'", path.to_str().unwrap(), file_name).as_str());
-
     log::info!("Importing file {path:?} to {final_path:?}");
+
+    let mut move_result = fs::rename(path, &final_path);
+    let mut retry_count = 0;
+    while move_result.is_err() && retry_count < 5 {
+        log::warn!("Failed to move {path:?} to {final_path:?}. Retrying in 5 seconds...");
+        std::thread::sleep(std::time::Duration::from_secs(5));
+        move_result = fs::rename(path, &final_path);
+        retry_count += 1;
+    }
+
+    if move_result.is_err() {
+        log::error!("Failed to move {path:?} to {final_path:?} after 5 retries. Giving up.");
+    } else {
+        add_model_to_db(&file_name, &model_id);
+        add_file_to_model(&file_name, &model_id, FileCategory::Part);
+    }
+}
+
+pub fn import_directory(path: &PathBuf, model_id: &Uuid) {
+    let final_path = ensure_model_dir(path, model_id);
+
+    log::info!("Importing directory {path:?} to {final_path:?}");
 
     let mut move_result = fs::rename(path, &final_path);
     let mut retry_count = 0;

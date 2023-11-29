@@ -34,6 +34,7 @@ diesel::table! {
         part_count -> Integer,
         image_count -> Integer,
         project_count -> Integer,
+        support_file_count -> Integer,
     }
 }
 

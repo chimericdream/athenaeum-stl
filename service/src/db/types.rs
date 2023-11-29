@@ -13,6 +13,7 @@ pub struct Model {
     pub part_count: i32,
     pub image_count: i32,
     pub project_count: i32,
+    pub support_file_count: i32,
 }
 
 #[derive(Insertable)]

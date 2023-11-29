@@ -1,12 +1,13 @@
 CREATE TABLE models
 (
-    id            VARCHAR   NOT NULL PRIMARY KEY,
-    name          VARCHAR   NOT NULL,
-    thumbnail     VARCHAR            DEFAULT NULL,
-    imported_at   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    part_count    INT       NOT NULL DEFAULT 0,
-    image_count   INT       NOT NULL DEFAULT 0,
-    project_count INT       NOT NULL DEFAULT 0
+    id                 VARCHAR   NOT NULL PRIMARY KEY,
+    name               VARCHAR   NOT NULL,
+    thumbnail          VARCHAR            DEFAULT NULL,
+    imported_at        TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    part_count         INT       NOT NULL DEFAULT 0,
+    image_count        INT       NOT NULL DEFAULT 0,
+    project_count      INT       NOT NULL DEFAULT 0,
+    support_file_count INT       NOT NULL DEFAULT 0
 );
 
 CREATE TABLE file_records

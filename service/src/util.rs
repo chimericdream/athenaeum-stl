@@ -34,10 +34,8 @@ pub fn get_library_dir() -> io::Result<PathBuf> {
 
 pub fn ensure_tree(path: &PathBuf) -> io::Result<()> {
     let file_name = path.file_name().unwrap().to_str().unwrap();
-    let mut final_dir = path.clone();
-    final_dir.pop();
 
-    create_dir_all(&final_dir).expect(format!("Failed to create destination directory '{}' for ignored file '{}'", path.to_str().unwrap(), file_name).as_str());
+    create_dir_all(&path).expect(format!("Failed to create destination directory '{}' for ignored file '{}'", path.to_str().unwrap(), file_name).as_str());
 
     Ok(())
 }
