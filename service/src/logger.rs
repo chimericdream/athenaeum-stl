@@ -1,4 +1,5 @@
 use log::LevelFilter;
+use log4rs::append::console::ConsoleAppender;
 use log4rs::append::rolling_file::RollingFileAppender;
 use log4rs::append::rolling_file::policy::compound::CompoundPolicy;
 use log4rs::append::rolling_file::policy::compound::trigger::size::SizeTrigger;
@@ -6,8 +7,9 @@ use log4rs::encode::pattern::PatternEncoder;
 use log4rs::config::{Appender, Config, Root};
 
 pub fn init() -> Result<(), Box<dyn std::error::Error>> {
+    let pattern = "[{d(%Y-%m-%d %H:%M:%S)}][{T:<12.12}][{l:<5.5}] {m}\n";
     let logfile = RollingFileAppender::builder()
-        .encoder(Box::new(PatternEncoder::new("{l} - {m}\n")))
+        .encoder(Box::new(PatternEncoder::new(pattern)))
         .build(
             "log/output.log",
             Box::new(
@@ -17,11 +19,16 @@ pub fn init() -> Result<(), Box<dyn std::error::Error>> {
                 )
             )
         )?;
+    let stdout = ConsoleAppender::builder()
+        .encoder(Box::new(PatternEncoder::new(pattern)))
+        .build();
 
     let config = Config::builder()
+        .appender(Appender::builder().build("stdout", Box::new(stdout)))
         .appender(Appender::builder().build("logfile", Box::new(logfile)))
         .build(Root::builder()
             .appender("logfile")
+            .appender("stdout")
             .build(LevelFilter::Info))?;
 
     log4rs::init_config(config)?;
