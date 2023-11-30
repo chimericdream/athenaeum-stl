@@ -1,10 +1,10 @@
-use athenaeum_import::db::establish_connection;
-use athenaeum_import::db::types::Model;
+use athenaeum_server::db::establish_connection;
+use athenaeum_server::db::types::Model;
 use diesel::prelude::*;
 use std::env::args;
 
 fn main() {
-    use athenaeum_import::db::schema::models::dsl::models;
+    use athenaeum_server::db::schema::models::dsl::models;
 
     let model_id = args().nth(1).expect("get_post requires a post id");
 

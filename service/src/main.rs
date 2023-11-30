@@ -4,8 +4,8 @@ extern crate rocket;
 use std::thread;
 use rocket::serde::{json::Json};
 
-use athenaeum_import::{db, logger, scanner};
-use athenaeum_import::db::types::{Model};
+use athenaeum_server::{db, logger, scanner};
+use athenaeum_server::db::types::{Model};
 
 #[get("/")]
 fn index() -> Json<Vec<Model>> {
