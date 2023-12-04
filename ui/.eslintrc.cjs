@@ -1,9 +1,9 @@
 /** @type {import('eslint').Linter.Config} */
 module.exports = {
     extends: [
-        '@remix-run/eslint-config',
-        '@remix-run/eslint-config/node',
-        '@remix-run/eslint-config/jest-testing-library',
+        'next/core-web-vitals',
+        'plugin:import/recommended',
+        'plugin:import/typescript',
     ],
     'parserOptions': {
         'sourceType': 'module',
