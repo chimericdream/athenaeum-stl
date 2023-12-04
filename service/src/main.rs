@@ -7,7 +7,7 @@ use rocket::serde::{json::Json};
 use athenaeum_server::{db, logger, scanner};
 use athenaeum_server::db::types::{Model};
 
-#[get("/")]
+#[get("/models")]
 fn index() -> Json<Vec<Model>> {
     let models = db::models::list_models().expect("Failed to list models");
 
