@@ -9,6 +9,17 @@ export interface Model {
     support_file_count: number;
 }
 
+export interface ModelRecord {
+    id: string;
+    name: string;
+    thumbnail: string | null;
+    imported_at: string;
+    parts: FileRecord[];
+    images: FileRecord[];
+    projects: FileRecord[];
+    support_files: FileRecord[];
+}
+
 export interface NewModel {
     id: string;
     name: string;
@@ -38,4 +49,14 @@ export interface Label {
 export interface ModelLabel {
     model_id: string;
     label_id: string;
+}
+
+export async function loadModels(): Promise<Array<Model>> {
+    const res = await fetch('http://localhost:8000/models');
+    return res.json();
+}
+
+export async function loadModel(id: string): Promise<ModelRecord> {
+    const res = await fetch(`http://localhost:8000/models/${id}`);
+    return res.json();
 }

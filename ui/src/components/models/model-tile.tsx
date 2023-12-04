@@ -15,6 +15,8 @@ import type { Model } from '~/services/athenaeum';
 export const ModelTile = ({ model }: { model: Model }) => {
     const theme = useTheme();
 
+    const IMG_SIZE = '12rem';
+
     return (
         <Card variant="outlined">
             <CardContent>
@@ -22,11 +24,13 @@ export const ModelTile = ({ model }: { model: Model }) => {
                     {model.name}
                 </Typography>
                 <Typography
-                    variant="h1"
                     component="div"
-                    sx={{ textAlign: 'center' }}
+                    sx={{
+                        height: IMG_SIZE,
+                        textAlign: 'center',
+                    }}
                 >
-                    <ViewInArIcon />
+                    <ViewInArIcon sx={{ fontSize: IMG_SIZE }} />
                 </Typography>
             </CardContent>
             <CardActions
@@ -42,28 +46,28 @@ export const ModelTile = ({ model }: { model: Model }) => {
                     <Badge
                         badgeContent={model.part_count}
                         color="primary"
-                        title="Part count"
+                        title="Part files"
                     >
                         <ViewInArIcon />
                     </Badge>
                     <Badge
                         badgeContent={model.image_count}
                         color="primary"
-                        title="Image count"
+                        title="Image files"
                     >
                         <ImageIcon />
                     </Badge>
                     <Badge
                         badgeContent={model.project_count}
                         color="primary"
-                        title="Project count"
+                        title="Project files"
                     >
                         <LayersIcon />
                     </Badge>
                     <Badge
                         badgeContent={model.support_file_count}
                         color="primary"
-                        title="Support file count"
+                        title="Support files"
                     >
                         <FilePresentIcon />
                     </Badge>

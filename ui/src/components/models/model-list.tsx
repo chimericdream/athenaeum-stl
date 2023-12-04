@@ -1,17 +1,15 @@
+'use client';
+
 import Grid from '@mui/material/Unstable_Grid2';
-import { Suspense } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import Link from 'next/link';
 
 import { ModelTile } from '~/components/models/model-tile';
-import type { Model } from '~/services/athenaeum';
+import { loadModels } from '~/services/athenaeum';
 
-// Next.js fetch API in action
-async function loadPosts(): Promise<Array<Model>> {
-    const res = await fetch('http://localhost:8000/models');
-    return res.json();
-}
-
-const InnerList = async () => {
-    const models = await loadPosts();
+export const ModelList = () => {
+    const { data } = useQuery({ queryKey: ['models'], queryFn: loadModels });
+    const models = data ?? [];
 
     return (
         <Grid container gap={3}>
@@ -23,17 +21,11 @@ const InnerList = async () => {
                     lg={3}
                     sx={{ overflow: 'hidden' }}
                 >
-                    <ModelTile model={model} />
+                    <Link href={`/models/${model.id}`}>
+                        <ModelTile model={model} />
+                    </Link>
                 </Grid>
             ))}
         </Grid>
-    );
-};
-
-export const ModelList = () => {
-    return (
-        <Suspense fallback={<p>Loading...</p>}>
-            <InnerList />
-        </Suspense>
     );
 };
