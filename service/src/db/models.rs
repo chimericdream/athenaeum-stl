@@ -1,7 +1,7 @@
 use uuid::Uuid;
 use diesel::prelude::*;
 use crate::db::{establish_connection};
-use crate::db::types::{Model, NewModel};
+use crate::db::types::{Model, ModelRecord, NewModel};
 
 pub fn add_model_to_db(name: &str, id: &Uuid) {
     let connection = &mut establish_connection();
@@ -24,4 +24,50 @@ pub fn list_models() -> Result<Vec<Model>, diesel::result::Error> {
 
     let connection = &mut establish_connection();
     models.load(connection)
+}
+
+pub fn get_model(id: &str) -> Result<ModelRecord, Box<dyn std::error::Error>> {
+    use crate::db::schema::*;
+    use crate::db::types::*;
+
+    let connection = &mut establish_connection();
+    let model = models::table
+        .filter(models::id.eq(id))
+        .select(Model::as_select())
+        .get_result(connection)?;
+
+    let files = FileRecord::belonging_to(&model)
+        .select(FileRecord::as_select())
+        .load(connection)?;
+
+    let mut model_record = ModelRecord {
+        id: model.id,
+        name: model.name,
+        thumbnail: model.thumbnail,
+        imported_at: model.imported_at,
+        images: vec![],
+        parts: vec![],
+        projects: vec![],
+        support_files: vec![],
+    };
+
+    for file in files {
+        match file.category.as_str() {
+            "image" => {
+                model_record.images.push(file);
+            },
+            "part" => {
+                model_record.parts.push(file);
+            },
+            "project" => {
+                model_record.projects.push(file);
+            },
+            "support" => {
+                model_record.support_files.push(file);
+            },
+            _ => (),
+        }
+    }
+
+    Ok(model_record)
 }

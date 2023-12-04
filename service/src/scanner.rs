@@ -52,7 +52,7 @@ fn start_watching(dir: PathBuf) {
     }
 }
 
-fn watch<P: AsRef<Path>>(path: P) -> notify::Result<()> {
+fn watch<P: AsRef<Path>>(import_path: P) -> notify::Result<()> {
     let (tx, rx) = std::sync::mpsc::channel();
 
     // Automatically select the best implementation for your platform.
@@ -61,7 +61,7 @@ fn watch<P: AsRef<Path>>(path: P) -> notify::Result<()> {
 
     // Add a path to be watched. All files and directories at that path and
     // below will be monitored for changes.
-    watcher.watch(path.as_ref(), RecursiveMode::NonRecursive)?;
+    watcher.watch(import_path.as_ref(), RecursiveMode::NonRecursive)?;
 
     for res in rx {
         match res {
@@ -69,7 +69,7 @@ fn watch<P: AsRef<Path>>(path: P) -> notify::Result<()> {
                 if event.kind.is_create() {
                     // Wait a couple of seconds before we try to import, in case the file/directory is still being written
                     std::thread::sleep(std::time::Duration::from_secs(2));
-                    check_event(event);
+                    check_event(event, &import_path.as_ref());
                 }
             },
             Err(error) => log::error!("Error: {error:?}"),
@@ -79,10 +79,12 @@ fn watch<P: AsRef<Path>>(path: P) -> notify::Result<()> {
     Ok(())
 }
 
-fn check_event(event: Event) {
+fn check_event(event: Event, import_path: &Path) {
     for path in event.paths {
         if path.is_dir() {
-            check_dir_for_import(&path);
+            if path.ne(import_path) {
+                check_dir_for_import(&path);
+            }
         } else {
             check_file_for_import(&path);
         }
