@@ -12,7 +12,7 @@ interface NavbarProps {
     toggleLeftNav: () => void;
 }
 
-export default function Navbar({ toggleLeftNav }: NavbarProps) {
+export const Navbar = ({ toggleLeftNav }: NavbarProps) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
 
@@ -41,4 +41,4 @@ export default function Navbar({ toggleLeftNav }: NavbarProps) {
             </Toolbar>
         </AppBar>
     );
-}
+};

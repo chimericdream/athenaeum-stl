@@ -8,7 +8,7 @@ import type { PropsWithChildren as PWC } from 'react';
 
 import { DRAWER_WIDTH } from '~/util/constants';
 
-export default function MainContent({ children }: PWC) {
+export const MainContent = ({ children }: PWC) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
     const isXs = useMediaQuery(theme.breakpoints.only('xs'));
@@ -35,4 +35,4 @@ export default function MainContent({ children }: PWC) {
             </Grid>
         </Box>
     );
-}
+};

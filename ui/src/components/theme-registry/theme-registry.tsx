@@ -7,14 +7,12 @@ import type { PropsWithChildren as PWC } from 'react';
 import NextAppDirEmotionCacheProvider from './emotion-cache';
 import theme from './theme';
 
-export default function ThemeRegistry({ children }: PWC) {
-    return (
-        <NextAppDirEmotionCacheProvider options={{ key: 'mui' }}>
-            <ThemeProvider theme={theme}>
-                {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-                <CssBaseline />
-                {children}
-            </ThemeProvider>
-        </NextAppDirEmotionCacheProvider>
-    );
-}
+export const ThemeRegistry = ({ children }: PWC) => (
+    <NextAppDirEmotionCacheProvider options={{ key: 'mui' }}>
+        <ThemeProvider theme={theme}>
+            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+            <CssBaseline />
+            {children}
+        </ThemeProvider>
+    </NextAppDirEmotionCacheProvider>
+);

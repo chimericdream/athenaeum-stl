@@ -4,10 +4,7 @@ import type { PropsWithChildren as PWC } from 'react';
 
 interface ContentAreaProps extends GridDefaultBreakpoints {}
 
-export default function ContentArea({
-    children,
-    ...props
-}: PWC<ContentAreaProps>) {
+export const ContentArea = ({ children, ...props }: PWC<ContentAreaProps>) => {
     return (
         <Grid
             {...props}
@@ -18,4 +15,4 @@ export default function ContentArea({
             {children}
         </Grid>
     );
-}
+};

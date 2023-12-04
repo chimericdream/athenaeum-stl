@@ -7,7 +7,7 @@ import ListItemText from '@mui/material/ListItemText';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-export default function InboxLeftNav() {
+export const InboxLeftNav = () => {
     const pathname = usePathname();
 
     return (
@@ -27,4 +27,4 @@ export default function InboxLeftNav() {
             </List>
         </>
     );
-}
+};

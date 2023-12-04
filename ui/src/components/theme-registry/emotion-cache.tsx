@@ -20,9 +20,9 @@ export interface NextAppDirEmotionCacheProviderProps {
 }
 
 // Adapted from https://github.com/garronej/tss-react/blob/main/src/next/appDir.tsx
-export default function NextAppDirEmotionCacheProvider(
+export const NextAppDirEmotionCacheProvider = (
     props: NextAppDirEmotionCacheProviderProps
-) {
+) => {
     const { options, CacheProvider = DefaultCacheProvider, children } = props;
 
     /* eslint-disable-next-line react/hook-use-state */
@@ -107,4 +107,4 @@ export default function NextAppDirEmotionCacheProvider(
     });
 
     return <CacheProvider value={registry.cache}>{children}</CacheProvider>;
-}
+};

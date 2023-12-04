@@ -2,7 +2,7 @@
 
 import Grid from '@mui/material/Unstable_Grid2';
 
-import ContentArea from '~/components/layout/content-area';
+import { ContentArea } from '~/components/layout/content-area';
 
 export default function Page() {
     return (

@@ -10,7 +10,7 @@ import ListSubheader from '@mui/material/ListSubheader';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-export default function ActionLeftNav() {
+export const ActionLeftNav = () => {
     const pathname = usePathname();
 
     const MENU_ITEMS = [
@@ -50,4 +50,4 @@ export default function ActionLeftNav() {
             </List>
         </>
     );
-}
+};

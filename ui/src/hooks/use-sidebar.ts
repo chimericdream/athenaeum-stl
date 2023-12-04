@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 
-export default function useSidebar() {
+export const useSidebar = () => {
     const [isOpen, setIsOpen] = useState(false);
 
     const toggle = useCallback(() => {
@@ -16,4 +16,4 @@ export default function useSidebar() {
     }, [setIsOpen]);
 
     return { closeSidebar, isOpen, openSidebar, toggle };
-}
+};

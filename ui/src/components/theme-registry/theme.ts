@@ -8,7 +8,7 @@ const roboto = Roboto({
     display: 'swap',
 });
 
-const theme = createTheme({
+export const theme = createTheme({
     breakpoints: {
         values: {
             xs: 0,
@@ -42,5 +42,3 @@ const theme = createTheme({
         },
     },
 });
-
-export default theme;

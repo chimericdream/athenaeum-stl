@@ -1,8 +1,8 @@
 import type { PropsWithChildren as PWC } from 'react';
 
-import AppWrapper from '~/components/layout/app-wrapper';
-import Providers from '~/components/layout/providers';
-import ThemeRegistry from '~/components/theme-registry/theme-registry';
+import { AppWrapper } from '~/components/layout/app-wrapper';
+import { Providers } from '~/components/layout/providers';
+import { ThemeRegistry } from '~/components/theme-registry/theme-registry';
 
 /*
  * export const metadata: Metadata = {

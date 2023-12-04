@@ -12,9 +12,9 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-import ActionLeftNav from '~/components/layout/left-nav/action-left-nav';
-import ContextLeftNav from '~/components/layout/left-nav/context-left-nav';
-import InboxLeftNav from '~/components/layout/left-nav/inbox-left-nav';
+import { ActionLeftNav } from '~/components/layout/left-nav/action-left-nav';
+import { ContextLeftNav } from '~/components/layout/left-nav/context-left-nav';
+import { InboxLeftNav } from '~/components/layout/left-nav/inbox-left-nav';
 import { DRAWER_WIDTH } from '~/util/constants';
 
 interface LeftNavProps {
@@ -22,7 +22,7 @@ interface LeftNavProps {
     toggleDrawer: () => void;
 }
 
-export default function LeftNav({ open, toggleDrawer }: LeftNavProps) {
+export const LeftNav = ({ open, toggleDrawer }: LeftNavProps) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
 
@@ -88,4 +88,4 @@ export default function LeftNav({ open, toggleDrawer }: LeftNavProps) {
             </List>
         </Drawer>
     );
-}
+};
