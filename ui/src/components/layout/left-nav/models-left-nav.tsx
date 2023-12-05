@@ -1,4 +1,4 @@
-import InboxIcon from '@mui/icons-material/Inbox';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -7,7 +7,7 @@ import ListItemText from '@mui/material/ListItemText';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-export const InboxLeftNav = () => {
+export const ModelsLeftNav = () => {
     const pathname = usePathname();
 
     return (
@@ -16,13 +16,13 @@ export const InboxLeftNav = () => {
             <List>
                 <ListItemButton
                     component={Link}
-                    href="/inbox"
-                    selected={pathname === '/inbox'}
+                    href="/models"
+                    selected={pathname === '/models'}
                 >
                     <ListItemIcon>
-                        <InboxIcon />
+                        <DashboardIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Inbox" />
+                    <ListItemText primary="Models" />
                 </ListItemButton>
             </List>
         </>

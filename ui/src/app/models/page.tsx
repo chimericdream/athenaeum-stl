@@ -7,6 +7,7 @@ import {
 
 import { ContentArea } from '~/components/layout/content-area';
 import { ModelList } from '~/components/models/model-list';
+import { PageTitle } from '~/components/typography/page-title';
 import { loadModels } from '~/services/athenaeum';
 
 export default async function Page() {
@@ -19,6 +20,9 @@ export default async function Page() {
 
     return (
         <ContentArea xs={12} sm={6} md={8} xl={9}>
+            <Grid xs={12}>
+                <PageTitle title="All Models" />
+            </Grid>
             <Grid xs={12}>
                 <HydrationBoundary state={dehydrate(queryClient)}>
                     <ModelList />

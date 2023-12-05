@@ -7,6 +7,7 @@ import {
 
 import { ContentArea } from '~/components/layout/content-area';
 import { ModelDetails } from '~/components/models/model-details';
+import { ModelPageTitle } from '~/components/models/model-page-title';
 import { loadModel } from '~/services/athenaeum';
 
 interface PageProps {
@@ -26,11 +27,14 @@ export default async function Page({ params }: PageProps) {
 
     return (
         <ContentArea xs={12} sm={6} md={8} xl={9}>
-            <Grid xs={12}>
-                <HydrationBoundary state={dehydrate(queryClient)}>
+            <HydrationBoundary state={dehydrate(queryClient)}>
+                <Grid xs={12}>
+                    <ModelPageTitle id={id} />
+                </Grid>
+                <Grid xs={12}>
                     <ModelDetails id={id} />
-                </HydrationBoundary>
-            </Grid>
+                </Grid>
+            </HydrationBoundary>
         </ContentArea>
     );
 }

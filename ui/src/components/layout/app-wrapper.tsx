@@ -1,22 +1,12 @@
-'use client';
+import { type PropsWithChildren as PWC } from 'react';
 
-import { type PropsWithChildren as PWC, useCallback, useState } from 'react';
-
-import { LeftNav } from '~/components/layout/left-nav';
 import { MainContent } from '~/components/layout/main-content';
-import { Navbar } from '~/components/layout/navbar';
+import { Navigation } from '~/components/navigation';
 
 export const AppWrapper = ({ children }: PWC) => {
-    const [leftNavOpen, setLeftNavOpen] = useState(false);
-
-    const toggleLeftNav = useCallback(() => {
-        setLeftNavOpen((prev) => !prev);
-    }, [setLeftNavOpen]);
-
     return (
         <>
-            <Navbar toggleLeftNav={toggleLeftNav} />
-            <LeftNav open={leftNavOpen} toggleDrawer={toggleLeftNav} />
+            <Navigation />
             <MainContent>{children}</MainContent>
         </>
     );
