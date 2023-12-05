@@ -11,16 +11,20 @@ pub enum FileCategory {
     Support
 }
 
-pub fn add_file_to_model(name: &str, model_id: &Uuid, category: FileCategory) {
+pub fn add_file_to_model(name: &str, size: u64, model_id: &Uuid, category: FileCategory) {
     let connection = &mut establish_connection();
 
     use crate::db::schema::{file_records, models};
 
     let id = make_id();
 
+    let safe_size = size as i64;
+
     let new_model = NewFileRecord {
         id: &id.hyphenated().to_string(),
         name: &name,
+        file_name: &name,
+        file_size: &safe_size,
         category: match category {
             FileCategory::Image => "image",
             FileCategory::Part => "part",

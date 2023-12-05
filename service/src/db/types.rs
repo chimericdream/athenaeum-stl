@@ -45,6 +45,7 @@ pub struct FileRecord {
     pub id: String,
     pub name: String,
     pub file_name: String,
+    pub file_size: i64,
     pub thumbnail: Option<String>,
     pub category: String,
     pub imported_at: String,
@@ -56,6 +57,8 @@ pub struct FileRecord {
 pub struct NewFileRecord<'a> {
     pub id: &'a str,
     pub name: &'a str,
+    pub file_name: &'a str,
+    pub file_size: &'a i64,
     pub category: &'a str,
     pub model_id: &'a str,
 }

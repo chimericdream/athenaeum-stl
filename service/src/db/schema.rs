@@ -9,6 +9,7 @@ diesel::table! {
         category -> Text,
         imported_at -> Timestamp,
         model_id -> Text,
+        file_size -> BigInt,
     }
 }
 

@@ -83,6 +83,8 @@ pub fn import_single_file(path: &PathBuf, model_id: &Uuid) {
     let file_name = get_safe_file_name(&path);
     let model_name = path.file_stem().unwrap().to_str().unwrap();
 
+    let file_size = path.metadata().unwrap().len();
+
     let mut final_path = ensure_model_dir(path, model_id);
     final_path.push(&file_name);
 
@@ -92,7 +94,7 @@ pub fn import_single_file(path: &PathBuf, model_id: &Uuid) {
 
     if move_result.is_ok() {
         add_model_to_db(&model_name, &model_id);
-        add_file_to_model(&file_name, &model_id, FileCategory::Part);
+        add_file_to_model(&file_name, file_size, &model_id, FileCategory::Part);
     }
 }
 
@@ -154,12 +156,14 @@ fn scan_directory_and_import(path: &PathBuf, model_id: &Uuid, is_root: bool) {
 
                 log::info!("Importing file {file_name:?} to {file_path:?}");
 
+                let file_size = path.metadata().unwrap().len();
+
                 let mut final_path = PathBuf::from(file_path.unwrap());
                 final_path.push(&file_name);
                 let move_result = move_file(&path, &final_path);
 
                 if move_result.is_ok() {
-                    add_file_to_model(&file_name, &model_id, file_category);
+                    add_file_to_model(&file_name, file_size, &model_id, file_category);
                 }
             }
         }
