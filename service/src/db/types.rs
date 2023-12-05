@@ -44,6 +44,7 @@ pub struct NewModel<'a> {
 pub struct FileRecord {
     pub id: String,
     pub name: String,
+    pub file_name: String,
     pub thumbnail: Option<String>,
     pub category: String,
     pub imported_at: String,

@@ -28,6 +28,7 @@ export interface NewModel {
 export interface FileRecord {
     id: string;
     name: string;
+    file_name: string;
     thumbnail: string | null;
     category: string;
     imported_at: string;

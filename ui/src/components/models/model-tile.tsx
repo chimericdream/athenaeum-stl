@@ -44,9 +44,13 @@ export const ModelTile = ({ model }: { model: Model }) => {
                     }}
                 >
                     <Badge
-                        badgeContent={model.part_count}
-                        color="primary"
+                        showZero
+                        badgeContent={
+                            model.part_count > 0 ? model.part_count : '!'
+                        }
+                        color={model.part_count > 0 ? 'primary' : 'error'}
                         title="Part files"
+                        sx={{ mt: 1 }}
                     >
                         <ViewInArIcon />
                     </Badge>
@@ -54,6 +58,7 @@ export const ModelTile = ({ model }: { model: Model }) => {
                         badgeContent={model.image_count}
                         color="primary"
                         title="Image files"
+                        sx={{ mt: 1 }}
                     >
                         <ImageIcon />
                     </Badge>
@@ -61,6 +66,7 @@ export const ModelTile = ({ model }: { model: Model }) => {
                         badgeContent={model.project_count}
                         color="primary"
                         title="Project files"
+                        sx={{ mt: 1 }}
                     >
                         <LayersIcon />
                     </Badge>
@@ -68,6 +74,7 @@ export const ModelTile = ({ model }: { model: Model }) => {
                         badgeContent={model.support_file_count}
                         color="primary"
                         title="Support files"
+                        sx={{ mt: 1 }}
                     >
                         <FilePresentIcon />
                     </Badge>
