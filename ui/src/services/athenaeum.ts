@@ -1,3 +1,12 @@
+const BASE_URL = 'http://localhost:8000';
+
+export enum FileCategory {
+    PART = 'part',
+    IMAGE = 'image',
+    PROJECT = 'project',
+    SUPPORT_FILE = 'support_file',
+}
+
 export interface Model {
     id: string;
     name: string;
@@ -29,8 +38,9 @@ export interface FileRecord {
     id: string;
     name: string;
     file_name: string;
+    file_size: number;
     thumbnail: string | null;
-    category: string;
+    category: FileCategory;
     imported_at: string;
     model_id: string;
 }
@@ -38,7 +48,7 @@ export interface FileRecord {
 export interface NewFileRecord {
     id: string;
     name: string;
-    category: string;
+    category: FileCategory;
     model_id: string;
 }
 
@@ -52,12 +62,16 @@ export interface ModelLabel {
     label_id: string;
 }
 
+export function getDownloadUrl(file: FileRecord): string {
+    return `${BASE_URL}/static/${file.model_id}/${file.category}/${file.file_name}`;
+}
+
 export async function loadModels(): Promise<Array<Model>> {
-    const res = await fetch('http://localhost:8000/models');
+    const res = await fetch(`${BASE_URL}/models`);
     return res.json();
 }
 
 export async function loadModel(id: string): Promise<ModelRecord> {
-    const res = await fetch(`http://localhost:8000/models/${id}`);
+    const res = await fetch(`${BASE_URL}/models/${id}`);
     return res.json();
 }

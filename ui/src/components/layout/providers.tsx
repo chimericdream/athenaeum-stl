@@ -10,7 +10,7 @@ export const Providers = ({ children }: PWC) => {
             new QueryClient({
                 defaultOptions: {
                     queries: {
-                        staleTime: 30000,
+                        staleTime: 100,
                     },
                 },
             })

@@ -2,16 +2,17 @@
 extern crate rocket;
 
 use std::thread;
-use rocket::fs::NamedFile;
-use rocket::response::status::NotFound;
+use std::io::ErrorKind;
+use rocket::http::Status;
 use rocket::serde::{json::Json};
+use rocket_download_response::DownloadResponse;
 
 use athenaeum_server::{db, logger, scanner};
 use athenaeum_server::db::types::{Model, ModelRecord};
 use athenaeum_server::util::get_library_dir;
 
 #[get("/static/<model_id>/<file_type>/<file_name>")]
-async fn get_static_file(model_id: &str, file_type: &str, file_name: &str) -> Result<NamedFile, NotFound<String>> {
+async fn get_static_file(model_id: &str, file_type: &str, file_name: &str) -> Result<DownloadResponse, Status> {
     let folder_1 = model_id[0..2].to_string();
     let folder_2 = model_id[2..4].to_string();
 
@@ -38,7 +39,13 @@ async fn get_static_file(model_id: &str, file_type: &str, file_name: &str) -> Re
 
     final_path.push(file_name);
 
-    NamedFile::open(&final_path).await.map_err(|e| NotFound(e.to_string()))
+    DownloadResponse::from_file(final_path, None::<String>, None).await.map_err(|err| {
+        if err.kind() == ErrorKind::NotFound {
+            Status::NotFound
+        } else {
+            Status::InternalServerError
+        }
+    })
 }
 
 #[get("/models/<model_id>")]
