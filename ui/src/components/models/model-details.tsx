@@ -5,9 +5,6 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { useQuery } from '@tanstack/react-query';
 
 import { FileList } from '~/components/models/details/file-list';
-import { ImageList } from '~/components/models/details/image-list';
-import { ProjectList } from '~/components/models/details/project-list';
-import { SupportFileList } from '~/components/models/details/support-file-list';
 import { ImportedAt } from '~/components/typography/imported-at';
 import { loadModel } from '~/services/athenaeum';
 
