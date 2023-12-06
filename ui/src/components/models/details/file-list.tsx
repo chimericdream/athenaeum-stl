@@ -1,24 +1,14 @@
-import DownloadIcon from '@mui/icons-material/Download';
-import {
-    Box,
-    IconButton,
-    List,
-    ListItem,
-    ListItemText,
-    Typography,
-} from '@mui/material';
-import { filesize } from 'filesize';
+import { Box, List, Typography } from '@mui/material';
 
-import { FileDownloadButton } from '~/components/models/details/file-download-button';
+import { FileListItem } from '~/components/models/details/file-list-item';
 import type { FileRecord } from '~/services/athenaeum';
 
-export const FileList = ({
-    files,
-    title,
-}: {
+interface Props {
     files: Array<FileRecord>;
     title: string;
-}) => {
+}
+
+export const FileList = ({ files, title }: Props) => {
     return (
         <>
             <Box
@@ -30,21 +20,9 @@ export const FileList = ({
             >
                 <Typography variant="h5">{title}</Typography>
             </Box>
-            <List>
+            <List sx={{ py: 0 }}>
                 {files.map((file) => (
-                    <ListItem
-                        key={file.id}
-                        secondaryAction={<FileDownloadButton file={file} />}
-                    >
-                        <ListItemText
-                            primary={file.name}
-                            secondary={
-                                file.file_size
-                                    ? filesize(file.file_size, { round: 1 })
-                                    : null
-                            }
-                        />
-                    </ListItem>
+                    <FileListItem key={file.id} file={file} />
                 ))}
             </List>
         </>

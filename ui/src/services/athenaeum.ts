@@ -4,7 +4,7 @@ export enum FileCategory {
     PART = 'part',
     IMAGE = 'image',
     PROJECT = 'project',
-    SUPPORT_FILE = 'support_file',
+    SUPPORT_FILE = 'support',
 }
 
 export interface Model {
@@ -63,6 +63,10 @@ export interface ModelLabel {
 }
 
 export function getDownloadUrl(file: FileRecord): string {
+    return `${BASE_URL}/download/${file.model_id}/${file.category}/${file.file_name}`;
+}
+
+export function getStaticUrl(file: FileRecord): string {
     return `${BASE_URL}/static/${file.model_id}/${file.category}/${file.file_name}`;
 }
 

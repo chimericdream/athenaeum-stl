@@ -15,6 +15,12 @@ const nextConfig = {
                 port: '',
                 pathname: '/random',
             },
+            {
+                protocol: 'http',
+                hostname: 'localhost',
+                port: '8000',
+                pathname: '/static/**',
+            },
         ],
     },
 };
