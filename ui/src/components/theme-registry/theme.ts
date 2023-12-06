@@ -1,3 +1,4 @@
+import { grey } from '@mui/material/colors';
 import { createTheme } from '@mui/material/styles';
 import { Roboto } from 'next/font/google';
 
@@ -78,6 +79,10 @@ export const theme = createTheme({
         warning: { ...selectiveYellow, contrastText: '#000' },
         info: { ...deepSkyBlue, contrastText: '#000' },
         success: { ...hunterGreen, contrastText: '#fff' },
+        backgroundAlt: {
+            paper: grey[800],
+            default: grey[800],
+        },
     },
     typography: {
         fontFamily: roboto.style.fontFamily,

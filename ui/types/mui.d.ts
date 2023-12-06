@@ -1,5 +1,6 @@
 // noinspection ES6UnusedImports
 import '@mui/material/styles';
+import type { TypeBackground } from '@mui/material/styles/createPalette';
 import type {
     TypographyStyle,
     TypographyStyleOptions,
@@ -14,6 +15,16 @@ declare module '@mui/material' {
 declare module '@mui/material/styles' {
     interface BreakpointOverrides {
         xxl: true;
+    }
+}
+
+declare module '@mui/material/styles/createPalette' {
+    interface PaletteOptions {
+        backgroundAlt?: Partial<TypeBackground>;
+    }
+
+    interface Palette {
+        backgroundAlt: TypeBackground;
     }
 }
 

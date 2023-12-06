@@ -11,25 +11,28 @@ import {
     Modal,
     Typography,
 } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { filesize } from 'filesize';
-import Image from 'next/image';
 import { useCallback, useState } from 'react';
 
+import { ImagePreview } from '~/components/models/preview/image';
+import { TextPreview } from '~/components/models/preview/txt';
 import {
     FileCategory,
-    FileRecord,
     getDownloadUrl,
-    getStaticUrl,
+    type FileRecord,
 } from '~/services/athenaeum';
 
 export const FileListItem = ({ file }: { file: FileRecord }) => {
     const [open, setOpen] = useState(false);
     const toggleModal = useCallback(() => setOpen((prev) => !prev), [setOpen]);
 
+    const theme = useTheme();
+
     const canPreview =
         file.category === FileCategory.IMAGE ||
         file.category === FileCategory.PART ||
-        (file.category === FileCategory.SUPPORT_FILE &&
+        (file.category === FileCategory.SUPPORT &&
             file.file_name.endsWith('txt'));
 
     const handleClick = useCallback(() => {
@@ -84,26 +87,34 @@ export const FileListItem = ({ file }: { file: FileRecord }) => {
                                 gridTemplateAreas: '"preview sidebar"',
                                 gridTemplateColumns: '3fr 1fr',
                                 height: '100%',
+                                maxHeight: '80vh',
                             }}
                         >
                             <Box
                                 sx={{
                                     gridArea: 'preview',
                                     height: '100%',
+                                    overflow: 'hidden',
                                     position: 'relative',
                                 }}
                             >
-                                <Image
-                                    fill
-                                    src={getStaticUrl(file)}
-                                    alt={file.name}
-                                    style={{
-                                        objectFit: 'contain',
-                                        objectPosition: 'left top',
-                                    }}
-                                />
+                                {file.category === FileCategory.IMAGE && (
+                                    <ImagePreview file={file} />
+                                )}
+                                {/*{file.category === FileCategory.PART && (*/}
+                                {/*    <PartPreview file={file} />*/}
+                                {/*)}*/}
+                                {file.category === FileCategory.SUPPORT && (
+                                    <TextPreview file={file} />
+                                )}
                             </Box>
-                            <Box sx={{ gridArea: 'sidebar', padding: 2 }}>
+                            <Box
+                                sx={{
+                                    borderLeft: `1px solid ${theme.palette.grey[800]}`,
+                                    gridArea: 'sidebar',
+                                    padding: 2,
+                                }}
+                            >
                                 <Typography
                                     variant="body1"
                                     textOverflow="ellipsis"

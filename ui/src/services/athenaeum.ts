@@ -4,7 +4,7 @@ export enum FileCategory {
     PART = 'part',
     IMAGE = 'image',
     PROJECT = 'project',
-    SUPPORT_FILE = 'support',
+    SUPPORT = 'support',
 }
 
 export interface Model {
