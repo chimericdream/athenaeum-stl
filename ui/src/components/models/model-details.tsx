@@ -4,7 +4,7 @@ import { Box, Card, CardContent } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useQuery } from '@tanstack/react-query';
 
-import { FileList } from '~/components/models/details/file-list';
+import { FileList } from '~/components/models/files/file-list';
 import { ImportedAt } from '~/components/typography/imported-at';
 import { loadModel } from '~/services/athenaeum';
 

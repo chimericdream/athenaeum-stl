@@ -1,6 +1,6 @@
 import { Box, List, Typography } from '@mui/material';
 
-import { FileListItem } from '~/components/models/details/file-list-item';
+import { FileListItem } from '~/components/models/files/file-list-item';
 import type { FileRecord } from '~/services/athenaeum';
 
 interface Props {
