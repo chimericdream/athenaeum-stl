@@ -1,7 +1,6 @@
 #[macro_use]
 extern crate rocket;
 
-use std::thread;
 use std::io::ErrorKind;
 use rocket::fs::NamedFile;
 use rocket::http::Status;
@@ -100,10 +99,7 @@ fn rocket() -> _ {
     logger::init().expect("Failed to initialize logger");
 
     db::init();
-
-    thread::spawn(|| {
-        scanner::init();
-    });
+    scanner::init();
 
     rocket::build().mount("/", routes![index, get_model, download_file, get_static_file])
 }
