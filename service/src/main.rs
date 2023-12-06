@@ -3,7 +3,7 @@ extern crate rocket;
 
 use std::io::ErrorKind;
 use rocket::fs::NamedFile;
-use rocket::http::Status;
+use rocket::http::{Status};
 use rocket::response::status::NotFound;
 use rocket::serde::{json::Json};
 use rocket_download_response::DownloadResponse;
@@ -101,5 +101,13 @@ fn rocket() -> _ {
     db::init();
     scanner::init();
 
-    rocket::build().mount("/", routes![index, get_model, download_file, get_static_file])
+    // You can also deserialize this
+    let cors = rocket_cors::CorsOptions {
+        ..Default::default()
+    }
+    .to_cors().unwrap();
+
+    rocket::build()
+        .mount("/", routes![index, get_model, download_file, get_static_file])
+        .attach(cors)
 }
