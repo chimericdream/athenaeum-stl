@@ -20,7 +20,7 @@ export const ModelDetails = ({ id }: { id: string }) => {
 
     return (
         <>
-            <Box>
+            <Box component="div">
                 <ImportedAt dateTime={model.imported_at} />
             </Box>
             <Grid container gap={3}>
@@ -56,9 +56,9 @@ export const ModelDetails = ({ id }: { id: string }) => {
                     </Card>
                 </Grid>
             </Grid>
-            <pre>
-                <code>{JSON.stringify(model, null, 2)}</code>
-            </pre>
+            {/*<pre>*/}
+            {/*    <code>{JSON.stringify(model, null, 2)}</code>*/}
+            {/*</pre>*/}
         </>
     );
 };

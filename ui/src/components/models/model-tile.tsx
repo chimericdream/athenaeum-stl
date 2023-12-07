@@ -37,6 +37,7 @@ export const ModelTile = ({ model }: { model: Model }) => {
                 sx={{ borderTop: `1px solid ${theme.palette.grey[800]}` }}
             >
                 <Box
+                    component="div"
                     sx={{
                         display: 'flex',
                         justifyContent: 'space-evenly',

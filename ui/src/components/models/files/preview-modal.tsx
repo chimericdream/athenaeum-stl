@@ -3,9 +3,11 @@
 import { Box, Card, CardContent, Modal, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { filesize } from 'filesize';
+import { Suspense } from 'react';
 
 import { useFileRecordContext } from '~/components/models/files/file-record-context';
 import { ImagePreview } from '~/components/models/files/preview/image';
+import { StlPreview } from '~/components/models/files/preview/stl';
 import { TextPreview } from '~/components/models/files/preview/txt';
 import { FileCategory } from '~/services/athenaeum';
 
@@ -25,6 +27,7 @@ export const PreviewModal = ({ selected }: { selected: boolean }) => {
             aria-describedby="modal-modal-description"
         >
             <Box
+                component="div"
                 sx={{
                     display: 'grid',
                     gridTemplateAreas: '". . ." ". card ." ". . ."',
@@ -49,6 +52,7 @@ export const PreviewModal = ({ selected }: { selected: boolean }) => {
                         }}
                     >
                         <Box
+                            component="div"
                             sx={{
                                 gridArea: 'preview',
                                 height: '100%',
@@ -59,6 +63,11 @@ export const PreviewModal = ({ selected }: { selected: boolean }) => {
                             {file.category === FileCategory.IMAGE && (
                                 <ImagePreview file={file} />
                             )}
+                            {file.category === FileCategory.PART && (
+                                <Suspense fallback={null}>
+                                    <StlPreview file={file} />
+                                </Suspense>
+                            )}
                             {/*{file.category === FileCategory.PART && (*/}
                             {/*    <PartPreview file={file} />*/}
                             {/*)}*/}
@@ -67,6 +76,7 @@ export const PreviewModal = ({ selected }: { selected: boolean }) => {
                             )}
                         </Box>
                         <Box
+                            component="div"
                             sx={{
                                 borderLeft: `1px solid ${theme.palette.grey[800]}`,
                                 gridArea: 'sidebar',

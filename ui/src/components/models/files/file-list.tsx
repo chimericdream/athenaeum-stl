@@ -12,6 +12,7 @@ export const FileList = ({ files, title }: Props) => {
     return (
         <>
             <Box
+                component="div"
                 sx={(theme) => ({
                     py: 1,
                     px: 2,
