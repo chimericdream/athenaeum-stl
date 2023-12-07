@@ -3,11 +3,10 @@
 import { Box, Card, CardContent, Modal, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { filesize } from 'filesize';
-import { Suspense } from 'react';
 
 import { useFileRecordContext } from '~/components/models/files/file-record-context';
 import { ImagePreview } from '~/components/models/files/preview/image';
-import { StlPreview } from '~/components/models/files/preview/stl';
+import { PartPreview } from '~/components/models/files/preview/part';
 import { TextPreview } from '~/components/models/files/preview/txt';
 import { FileCategory } from '~/services/athenaeum';
 
@@ -64,9 +63,7 @@ export const PreviewModal = ({ selected }: { selected: boolean }) => {
                                 <ImagePreview file={file} />
                             )}
                             {file.category === FileCategory.PART && (
-                                <Suspense fallback={null}>
-                                    <StlPreview file={file} />
-                                </Suspense>
+                                <PartPreview file={file} />
                             )}
                             {/*{file.category === FileCategory.PART && (*/}
                             {/*    <PartPreview file={file} />*/}
