@@ -26,7 +26,7 @@ export default async function Page({ params }: PageProps) {
     });
 
     return (
-        <ContentArea xs={12} sm={6} md={8} xl={9}>
+        <ContentArea xs={12}>
             <HydrationBoundary state={dehydrate(queryClient)}>
                 <Grid xs={12}>
                     <ModelPageTitle id={id} />

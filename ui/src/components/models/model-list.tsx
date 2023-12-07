@@ -12,14 +12,14 @@ export const ModelList = () => {
     const models = data ?? [];
 
     return (
-        <Grid container gap={3}>
+        <Grid container>
             {models.map((model) => (
                 <Grid
                     key={model.id}
                     xs={12}
                     sm={4}
                     lg={3}
-                    sx={{ overflow: 'hidden' }}
+                    sx={{ overflow: 'hidden', padding: 1 }}
                 >
                     <Link href={`/models/${model.id}`}>
                         <ModelTile model={model} />

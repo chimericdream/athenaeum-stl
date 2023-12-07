@@ -19,8 +19,8 @@ export default async function Page() {
     });
 
     return (
-        <ContentArea xs={12} sm={6} md={8} xl={9}>
-            <Grid xs={12}>
+        <ContentArea xs={12}>
+            <Grid xs={12} sx={{ pl: 3 }}>
                 <PageTitle title="All Models" />
             </Grid>
             <Grid xs={12}>
