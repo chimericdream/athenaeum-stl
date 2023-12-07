@@ -41,7 +41,7 @@ export const ModelDetails = ({ id }: { id: string }) => {
                 <Grid xs={12} sm={6} md={4}>
                     <Card variant="outlined">
                         <CardContent sx={{ padding: '0 !important' }}>
-                            <FileList files={model.projects} title="Projecs" />
+                            <FileList files={model.projects} title="Projects" />
                         </CardContent>
                     </Card>
                 </Grid>
