@@ -20,7 +20,7 @@ export const ModelDetails = ({ id }: { id: string }) => {
 
     return (
         <>
-            <Box component="div">
+            <Box component="div" sx={{ my: 2 }}>
                 <ImportedAt dateTime={model.imported_at} />
             </Box>
             <Grid container gap={3}>

@@ -1,10 +1,8 @@
 'use client';
 
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { Link } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
-import NextLink from 'next/link';
 
+import { type Breadcrumb, Breadcrumbs } from '~/components/layout/breadcrumbs';
 import { PageTitle } from '~/components/typography/page-title';
 import { loadModel } from '~/services/athenaeum';
 
@@ -14,18 +12,21 @@ export const ModelPageTitle = ({ id }: { id: string }) => {
         queryFn: () => loadModel(id),
     });
 
+    const crumbs: Breadcrumb[] = [
+        {
+            label: 'Models',
+            href: '/models',
+        },
+        {
+            label: data?.name ?? 'Unknown model',
+            href: `/models/${id}`,
+        },
+    ];
+
     return (
-        <PageTitle
-            title={data?.name ?? 'Unknown model'}
-            subtitle={
-                <>
-                    <Link href="/models" component={NextLink} color="primary">
-                        Models
-                    </Link>
-                    <ChevronRightIcon />
-                    <span>{data?.name ?? 'Unknown model'}</span>
-                </>
-            }
-        />
+        <>
+            <PageTitle title={data?.name ?? 'Unknown model'} />
+            <Breadcrumbs crumbs={crumbs} />
+        </>
     );
 };

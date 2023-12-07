@@ -15,9 +15,12 @@ export const PageTitle = (props: PageTitleProps) => {
     const theme = useTheme();
 
     return (
-        <Box sx={{ display: 'flex', height: 'auto', gap: '1rem' }}>
+        <Box
+            component="div"
+            sx={{ display: 'flex', height: 'auto', gap: '1rem' }}
+        >
             {Icon && (
-                <Box>
+                <Box component="div">
                     <Icon
                         sx={{
                             fontSize: theme.typography.h4.fontSize,
@@ -26,7 +29,7 @@ export const PageTitle = (props: PageTitleProps) => {
                     />
                 </Box>
             )}
-            <Box sx={{ flexGrow: 1 }}>
+            <Box component="div" sx={{ flexGrow: 1 }}>
                 <Typography variant="h4">{title}</Typography>
                 {subtitle && (
                     <Typography
