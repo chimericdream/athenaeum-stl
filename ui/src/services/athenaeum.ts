@@ -62,6 +62,8 @@ export interface Label {
     name: string;
 }
 
+export type NewLabel = Omit<Label, 'id'>;
+
 export interface ModelLabel {
     model_id: string;
     label_id: string;
