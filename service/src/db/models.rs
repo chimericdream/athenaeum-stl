@@ -1,7 +1,7 @@
 use uuid::Uuid;
 use diesel::prelude::*;
 use crate::db::{establish_connection};
-use crate::db::types::{Model, ModelRecord, NewModel};
+use crate::db::types::{Model, ModelRecord, ModelUpdate, NewModel};
 
 pub fn add_model_to_db(name: &str, id: &Uuid) {
     let connection = &mut establish_connection();
@@ -24,6 +24,19 @@ pub fn list_models() -> Result<Vec<Model>, diesel::result::Error> {
 
     let connection = &mut establish_connection();
     models.load(connection)
+}
+
+pub fn update_model(id: &str, model: &ModelUpdate) -> Result<ModelRecord, Box<dyn std::error::Error>> {
+    use crate::db::schema::*;
+
+    let connection = &mut establish_connection();
+    diesel::update(models::table)
+        .set(model)
+        .filter(models::id.eq(id))
+        .returning(Model::as_returning())
+        .execute(connection)?;
+
+    get_model(id)
 }
 
 pub fn get_model(id: &str) -> Result<ModelRecord, Box<dyn std::error::Error>> {

@@ -1,5 +1,5 @@
 use diesel::prelude::*;
-use rocket::serde::{Serialize};
+use rocket::serde::{Deserialize, Serialize};
 
 #[derive(Identifiable, Debug, Queryable, Selectable, Serialize)]
 #[diesel(table_name = crate::db::schema::models)]
@@ -14,6 +14,13 @@ pub struct Model {
     pub image_count: i32,
     pub project_count: i32,
     pub support_file_count: i32,
+}
+
+#[derive(AsChangeset, Deserialize)]
+#[diesel(table_name = crate::db::schema::models)]
+#[serde(crate = "rocket::serde")]
+pub struct ModelUpdate<'a> {
+    pub name: Option<&'a str>,
 }
 
 #[derive(Serialize)]

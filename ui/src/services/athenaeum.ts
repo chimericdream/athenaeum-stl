@@ -18,6 +18,10 @@ export interface Model {
     support_file_count: number;
 }
 
+export interface ModelUpdate {
+    name?: string;
+}
+
 export interface ModelRecord {
     id: string;
     name: string;
@@ -79,3 +83,21 @@ export async function loadModel(id: string): Promise<ModelRecord> {
     const res = await fetch(`${BASE_URL}/models/${id}`);
     return res.json();
 }
+
+export const getModelUpdater =
+    (id: string) =>
+    async (model: ModelUpdate): Promise<ModelRecord> => {
+        const response = await fetch(`${BASE_URL}/models/${id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(model),
+        });
+
+        if (!response.ok) {
+            throw new Error('Something went wrong');
+        }
+
+        return response.json();
+    };

@@ -109,5 +109,34 @@ export const theme = createTheme({
                 },
             },
         },
+        MuiOutlinedInput: {
+            styleOverrides: {
+                root: {
+                    '&.Mui-focused': {
+                        '& .MuiOutlinedInput-notchedOutline': {
+                            borderColor: deepSkyBlue.main,
+                        },
+                    },
+                    '&:hover': {
+                        '& .MuiOutlinedInput-notchedOutline': {
+                            borderColor: deepSkyBlue.main,
+                        },
+                    },
+                },
+
+                focused: {},
+            },
+        },
+        MuiInputLabel: {
+            styleOverrides: {
+                root: {
+                    '&.Mui-focused': {
+                        color: deepSkyBlue.main,
+                    },
+                },
+
+                focused: {},
+            },
+        },
     },
 });

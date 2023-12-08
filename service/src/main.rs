@@ -9,7 +9,7 @@ use rocket::serde::{json::Json};
 use rocket_download_response::DownloadResponse;
 
 use athenaeum_server::{db, logger, scanner};
-use athenaeum_server::db::types::{Model, ModelRecord};
+use athenaeum_server::db::types::{Model, ModelRecord, ModelUpdate};
 use athenaeum_server::util::get_library_dir;
 
 #[get("/static/<model_id>/<file_type>/<file_name>")]
@@ -80,6 +80,13 @@ async fn download_file(model_id: &str, file_type: &str, file_name: &str) -> Resu
     })
 }
 
+#[patch("/models/<model_id>", data = "<data>")]
+fn update_model(model_id: &str, data: Json<ModelUpdate>) -> Json<ModelRecord> {
+    let updated_model = db::models::update_model(&model_id, &data).expect("Failed to update model");
+
+    Json(updated_model)
+}
+
 #[get("/models/<model_id>")]
 fn get_model(model_id: &str) -> Json<ModelRecord> {
     let model = db::models::get_model(&model_id).expect("Failed to retrieve model");
@@ -108,6 +115,6 @@ fn rocket() -> _ {
     .to_cors().unwrap();
 
     rocket::build()
-        .mount("/", routes![index, get_model, download_file, get_static_file])
+        .mount("/", routes![index, get_model, update_model, download_file, get_static_file])
         .attach(cors)
 }

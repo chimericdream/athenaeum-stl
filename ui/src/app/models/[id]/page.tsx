@@ -28,8 +28,10 @@ export default async function Page({ params }: PageProps) {
     return (
         <ContentArea xs={12}>
             <HydrationBoundary state={dehydrate(queryClient)}>
-                <Grid xs={12}>
+                <Grid xs={8}>
                     <ModelPageTitle id={id} />
+                </Grid>
+                <Grid xs={12}>
                     <ModelDetails id={id} />
                 </Grid>
             </HydrationBoundary>
