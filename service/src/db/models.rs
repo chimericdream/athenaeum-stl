@@ -53,6 +53,11 @@ pub fn get_model(id: &str) -> Result<ModelRecord, Box<dyn std::error::Error>> {
         .select(FileRecord::as_select())
         .load(connection)?;
 
+    let labels = model_labels::table
+        .filter(model_labels::model_id.eq(id))
+        .select(ModelLabel::as_select())
+        .load(connection)?;
+
     let mut model_record = ModelRecord {
         id: model.id,
         name: model.name,
@@ -62,6 +67,7 @@ pub fn get_model(id: &str) -> Result<ModelRecord, Box<dyn std::error::Error>> {
         parts: vec![],
         projects: vec![],
         support_files: vec![],
+        labels,
     };
 
     for file in files {

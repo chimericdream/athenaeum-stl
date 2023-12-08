@@ -19,6 +19,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCallback, useState } from 'react';
 
+import { LabelsLeftNav } from '~/components/layout/left-nav/labels-left-nav';
 import { ModelsLeftNav } from '~/components/layout/left-nav/models-left-nav';
 import { DRAWER_WIDTH } from '~/util/constants';
 
@@ -100,7 +101,9 @@ export const Navigation = () => {
                 </Toolbar>
             </AppBar>
             <Drawer {...drawerProps}>
+                <Divider />
                 <ModelsLeftNav />
+                <LabelsLeftNav />
                 <Divider sx={{ mt: 'auto' }} />
                 <List>
                     <ListItemButton

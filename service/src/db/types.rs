@@ -34,6 +34,7 @@ pub struct ModelRecord {
     pub images: Vec<FileRecord>,
     pub projects: Vec<FileRecord>,
     pub support_files: Vec<FileRecord>,
+    pub labels: Vec<ModelLabel>,
 }
 
 #[derive(Insertable)]
@@ -70,19 +71,21 @@ pub struct NewFileRecord<'a> {
     pub model_id: &'a str,
 }
 
-#[derive(Identifiable, Queryable, Selectable)]
+#[derive(Identifiable, Queryable, Selectable, Serialize)]
 #[diesel(table_name = crate::db::schema::labels)]
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]
+#[serde(crate = "rocket::serde")]
 pub struct Label {
     pub id: String,
     pub name: String,
 }
 
-#[derive(Associations, Debug, Queryable, Selectable)]
+#[derive(Associations, Debug, Queryable, Selectable, Serialize)]
 #[diesel(table_name = crate::db::schema::model_labels)]
 #[diesel(belongs_to(Label))]
 #[diesel(belongs_to(Model))]
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]
+#[serde(crate = "rocket::serde")]
 pub struct ModelLabel {
     pub model_id: String,
     pub label_id: String,

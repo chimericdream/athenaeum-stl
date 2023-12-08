@@ -9,7 +9,7 @@ use rocket::serde::{json::Json};
 use rocket_download_response::DownloadResponse;
 
 use athenaeum_server::{db, logger, scanner};
-use athenaeum_server::db::types::{Model, ModelRecord, ModelUpdate};
+use athenaeum_server::db::types::{Label, Model, ModelRecord, ModelUpdate};
 use athenaeum_server::util::get_library_dir;
 
 #[get("/static/<model_id>/<file_type>/<file_name>")]
@@ -95,10 +95,17 @@ fn get_model(model_id: &str) -> Json<ModelRecord> {
 }
 
 #[get("/models")]
-fn index() -> Json<Vec<Model>> {
+fn get_models() -> Json<Vec<Model>> {
     let models = db::models::list_models().expect("Failed to list models");
 
     Json(models)
+}
+
+#[get("/labels")]
+fn get_labels() -> Json<Vec<Label>> {
+    let labels = db::labels::list_labels().expect("Failed to list labels");
+
+    Json(labels)
 }
 
 #[launch]
@@ -115,6 +122,16 @@ fn rocket() -> _ {
     .to_cors().unwrap();
 
     rocket::build()
-        .mount("/", routes![index, get_model, update_model, download_file, get_static_file])
+        .mount(
+            "/",
+            routes![
+                get_labels,
+                get_models,
+                get_model,
+                update_model,
+                download_file,
+                get_static_file
+            ]
+        )
         .attach(cors)
 }

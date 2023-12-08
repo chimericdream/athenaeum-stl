@@ -1,5 +1,6 @@
 pub mod schema;
 pub mod types;
+pub mod labels;
 pub mod models;
 pub mod model_files;
 

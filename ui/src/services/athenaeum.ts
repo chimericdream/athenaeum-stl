@@ -31,6 +31,7 @@ export interface ModelRecord {
     images: FileRecord[];
     projects: FileRecord[];
     support_files: FileRecord[];
+    labels: ModelLabel[];
 }
 
 export interface NewModel {
@@ -81,6 +82,11 @@ export async function loadModels(): Promise<Array<Model>> {
 
 export async function loadModel(id: string): Promise<ModelRecord> {
     const res = await fetch(`${BASE_URL}/models/${id}`);
+    return res.json();
+}
+
+export async function loadLabels(): Promise<Array<Label>> {
+    const res = await fetch(`${BASE_URL}/labels`);
     return res.json();
 }
 
