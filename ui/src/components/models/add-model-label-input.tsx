@@ -56,10 +56,9 @@ export const AddModelLabelInput = ({ modelId }: { modelId: string }) => {
         mutationFn: addLabelToModel,
         onSuccess: async (model) => {
             await queryClient.invalidateQueries({ queryKey: ['labels'] });
-            await queryClient.invalidateQueries({
-                queryKey: ['models', modelId],
-            });
+            queryClient.setQueryData(['models', modelId], model);
             setValue(null);
+            reset();
         },
     });
 

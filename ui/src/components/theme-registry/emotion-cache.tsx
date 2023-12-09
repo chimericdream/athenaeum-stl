@@ -28,11 +28,11 @@ export const NextAppDirEmotionCacheProvider = (
     /* eslint-disable-next-line react/hook-use-state */
     const [registry] = useState(() => {
         const cache = createCache(options);
-        /* eslint-disable-next-line @typescript-eslint/unbound-method */
         const prevInsert = cache.insert;
 
         cache.compat = true;
 
+        // noinspection JSMismatchedCollectionQueryUpdate
         let inserted: Array<{ name: string; isGlobal: boolean }> = [];
         cache.insert = (...args) => {
             const [selector, serialized] = args;
