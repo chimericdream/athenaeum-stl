@@ -40,7 +40,7 @@ export const ModelLabels = ({ id }: { id: string }) => {
             {labels.map((label) => (
                 <Chip
                     key={label.label_id}
-                    label="foo"
+                    label={allLabels.find((l) => l.id === label.label_id)?.name}
                     sx={{ margin: 0.5 }}
                     variant="outlined"
                 />

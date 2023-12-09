@@ -87,6 +87,24 @@ export async function loadModel(id: string): Promise<ModelRecord> {
     return res.json();
 }
 
+export async function addLabelToModel({
+    id,
+    label,
+}: {
+    id: string;
+    label: Label | NewLabel;
+}): Promise<ModelRecord> {
+    const res = await fetch(`${BASE_URL}/models/${id}/labels`, {
+        /* @ts-expect-error -- if the ID exists, it's an existing label; otherwise it's new */
+        method: Boolean(label.id) ? 'PUT' : 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(label),
+    });
+    return res.json();
+}
+
 export async function createLabel(label: string): Promise<Label> {
     const res = await fetch(`${BASE_URL}/labels`, {
         method: 'POST',

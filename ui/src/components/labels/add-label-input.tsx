@@ -44,20 +44,13 @@ export const AddLabelInput = () => {
         },
     });
 
-    const save = useCallback(
-        (name: string) => {
-            mutate(name);
-        },
-        [mutate]
-    );
-
     // When the user actually selects a label
     const handleChange = useCallback(
         (event: SyntheticEvent, newValue: string | FilteredLabel | null) => {
             if (typeof newValue === 'string') {
                 // I probably don't want this
                 setValue({
-                    name: newValue,
+                    name: `${newValue}---how did this happen`,
                 });
             } else if (newValue?.inputValue) {
                 // Create a new label

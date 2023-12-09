@@ -71,7 +71,7 @@ pub struct NewFileRecord<'a> {
     pub model_id: &'a str,
 }
 
-#[derive(Identifiable, Debug, Queryable, Selectable, Serialize)]
+#[derive(Identifiable, Debug, Deserialize, Queryable, Selectable, Serialize)]
 #[diesel(table_name = crate::db::schema::labels)]
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]
 #[serde(crate = "rocket::serde")]

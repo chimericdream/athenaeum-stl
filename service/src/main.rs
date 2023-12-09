@@ -94,9 +94,6 @@ fn create_label(data: Json<NewLabel>) -> Json<Label> {
 }
 
 /*
-POST /labels -> create_label
-    {"name": "..."}
-GET /labels -> list_labels
 PUT /labels/<label_id> -> update_label
     {"name": "..."}
 GET /models/<model_id>/labels -> List of labels
@@ -105,6 +102,21 @@ PUT /models/<model_id>/labels -> Add a label
     {"name": "..."} -> create a new label and add it
 DELETE /models/<model_id>/labels/<label_id> -> Remove a label
  */
+
+#[post("/models/<model_id>/labels", data = "<data>")]
+fn add_new_label_to_model(model_id: &str, data: Json<NewLabel>) -> Json<ModelRecord> {
+    let label = db::labels::create_label(&data.name).expect("Failed to create label");
+    let updated_model = db::models::add_label_to_model(&model_id, &label.id).expect("Failed to add label to model");
+
+    Json(updated_model)
+}
+
+#[put("/models/<model_id>/labels", data = "<data>")]
+fn add_label_to_model(model_id: &str, data: Json<Label>) -> Json<ModelRecord> {
+    let updated_model = db::models::add_label_to_model(&model_id, &data.id).expect("Failed to add label to model");
+
+    Json(updated_model)
+}
 
 #[patch("/models/<model_id>", data = "<data>")]
 fn update_model(model_id: &str, data: Json<ModelUpdate>) -> Json<ModelRecord> {
@@ -156,6 +168,8 @@ fn rocket() -> _ {
                 get_models,
                 get_model,
                 update_model,
+                add_label_to_model,
+                add_new_label_to_model,
                 download_file,
                 get_static_file
             ]

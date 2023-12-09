@@ -26,6 +26,17 @@ pub fn list_models() -> Result<Vec<Model>, diesel::result::Error> {
     models.load(connection)
 }
 
+pub fn add_label_to_model(model_id: &str, label_id: &str) -> Result<ModelRecord, Box<dyn std::error::Error>> {
+    use crate::db::schema::*;
+
+    let connection = &mut establish_connection();
+    diesel::insert_into(model_labels::table)
+        .values((model_labels::model_id.eq(model_id), model_labels::label_id.eq(label_id)))
+        .execute(connection)?;
+
+    get_model(model_id)
+}
+
 pub fn update_model(id: &str, model: &ModelUpdate) -> Result<ModelRecord, Box<dyn std::error::Error>> {
     use crate::db::schema::*;
 
