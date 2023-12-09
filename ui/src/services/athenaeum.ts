@@ -87,6 +87,17 @@ export async function loadModel(id: string): Promise<ModelRecord> {
     return res.json();
 }
 
+export async function createLabel(label: string): Promise<Label> {
+    const res = await fetch(`${BASE_URL}/labels`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name: label }),
+    });
+    return res.json();
+}
+
 export async function loadLabels(): Promise<Array<Label>> {
     const res = await fetch(`${BASE_URL}/labels`);
     return res.json();

@@ -20,6 +20,7 @@ export const NonPreviewModal = ({ selected }: { selected: boolean }) => {
             aria-describedby="modal-modal-description"
         >
             <Box
+                component="div"
                 sx={{
                     display: 'grid',
                     gridTemplateAreas: '". . ." ". card ." ". . ."',
@@ -34,7 +35,7 @@ export const NonPreviewModal = ({ selected }: { selected: boolean }) => {
                     onClick={(e) => e.stopPropagation()}
                 >
                     <CardContent sx={{ height: '100%', maxHeight: '40vh' }}>
-                        <Box sx={{ padding: 2 }}>
+                        <Box component="div" sx={{ padding: 2 }}>
                             <Typography variant="body1" textOverflow="ellipsis">
                                 {file.name}
                             </Typography>

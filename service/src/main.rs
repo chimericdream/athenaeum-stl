@@ -5,7 +5,7 @@ use std::io::ErrorKind;
 use rocket::fs::NamedFile;
 use rocket::http::{Status};
 use rocket::response::status::NotFound;
-use rocket::serde::{json::Json};
+use rocket::serde::{Deserialize, json::Json};
 use rocket_download_response::DownloadResponse;
 
 use athenaeum_server::{db, logger, scanner};
@@ -80,6 +80,32 @@ async fn download_file(model_id: &str, file_type: &str, file_name: &str) -> Resu
     })
 }
 
+#[derive(Deserialize)]
+#[serde(crate = "rocket::serde")]
+struct NewLabel {
+    name: String,
+}
+
+#[post("/labels", data = "<data>")]
+fn create_label(data: Json<NewLabel>) -> Json<Label> {
+    let label = db::labels::create_label(&data.name).expect("Failed to create label");
+
+    Json(label)
+}
+
+/*
+POST /labels -> create_label
+    {"name": "..."}
+GET /labels -> list_labels
+PUT /labels/<label_id> -> update_label
+    {"name": "..."}
+GET /models/<model_id>/labels -> List of labels
+PUT /models/<model_id>/labels -> Add a label
+    {"id": "..."} -> add an existing label
+    {"name": "..."} -> create a new label and add it
+DELETE /models/<model_id>/labels/<label_id> -> Remove a label
+ */
+
 #[patch("/models/<model_id>", data = "<data>")]
 fn update_model(model_id: &str, data: Json<ModelUpdate>) -> Json<ModelRecord> {
     let updated_model = db::models::update_model(&model_id, &data).expect("Failed to update model");
@@ -126,6 +152,7 @@ fn rocket() -> _ {
             "/",
             routes![
                 get_labels,
+                create_label,
                 get_models,
                 get_model,
                 update_model,

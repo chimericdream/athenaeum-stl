@@ -3,8 +3,9 @@
 import { Chip, Divider, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
-import { AddLabelInput } from '~/components/labels/add-label-input';
 import { loadLabels, loadModel } from '~/services/athenaeum';
+
+import { AddModelLabelInput } from './add-model-label-input';
 
 export const ModelLabels = ({ id }: { id: string }) => {
     const { data: model } = useQuery({
@@ -28,7 +29,7 @@ export const ModelLabels = ({ id }: { id: string }) => {
             <Typography variant="h6" component="h5" sx={{ mb: 3 }}>
                 Labels
             </Typography>
-            <AddLabelInput modelId={id} />
+            <AddModelLabelInput modelId={id} />
             <Divider sx={{ my: 3 }} />
             {labels.length === 0 && (
                 <Typography align="center" variant="body1">

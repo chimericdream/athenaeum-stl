@@ -34,6 +34,7 @@ export const TextPreview = ({ file }: { file: FileRecord }) => {
 
     return (
         <Box
+            component="div"
             sx={{
                 height: '100%',
                 backgroundColor: theme.palette.backgroundAlt.paper,

@@ -1,7 +1,7 @@
 use uuid::Uuid;
 use diesel::prelude::*;
 use crate::db::{establish_connection};
-use crate::db::types::{Label, ModelLabel};
+use crate::db::types::{Label, ModelLabel, NewLabel};
 
 // pub fn add_model_to_db(name: &str, id: &Uuid) {
 //     let connection = &mut establish_connection();
@@ -25,6 +25,37 @@ pub fn list_labels() -> Result<Vec<Label>, diesel::result::Error> {
     let connection = &mut establish_connection();
     labels.load(connection)
 }
+
+pub fn create_label(label_name: &str) -> Result<Label, diesel::result::Error> {
+    use crate::db::schema::labels::dsl::*;
+
+    let new_id = Uuid::new_v4().hyphenated().to_string();
+
+    let connection = &mut establish_connection();
+    let new_label = NewLabel {
+        id: &new_id,
+        name: &label_name,
+    };
+
+    diesel::insert_into(labels)
+        .values(&new_label)
+        .returning(Label::as_returning())
+        .get_result(connection)
+}
+
+/*
+POST /labels -> create_label
+    {"name": "..."}
+GET /labels -> list_labels
+PUT /labels/<label_id> -> update_label
+    {"name": "..."}
+GET /models/<model_id>/labels -> get_labels_for_model
+PUT /models/<model_id>/labels -> add_label_to_model
+    {"id": "..."} -> add an existing label
+    {"name": "..."} -> create a new label and add it
+DELETE /models/<model_id>/labels/<label_id> -> remove_label_from_model
+ */
+
 //
 // pub fn update_model(id: &str, model: &ModelUpdate) -> Result<ModelRecord, Box<dyn std::error::Error>> {
 //     use crate::db::schema::*;

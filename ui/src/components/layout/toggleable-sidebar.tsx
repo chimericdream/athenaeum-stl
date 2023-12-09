@@ -44,6 +44,7 @@ export const ToggleableSidebar = ({
         <Slide direction="left" in={open} mountOnEnter unmountOnExit>
             <Grid {...props} sx={gridStyles}>
                 <Box
+                    component="div"
                     sx={{
                         maxHeight: '100%',
                         overflowY: 'auto',
@@ -53,6 +54,7 @@ export const ToggleableSidebar = ({
                 >
                     {isXs ? (
                         <Box
+                            component="div"
                             sx={{
                                 display: 'flex',
                                 justifyContent: 'end',
