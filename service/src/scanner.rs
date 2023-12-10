@@ -106,8 +106,8 @@ fn check_dir_for_import(path: &PathBuf) {
         let path = entry.path();
 
         if !path.is_dir() {
-            match path.extension().unwrap().to_str().unwrap() {
-                "stl" | "obj" => has_importable_files = true,
+            match path.extension().unwrap().to_str().unwrap().to_lowercase().as_str() {
+                "stl" | "obj" | "gcode" => has_importable_files = true,
                 _ => (),
             }
         }
@@ -142,8 +142,8 @@ fn ignore_dir(path: &PathBuf) {
 }
 
 fn check_file_for_import(path: &PathBuf) {
-    match path.extension().unwrap().to_str().unwrap() {
-        "stl" | "obj" => import_file(path),
+    match path.extension().unwrap().to_str().unwrap().to_lowercase().as_str() {
+        "stl" | "obj" | "gcode" => import_file(path),
         _ => ignore_file(path),
     }
 }

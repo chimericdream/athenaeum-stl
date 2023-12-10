@@ -82,10 +82,7 @@ export const ModelPageTitle = ({ id }: { id: string }) => {
 
     return (
         <>
-            <Box
-                component="div"
-                sx={{ display: 'flex', height: 'auto', gap: '1rem' }}
-            >
+            <Box component="div">
                 {isEditing && (
                     <TextField
                         fullWidth
@@ -94,6 +91,7 @@ export const ModelPageTitle = ({ id }: { id: string }) => {
                         value={name}
                         onChange={handleInput}
                         InputProps={{
+                            sx: { pr: 0 },
                             endAdornment: (
                                 <InputAdornment position="end">
                                     <ButtonGroup
@@ -104,6 +102,11 @@ export const ModelPageTitle = ({ id }: { id: string }) => {
                                             color="warning"
                                             onClick={cancel}
                                             disabled={isPending}
+                                            sx={{
+                                                borderRadius: 0,
+                                                paddingBlock:
+                                                    'calc(1rem - 1px)',
+                                            }}
                                         >
                                             <CloseIcon />
                                         </Button>
@@ -111,6 +114,10 @@ export const ModelPageTitle = ({ id }: { id: string }) => {
                                             color="success"
                                             disabled={isPending}
                                             onClick={save}
+                                            sx={{
+                                                paddingBlock:
+                                                    'calc(1rem - 1px)',
+                                            }}
                                         >
                                             {isPending && <CircularProgress />}
                                             {!isPending && <SaveIcon />}

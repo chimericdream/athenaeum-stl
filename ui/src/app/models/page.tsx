@@ -20,10 +20,10 @@ export default async function Page() {
 
     return (
         <ContentArea xs={12}>
-            <Grid xs={12} sx={{ pl: 3 }}>
+            <Grid xs={12} sx={{ pl: 3, pb: 0 }}>
                 <PageTitle title="All Models" />
             </Grid>
-            <Grid xs={12}>
+            <Grid xs={12} sx={{ pt: 0 }}>
                 <HydrationBoundary state={dehydrate(queryClient)}>
                     <ModelList />
                 </HydrationBoundary>

@@ -120,15 +120,15 @@ fn scan_directory_and_import(path: &PathBuf, model_id: &Uuid, is_root: bool) {
             let mut should_move = true;
             let mut file_category = FileCategory::Part;
 
-            match path.extension().unwrap().to_str().unwrap() {
-                "stl" | "obj" => (),
+            match path.extension().unwrap().to_str().unwrap().to_lowercase().as_str() {
+                "stl" | "obj" | "gcode" => (),
                 "txt" | "pdf" | "zip" | "7z" => {
                     file_category = FileCategory::Support;
                 },
-                "3mf" => {
+                "3mf" | "dxf" | "blend" => {
                     file_category = FileCategory::Project;
                 },
-                "jpg" | "jpeg" | "png" | "webp" | "gif" => {
+                "jpg" | "jpeg" | "png" | "webp" | "gif" | "heic" => {
                     file_category = FileCategory::Image;
                 },
                 _ => {

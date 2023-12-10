@@ -121,20 +121,34 @@ export async function loadLabels(): Promise<Array<Label>> {
     return res.json();
 }
 
+export async function updateModel({
+    id,
+    model,
+}: {
+    id: string;
+    model: ModelUpdate;
+}): Promise<{ id: string; model: ModelRecord }> {
+    const response = await fetch(`${BASE_URL}/models/${id}`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(model),
+    });
+
+    if (!response.ok) {
+        throw new Error('Something went wrong');
+    }
+
+    const json = await response.json();
+
+    return { id, model: json };
+}
+
 export const getModelUpdater =
     (id: string) =>
     async (model: ModelUpdate): Promise<ModelRecord> => {
-        const response = await fetch(`${BASE_URL}/models/${id}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(model),
-        });
+        const result = await updateModel({ id, model });
 
-        if (!response.ok) {
-            throw new Error('Something went wrong');
-        }
-
-        return response.json();
+        return result.model;
     };
