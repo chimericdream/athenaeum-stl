@@ -1,3 +1,5 @@
+'use client';
+
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';

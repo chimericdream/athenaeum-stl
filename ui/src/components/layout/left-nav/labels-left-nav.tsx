@@ -1,3 +1,5 @@
+'use client';
+
 import LabelIcon from '@mui/icons-material/Label';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
