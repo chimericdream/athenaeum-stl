@@ -8,6 +8,7 @@ import ViewInArIcon from '@mui/icons-material/ViewInAr';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Badge, Box, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import {
+    gridClasses,
     DataGrid,
     GridColDef,
     type GridRenderCellParams,
@@ -176,7 +177,11 @@ export const ModelTable = ({
 
                 {toggleButtons}
             </Box>
-            <Box component="div" p={1}>
+            <Box
+                component="div"
+                p={1}
+                sx={{ height: '65rem', overflow: 'hidden' }}
+            >
                 <DataGrid
                     checkboxSelection={editMode}
                     rowSelection={false}
@@ -194,12 +199,14 @@ export const ModelTable = ({
                         '& .MuiDataGrid-cell': {
                             cursor: editMode ? 'default' : 'pointer',
                         },
-                        '& .MuiDataGrid-cell:focus': {
-                            outline: 'none',
-                        },
-                        '& .MuiDataGrid-cell--editing:focus-within': {
-                            outline: 'none',
-                        },
+                        [`& .${gridClasses.cell}:focus, & .${gridClasses.cell}:focus-within`]:
+                            {
+                                outline: 'none',
+                            },
+                        [`& .${gridClasses.columnHeader}:focus, & .${gridClasses.columnHeader}:focus-within`]:
+                            {
+                                outline: 'none',
+                            },
                     }}
                 />
             </Box>
