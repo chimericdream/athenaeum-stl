@@ -1,18 +1,29 @@
 'use client';
 
-import { Box, Card, CardContent, Modal, Typography } from '@mui/material';
+import {
+    Box,
+    Card,
+    CardContent,
+    Modal,
+    ToggleButton,
+    ToggleButtonGroup,
+    Typography,
+} from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { filesize } from 'filesize';
 
+import { ThreeDimAxes } from '~/components/icons/three-dim-axes';
 import { useFileRecordContext } from '~/components/models/files/file-record-context';
 import { ImagePreview } from '~/components/models/files/preview/image';
 import { PartPreview } from '~/components/models/files/preview/part';
 import { TextPreview } from '~/components/models/files/preview/txt';
+import { useModelPreviewContext } from '~/contexts/model-preview-context';
 import { FileCategory } from '~/services/athenaeum';
 
 export const PreviewModal = ({ selected }: { selected: boolean }) => {
     const theme = useTheme();
     const { file, deselect } = useFileRecordContext();
+    const { settings, updateSettings } = useModelPreviewContext();
 
     if (!selected) {
         return null;
@@ -65,8 +76,8 @@ export const PreviewModal = ({ selected }: { selected: boolean }) => {
                             {file.category === FileCategory.PART && (
                                 <PartPreview file={file} />
                             )}
-                            {/*{file.category === FileCategory.PART && (*/}
-                            {/*    <PartPreview file={file} />*/}
+                            {/*{file.category === FileCategory.PROJECT && (*/}
+                            {/*    <ProjectPreview file={file} />*/}
                             {/*)}*/}
                             {file.category === FileCategory.SUPPORT && (
                                 <TextPreview file={file} />
@@ -78,18 +89,45 @@ export const PreviewModal = ({ selected }: { selected: boolean }) => {
                                 borderLeft: `1px solid ${theme.palette.grey[800]}`,
                                 gridArea: 'sidebar',
                                 padding: 2,
+                                display: 'flex',
+                                flexDirection: 'column',
                             }}
                         >
-                            <Typography variant="body1" textOverflow="ellipsis">
-                                {file.name}
-                            </Typography>
-                            <Typography variant="body2">
-                                {file.file_size
-                                    ? filesize(file.file_size, {
-                                          round: 1,
-                                      })
-                                    : null}
-                            </Typography>
+                            <Box component="div" sx={{ flexGrow: 1 }}>
+                                <Typography
+                                    variant="body1"
+                                    textOverflow="ellipsis"
+                                >
+                                    {file.name}
+                                </Typography>
+                                <Typography variant="body2">
+                                    {file.file_size
+                                        ? filesize(file.file_size, {
+                                              round: 1,
+                                          })
+                                        : null}
+                                </Typography>
+                            </Box>
+                            <Box
+                                component="div"
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                <ToggleButtonGroup
+                                    value={settings}
+                                    onChange={updateSettings}
+                                    aria-label="Preview settings toggle buttons"
+                                >
+                                    <ToggleButton
+                                        value="showAxes"
+                                        title="Show Axes"
+                                    >
+                                        <ThreeDimAxes />
+                                    </ToggleButton>
+                                </ToggleButtonGroup>
+                            </Box>
                         </Box>
                     </CardContent>
                 </Card>

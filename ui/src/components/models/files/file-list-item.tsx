@@ -8,6 +8,7 @@ import { useCallback, useState } from 'react';
 import { FileRecordProvider } from '~/components/models/files/file-record-context';
 import { NonPreviewModal } from '~/components/models/files/non-preview-modal';
 import { PreviewModal } from '~/components/models/files/preview-modal';
+import { ModelPreviewProvider } from '~/contexts/model-preview-context';
 import { FileCategory, type FileRecord } from '~/services/athenaeum';
 
 export const FileListItem = ({ file }: { file: FileRecord }) => {
@@ -29,19 +30,21 @@ export const FileListItem = ({ file }: { file: FileRecord }) => {
 
     return (
         <FileRecordProvider file={file} deselect={deselect}>
-            <ListItemButton onClick={toggleSelected}>
-                <ListItemText
-                    primary={file.name}
-                    secondary={
-                        file.file_size
-                            ? filesize(file.file_size, { round: 1 })
-                            : null
-                    }
-                />
-                <PreviewIcon />
-            </ListItemButton>
-            {showPreviewModal && <PreviewModal selected={selected} />}
-            {showNonPreviewModal && <NonPreviewModal selected={selected} />}
+            <ModelPreviewProvider>
+                <ListItemButton onClick={toggleSelected}>
+                    <ListItemText
+                        primary={file.name}
+                        secondary={
+                            file.file_size
+                                ? filesize(file.file_size, { round: 1 })
+                                : null
+                        }
+                    />
+                    <PreviewIcon />
+                </ListItemButton>
+                {showPreviewModal && <PreviewModal selected={selected} />}
+                {showNonPreviewModal && <NonPreviewModal selected={selected} />}
+            </ModelPreviewProvider>
         </FileRecordProvider>
     );
 };
