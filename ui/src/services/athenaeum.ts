@@ -50,6 +50,10 @@ export interface FileRecord {
     model_id: string;
 }
 
+export interface FileUpdate {
+    name?: string;
+}
+
 export interface NewFileRecord {
     id: string;
     name: string;
@@ -151,4 +155,36 @@ export const getModelUpdater =
         const result = await updateModel({ id, model });
 
         return result.model;
+    };
+
+export async function updateFileRecord({
+    id,
+    file,
+}: {
+    id: string;
+    file: FileUpdate;
+}): Promise<{ id: string; file: FileRecord }> {
+    const response = await fetch(`${BASE_URL}/files/${id}`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(file),
+    });
+
+    if (!response.ok) {
+        throw new Error('Something went wrong');
+    }
+
+    const json = await response.json();
+
+    return { id, file: json };
+}
+
+export const getFileRecordUpdater =
+    (id: string) =>
+    async (file: FileUpdate): Promise<FileRecord> => {
+        const result = await updateFileRecord({ id, file });
+
+        return result.file;
     };

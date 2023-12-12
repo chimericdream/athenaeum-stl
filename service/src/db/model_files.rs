@@ -1,7 +1,7 @@
 use uuid::Uuid;
 use diesel::prelude::*;
 use crate::db::{establish_connection};
-use crate::db::types::{FileRecord, NewFileRecord};
+use crate::db::types::{FileRecord, FileUpdate, NewFileRecord};
 use crate::util::make_id;
 
 pub enum FileCategory {
@@ -9,6 +9,32 @@ pub enum FileCategory {
     Part,
     Project,
     Support
+}
+
+pub fn update_file(id: &str, file: &FileUpdate) -> Result<FileRecord, Box<dyn std::error::Error>> {
+    use crate::db::schema::*;
+
+    let connection = &mut establish_connection();
+    diesel::update(file_records::table)
+        .set(file)
+        .filter(file_records::id.eq(id))
+        .returning(FileRecord::as_returning())
+        .execute(connection)?;
+
+    get_file(id)
+}
+
+pub fn get_file(id: &str) -> Result<FileRecord, Box<dyn std::error::Error>> {
+    use crate::db::schema::*;
+    use crate::db::types::*;
+
+    let connection = &mut establish_connection();
+    let file = file_records::table
+        .filter(file_records::id.eq(id))
+        .select(FileRecord::as_select())
+        .get_result(connection)?;
+
+    Ok(file)
 }
 
 pub fn add_file_to_model(name: &str, size: u64, model_id: &Uuid, category: FileCategory) {

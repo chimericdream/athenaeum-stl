@@ -9,7 +9,7 @@ use rocket::serde::{Deserialize, json::Json};
 use rocket_download_response::DownloadResponse;
 
 use athenaeum_server::{db, logger, scanner};
-use athenaeum_server::db::types::{Label, Model, ModelRecord, ModelUpdate};
+use athenaeum_server::db::types::{FileRecord, FileUpdate, Label, Model, ModelRecord, ModelUpdate};
 use athenaeum_server::util::get_library_dir;
 
 #[get("/static/<model_id>/<file_type>/<file_name>")]
@@ -125,6 +125,13 @@ fn update_model(model_id: &str, data: Json<ModelUpdate>) -> Json<ModelRecord> {
     Json(updated_model)
 }
 
+#[patch("/files/<file_id>", data = "<data>")]
+fn update_file(file_id: &str, data: Json<FileUpdate>) -> Json<FileRecord> {
+    let updated_file = db::model_files::update_file(&file_id, &data).expect("Failed to update file");
+
+    Json(updated_file)
+}
+
 #[get("/models/<model_id>")]
 fn get_model(model_id: &str) -> Json<ModelRecord> {
     let model = db::models::get_model(&model_id).expect("Failed to retrieve model");
@@ -170,6 +177,7 @@ fn rocket() -> _ {
                 update_model,
                 add_label_to_model,
                 add_new_label_to_model,
+                update_file,
                 download_file,
                 get_static_file
             ]

@@ -60,6 +60,13 @@ pub struct FileRecord {
     pub model_id: String,
 }
 
+#[derive(AsChangeset, Deserialize)]
+#[diesel(table_name = crate::db::schema::file_records)]
+#[serde(crate = "rocket::serde")]
+pub struct FileUpdate<'a> {
+    pub name: Option<&'a str>,
+}
+
 #[derive(Insertable)]
 #[diesel(table_name = crate::db::schema::file_records)]
 pub struct NewFileRecord<'a> {
