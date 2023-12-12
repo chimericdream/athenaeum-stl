@@ -6,8 +6,8 @@ import { filesize } from 'filesize';
 import { useCallback, useState } from 'react';
 
 import { FileRecordProvider } from '~/components/models/files/file-record-context';
-import { NonPreviewModal } from '~/components/models/files/non-preview-modal';
-import { PreviewModal } from '~/components/models/files/preview-modal';
+import { NonPreviewModal } from '~/components/models/files/modals/non-preview-modal';
+import { PreviewModal } from '~/components/models/files/modals/preview-modal';
 import { ModelPreviewProvider } from '~/contexts/model-preview-context';
 import { FileCategory, type FileRecord } from '~/services/athenaeum';
 

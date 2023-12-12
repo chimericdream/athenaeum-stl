@@ -19,9 +19,9 @@ import type { SyntheticEvent } from 'react';
 import { NumberInput } from '~/components/forms/number-input';
 import { ThreeDimAxes } from '~/components/icons/three-dim-axes';
 import { useFileRecordContext } from '~/components/models/files/file-record-context';
-import { ImagePreview } from '~/components/models/files/preview/image';
-import { PartPreview } from '~/components/models/files/preview/part';
-import { TextPreview } from '~/components/models/files/preview/txt';
+import { ImagePreview } from '~/components/models/files/renderers/image';
+import { PartPreview } from '~/components/models/files/renderers/part';
+import { TextPreview } from '~/components/models/files/renderers/txt';
 import { useModelPreviewContext } from '~/contexts/model-preview-context';
 import { FileCategory } from '~/services/athenaeum';
 
