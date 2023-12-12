@@ -9,26 +9,39 @@ import {
     type PropsWithChildren as PWC,
 } from 'react';
 
-type PreviewSettings = 'showAxes';
+type PreviewFlags = 'showAxes';
+
+export interface PreviewSettings {
+    scale: number;
+}
 
 interface ModelPreviewContextType {
-    settings: string[];
-    updateSettings: (
-        _: MouseEvent<HTMLElement>,
-        newSettings: PreviewSettings[]
-    ) => void;
+    flags: string[];
+    settings: PreviewSettings;
+    updateFlags: (_: MouseEvent<HTMLElement>, newFlags: PreviewFlags[]) => void;
+    updateSettings: (newSettings: PreviewSettings) => void;
 }
 
 export const ModelPreviewContext =
     createContext<null | ModelPreviewContextType>(null);
 
 export const ModelPreviewProvider = ({ children }: PWC) => {
-    const [settings, setSettings] = useState<PreviewSettings[]>(['showAxes']);
+    const [flags, setFlags] = useState<PreviewFlags[]>(['showAxes']);
+    const [settings, setSettings] = useState<PreviewSettings>({
+        scale: 5,
+    });
 
     const ctx: ModelPreviewContextType = {
-        settings,
+        flags: flags,
+        settings: settings,
+        updateFlags: useCallback(
+            (_: MouseEvent<HTMLElement>, newFlags: PreviewFlags[]) => {
+                setFlags(newFlags);
+            },
+            [setFlags]
+        ),
         updateSettings: useCallback(
-            (_: MouseEvent<HTMLElement>, newSettings: PreviewSettings[]) => {
+            (newSettings: PreviewSettings) => {
                 setSettings(newSettings);
             },
             [setSettings]

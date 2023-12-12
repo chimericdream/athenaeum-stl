@@ -21,7 +21,7 @@ export const FileList = ({ files, title }: Props) => {
             >
                 <Typography variant="h5">{title}</Typography>
             </Box>
-            <List sx={{ py: 0 }}>
+            <List sx={{ maxHeight: '20rem', overflow: 'auto', py: 0 }}>
                 {files.map((file) => (
                     <FileListItem key={file.id} file={file} />
                 ))}
