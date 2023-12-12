@@ -1,8 +1,8 @@
 'use client';
 
 import { Center, OrbitControls } from '@react-three/drei';
-import { Canvas, useLoader, type Vector3 } from '@react-three/fiber';
-import { useState, Suspense, useEffect } from 'react';
+import { Canvas, useLoader } from '@react-three/fiber';
+import { Suspense } from 'react';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 
@@ -26,6 +26,9 @@ const Model = ({ file, flags, scale, settings }: ModelProps) => {
     const loader = isStl ? STLLoader : OBJLoader;
     const model = useLoader(loader, url);
 
+    const { rotation } = settings;
+    const { x, y, z } = rotation;
+
     return (
         <Canvas>
             {flags.includes('showAxes') && <axesHelper args={[5]} />}
@@ -36,7 +39,11 @@ const Model = ({ file, flags, scale, settings }: ModelProps) => {
             <Center>
                 <mesh
                     scale={[scale, scale, scale]}
-                    rotation={[Math.PI / -2, 0, 0]}
+                    rotation={[
+                        x * (Math.PI / -2),
+                        y * (Math.PI / -2),
+                        z * (Math.PI / -2),
+                    ]}
                     position={[0, 0, 0]}
                 >
                     <primitive object={model} />
@@ -50,12 +57,13 @@ const Model = ({ file, flags, scale, settings }: ModelProps) => {
 
 export const PartPreview = ({ file }: { file: FileRecord }) => {
     const { flags, settings } = useModelPreviewContext();
+    const rotation = settings.rotation;
     const scale = settings.scale / 100;
 
     return (
         <Suspense fallback={null}>
             <Model
-                key={`${file.id}--scale-${scale}`}
+                key={`${file.id}-s${scale}-r${JSON.stringify(rotation)}}`}
                 file={file}
                 flags={flags}
                 scale={scale}

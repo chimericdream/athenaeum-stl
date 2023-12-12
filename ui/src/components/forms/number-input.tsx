@@ -120,6 +120,7 @@ const StyledInputElement = styled('input')(
   border-radius: inherit;
   padding: 8px 12px;
   outline: 0;
+  min-width: 1px;
 `
 );
 

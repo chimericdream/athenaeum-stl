@@ -12,6 +12,11 @@ import {
 type PreviewFlags = 'showAxes';
 
 export interface PreviewSettings {
+    rotation: {
+        x: 0 | 1 | 2 | 3;
+        y: 0 | 1 | 2 | 3;
+        z: 0 | 1 | 2 | 3;
+    };
     scale: number;
 }
 
@@ -28,12 +33,13 @@ export const ModelPreviewContext =
 export const ModelPreviewProvider = ({ children }: PWC) => {
     const [flags, setFlags] = useState<PreviewFlags[]>(['showAxes']);
     const [settings, setSettings] = useState<PreviewSettings>({
+        rotation: { x: 0, y: 0, z: 0 },
         scale: 5,
     });
 
     const ctx: ModelPreviewContextType = {
-        flags: flags,
-        settings: settings,
+        flags,
+        settings,
         updateFlags: useCallback(
             (_: MouseEvent<HTMLElement>, newFlags: PreviewFlags[]) => {
                 setFlags(newFlags);
