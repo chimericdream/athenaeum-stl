@@ -17,7 +17,7 @@ export const Breadcrumbs = ({ crumbs }: { crumbs: Breadcrumb[] }) => {
 
     return (
         <MuiBreadcrumbs separator={<ChevronRightIcon />} sx={{ mt: 1, mb: 2 }}>
-            {breadcrumbs.map((crumb, index) => (
+            {breadcrumbs.map((crumb) => (
                 <Link
                     key={crumb.href}
                     href={crumb.href}

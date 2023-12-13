@@ -45,7 +45,7 @@ export const ModelTable = ({
     const theme = useTheme();
     const router = useRouter();
 
-    const { isPending, mutate, reset } = useMutation<
+    const { mutate } = useMutation<
         { id: string; model: ModelRecord },
         Error,
         { id: string; model: ModelUpdate }
