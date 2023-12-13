@@ -6,7 +6,7 @@ import createCache, {
 } from '@emotion/cache';
 import { CacheProvider as DefaultCacheProvider } from '@emotion/react';
 import { useServerInsertedHTML } from 'next/navigation';
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 
 export interface NextAppDirEmotionCacheProviderProps {
     /* This is the options passed to createCache() from 'import createCache from "@emotion/cache"' */
@@ -14,9 +14,9 @@ export interface NextAppDirEmotionCacheProviderProps {
     /* By default <CacheProvider /> from 'import { CacheProvider } from "@emotion/react"' */
     CacheProvider?: (props: {
         value: EmotionCache;
-        children: React.ReactNode;
-    }) => React.JSX.Element | null;
-    children: React.ReactNode;
+        children: ReactNode;
+    }) => JSX.Element | null;
+    children: ReactNode;
 }
 
 // Adapted from https://github.com/garronej/tss-react/blob/main/src/next/appDir.tsx

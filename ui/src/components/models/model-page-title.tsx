@@ -14,7 +14,7 @@ import {
     Typography,
 } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useCallback, useState } from 'react';
+import { useCallback, useState, type ChangeEvent } from 'react';
 
 import { type Breadcrumb, Breadcrumbs } from '~/components/layout/breadcrumbs';
 import {
@@ -59,11 +59,11 @@ export const ModelPageTitle = ({ id }: { id: string }) => {
     }, [reset, setIsEditing]);
 
     const save = useCallback(() => {
-        mutate({ name });
+        mutate({ name: name.trim() });
     }, [name, mutate]);
 
     const handleInput = useCallback(
-        (event: React.ChangeEvent<HTMLInputElement>) => {
+        (event: ChangeEvent<HTMLInputElement>) => {
             setName(event.target.value);
         },
         [setName]
