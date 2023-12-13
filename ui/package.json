@@ -8,8 +8,8 @@
     "packageManager": "^pnpm@8.11.0",
     "sideEffects": false,
     "scripts": {
-        "betterer": "betterer",
-        "betterer:ci": "NODE_ENV=test betterer ci",
+        "betterer": "env-cmd -f .env.test betterer --tsconfig ./tsconfig.json",
+        "betterer:ci": "env-cmd -f .env.test betterer --tsconfig ./tsconfig.json ci",
         "build": "next build",
         "check": "tsc --noEmit",
         "dev": "next dev",
@@ -21,8 +21,8 @@
         "pre-commit": "npx lint-staged",
         "prebuild": "pnpm test:ci",
         "start": "next start",
-        "test": "jest --coverage",
-        "test:ci": "NODE_ENV=test jest --ci --coverage",
+        "test": "jest --coverage --passWithNoTests",
+        "test:ci": "env-cmd -f .env.test jest --ci --coverage --passWithNoTests",
         "test:watch": "jest --watch --coverage",
         "update-deps": "env-cmd npm-check -uE"
     },

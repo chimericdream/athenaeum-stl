@@ -11,8 +11,8 @@
             "DOM.Iterable",
             "ESNEXT"
         ],
-        "module": "esnext",
-        "moduleResolution": "bundler",
+        "module": "ESNext",
+        "moduleResolution": "node",
         "noEmit": true,
         "paths": {
             "~/*": [
@@ -27,7 +27,7 @@
         "resolveJsonModule": true,
         "skipLibCheck": true,
         "strict": true,
-        "target": "ES2022",
+        "target": "ESNext",
         "typeRoots": [
             "./node_modules/@types",
             "./types"

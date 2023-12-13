@@ -1,0 +1,9 @@
+// BETTERER RESULTS V2.
+// 
+// If this file contains merge conflicts, use `betterer merge` to automatically resolve them:
+// https://phenomnomnominal.github.io/betterer/docs/results-file/#merge
+//
+exports[`increase total test coverage`] = {
+  value: `{ "total": { "lines": 75, "statements": 78, "functions": 21, "branches": 8 } }
+`
+};
