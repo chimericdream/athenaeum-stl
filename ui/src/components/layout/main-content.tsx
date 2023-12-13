@@ -26,13 +26,7 @@ export const MainContent = ({ children }: PWC) => {
                 alignItems: 'start',
             }}
         >
-            <Grid
-                container
-                spacing={3}
-                sx={{ flexGrow: 1, m: 0, width: '100%' }}
-            >
-                {children}
-            </Grid>
+            {children}
         </Box>
     );
 };

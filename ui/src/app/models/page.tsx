@@ -1,11 +1,10 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import { Box } from '@mui/material';
 import {
     dehydrate,
     HydrationBoundary,
     QueryClient,
 } from '@tanstack/react-query';
 
-import { ContentArea } from '~/components/layout/content-area';
 import { ModelList } from '~/components/models/model-list';
 import { PageTitle } from '~/components/typography/page-title';
 import { loadModels } from '~/services/athenaeum';
@@ -19,15 +18,24 @@ export default async function Page() {
     });
 
     return (
-        <ContentArea xs={12}>
-            <Grid xs={12} sx={{ pl: 3, pb: 0 }}>
+        <Box
+            component="div"
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                flexGrow: 1,
+                padding: '1rem',
+                width: '100%',
+            }}
+        >
+            <Box component="div">
                 <PageTitle title="All Models" />
-            </Grid>
-            <Grid xs={12} sx={{ pt: 0 }}>
+            </Box>
+            <Box component="div">
                 <HydrationBoundary state={dehydrate(queryClient)}>
                     <ModelList />
                 </HydrationBoundary>
-            </Grid>
-        </ContentArea>
+            </Box>
+        </Box>
     );
 }

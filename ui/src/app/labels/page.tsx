@@ -1,5 +1,4 @@
 import { Box } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2';
 import {
     dehydrate,
     HydrationBoundary,
@@ -8,7 +7,6 @@ import {
 
 import { AddLabelInput } from '~/components/labels/add-label-input';
 import { LabelList } from '~/components/labels/label-list';
-import { ContentArea } from '~/components/layout/content-area';
 import { PageTitle } from '~/components/typography/page-title';
 import { loadLabels } from '~/services/athenaeum';
 
@@ -21,23 +19,22 @@ export default async function Page() {
     });
 
     return (
-        <ContentArea xs={12}>
-            <Grid xs={12} sx={{ pl: 3 }}>
+        <Box component="div" sx={{ padding: '1rem', width: '100%' }}>
+            <Box component="div">
                 <PageTitle title="All Labels" />
-            </Grid>
+            </Box>
             <HydrationBoundary state={dehydrate(queryClient)}>
-                <Grid xs={12} sx={{ pl: 3 }}>
-                    <Box
-                        component="div"
-                        sx={{ width: { xs: '100%', sm: '50%', md: '33%' } }}
-                    >
-                        <AddLabelInput />
-                    </Box>
-                </Grid>
-                <Grid xs={12}>
-                    <LabelList />
-                </Grid>
+                <Box
+                    component="div"
+                    sx={{
+                        marginBlock: '1rem',
+                        width: { xs: '100%', sm: '50%', md: '33%' },
+                    }}
+                >
+                    <AddLabelInput />
+                </Box>
+                <LabelList />
             </HydrationBoundary>
-        </ContentArea>
+        </Box>
     );
 }

@@ -3,7 +3,7 @@ import { Breadcrumbs as MuiBreadcrumbs, Link, Typography } from '@mui/material';
 import NextLink from 'next/link';
 
 export interface Breadcrumb {
-    label: string;
+    label: string | JSX.Element;
     href: string;
 }
 

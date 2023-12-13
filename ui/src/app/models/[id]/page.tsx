@@ -1,11 +1,10 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import { Box } from '@mui/material';
 import {
     dehydrate,
     HydrationBoundary,
     QueryClient,
 } from '@tanstack/react-query';
 
-import { ContentArea } from '~/components/layout/content-area';
 import { ModelDetails } from '~/components/models/model-details';
 import { ModelLabels } from '~/components/models/model-labels';
 import { ModelPageTitle } from '~/components/models/model-page-title';
@@ -27,31 +26,49 @@ export default async function Page({ params }: PageProps) {
     });
 
     return (
-        <ContentArea xs={12}>
+        <Box
+            component="div"
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                flexGrow: 1,
+                gap: '1rem',
+                padding: '1rem',
+                width: '100%',
+            }}
+        >
             <HydrationBoundary state={dehydrate(queryClient)}>
-                <Grid xs={12} sm={8}>
+                <Box component="div" sx={{ width: { xs: '100%', sm: '67%' } }}>
                     <ModelPageTitle id={id} />
-                </Grid>
-                <Grid xs={12} sm={8}>
-                    <ModelDetails id={id} />
-                </Grid>
-                <Grid
-                    xs={12}
-                    sm={4}
-                    sx={{
-                        borderLeft: {
-                            xs: 0,
-                            sm: '1px solid rgba(255, 255, 255, 0.12)',
-                        },
-                        width: {
-                            xs: 'calc(100% - 1px)',
-                            sm: 'calc((100% * 4 / var(--Grid-columns)) - 1px)',
-                        },
-                    }}
+                </Box>
+                <Box
+                    component="div"
+                    sx={{ display: 'flex', flexGrow: 1, gap: '1rem' }}
                 >
-                    <ModelLabels id={id} />
-                </Grid>
+                    <Box component="div" sx={{ flexGrow: 1 }}>
+                        <ModelDetails id={id} />
+                    </Box>
+                    <Box
+                        component="div"
+                        sx={{
+                            borderLeft: {
+                                xs: 0,
+                                sm: '1px solid rgba(255, 255, 255, 0.12)',
+                            },
+                            paddingLeft: {
+                                xs: 0,
+                                sm: '1rem',
+                            },
+                            width: {
+                                xs: '100%',
+                                sm: 'calc(33% - 1px)',
+                            },
+                        }}
+                    >
+                        <ModelLabels id={id} />
+                    </Box>
+                </Box>
             </HydrationBoundary>
-        </ContentArea>
+        </Box>
     );
 }

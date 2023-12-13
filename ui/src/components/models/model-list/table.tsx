@@ -7,6 +7,7 @@ import LayersIcon from '@mui/icons-material/Layers';
 import ViewInArIcon from '@mui/icons-material/ViewInAr';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Badge, Box, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import {
     gridClasses,
     DataGrid,
@@ -41,6 +42,7 @@ export const ModelTable = ({
     const queryClient = useQueryClient();
     const [editMode, setEditMode] = useState(false);
 
+    const theme = useTheme();
     const router = useRouter();
 
     const { isPending, mutate, reset } = useMutation<
@@ -158,8 +160,15 @@ export const ModelTable = ({
         <>
             <Box
                 component="div"
-                p={1}
-                sx={{ display: 'flex', justifyContent: 'space-between' }}
+                sx={{
+                    backgroundColor: theme.palette.background.default,
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    paddingBlock: '1rem',
+                    position: 'sticky',
+                    top: '4rem',
+                    zIndex: 1,
+                }}
             >
                 <ToggleButtonGroup
                     exclusive
@@ -179,8 +188,11 @@ export const ModelTable = ({
             </Box>
             <Box
                 component="div"
-                p={1}
-                sx={{ height: '65rem', overflow: 'hidden' }}
+                sx={{
+                    height: '65rem',
+                    overflow: 'hidden',
+                    paddingBlock: '0.5rem',
+                }}
             >
                 <DataGrid
                     checkboxSelection={editMode}
@@ -192,7 +204,7 @@ export const ModelTable = ({
                             paginationModel: { page: 0, pageSize: 25 },
                         },
                     }}
-                    pageSizeOptions={[25, 50, 100, 250, 500]}
+                    pageSizeOptions={[25, 50, 100]}
                     onRowClick={handleRowClick}
                     processRowUpdate={processRowUpdate}
                     sx={{
