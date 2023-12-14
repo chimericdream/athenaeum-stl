@@ -11,11 +11,13 @@ import {
     IconButton,
     InputAdornment,
     TextField,
+    ToggleButton,
     Typography,
 } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useState, type ChangeEvent } from 'react';
 
+import { RefreshIcon } from '~/components/icons/refresh';
 import { type Breadcrumb, Breadcrumbs } from '~/components/layout/breadcrumbs';
 import {
     getModelUpdater,
@@ -33,6 +35,14 @@ export const ModelPageTitle = ({ id }: { id: string }) => {
 
     const [isEditing, setIsEditing] = useState(false);
     const [name, setName] = useState(data?.name ?? '');
+
+    const [isReloading, setIsReloading] = useState(false);
+
+    const reloadModel = useCallback(async () => {
+        setIsReloading(true);
+        await queryClient.invalidateQueries({ queryKey: ['models', id] });
+        setTimeout(() => setIsReloading(false), 1000);
+    }, [id, queryClient, setIsReloading]);
 
     const updateModel = getModelUpdater(id);
 
@@ -132,18 +142,35 @@ export const ModelPageTitle = ({ id }: { id: string }) => {
                     <Box
                         component="div"
                         sx={{
-                            alignItems: 'start',
+                            alignItems: 'center',
                             display: 'flex',
+                            justifyContent: 'space-between',
                             flexGrow: 1,
                             gap: 2,
                         }}
                     >
-                        <Typography variant="h4">
-                            {data?.name ?? 'Unknown model'}
-                        </Typography>
-                        <IconButton onClick={startEditing}>
-                            <EditIcon />
-                        </IconButton>
+                        <Box
+                            component="div"
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'start',
+                                gap: 2,
+                            }}
+                        >
+                            <Typography variant="h4">
+                                {data?.name ?? 'Unknown model'}
+                            </Typography>
+                            <IconButton onClick={startEditing}>
+                                <EditIcon />
+                            </IconButton>
+                        </Box>
+                        <ToggleButton
+                            value="reload"
+                            selected={isReloading}
+                            onClick={reloadModel}
+                        >
+                            <RefreshIcon isRotating={isReloading} />
+                        </ToggleButton>
                     </Box>
                 )}
             </Box>

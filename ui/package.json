@@ -34,6 +34,7 @@
         "@mui/icons-material": "5.14.19",
         "@mui/lab": "5.0.0-alpha.142",
         "@mui/material": "5.14.19",
+        "@mui/styles": "5.15.0",
         "@mui/system": "5.14.19",
         "@mui/x-data-grid": "6.18.4",
         "@react-three/drei": "9.90.0",

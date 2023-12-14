@@ -188,3 +188,21 @@ export const getFileRecordUpdater =
 
         return result.file;
     };
+
+export const moveFileToModel = async ({
+    id,
+    modelId,
+}: {
+    id: string;
+    modelId: string;
+}): Promise<FileRecord> => {
+    const response = await fetch(`${BASE_URL}/files/${id}/models/${modelId}`, {
+        method: 'PUT',
+    });
+
+    if (!response.ok) {
+        throw new Error('Something went wrong');
+    }
+
+    return await response.json();
+};
