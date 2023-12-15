@@ -1,8 +1,8 @@
 import { Box } from '@mui/material';
 import {
-    dehydrate,
     HydrationBoundary,
     QueryClient,
+    dehydrate,
 } from '@tanstack/react-query';
 
 import { AddLabelInput } from '~/components/labels/add-label-input';

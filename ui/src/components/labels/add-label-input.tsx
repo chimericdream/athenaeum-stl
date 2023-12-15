@@ -1,22 +1,22 @@
 'use client';
 
 import {
+    type AutocompleteRenderInputParams,
     CircularProgress,
+    type FilterOptionsState,
     InputAdornment,
     TextField,
-    type FilterOptionsState,
-    type AutocompleteRenderInputParams,
 } from '@mui/material';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
+    type HTMLAttributes,
+    type SyntheticEvent,
     useCallback,
     useState,
-    type SyntheticEvent,
-    type HTMLAttributes,
 } from 'react';
 
-import { createLabel, loadLabels, type Label } from '~/services/athenaeum';
+import { type Label, createLabel, loadLabels } from '~/services/athenaeum';
 
 interface FilteredLabel extends Partial<Label> {
     inputValue?: string;

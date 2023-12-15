@@ -12,12 +12,12 @@ import {
     Typography,
 } from '@mui/material';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useCallback, useState, type ChangeEvent } from 'react';
+import { type ChangeEvent, useCallback, useState } from 'react';
 
 import {
-    getFileRecordUpdater,
     type FileRecord,
     type FileUpdate,
+    getFileRecordUpdater,
 } from '~/services/athenaeum';
 
 export const EditFileName = ({ file }: { file: FileRecord }) => {

@@ -4,7 +4,7 @@ import {
     numberInputClasses,
 } from '@mui/base/Unstable_NumberInput';
 import { styled } from '@mui/system';
-import { forwardRef, type ForwardedRef, type SyntheticEvent } from 'react';
+import { type ForwardedRef, type SyntheticEvent, forwardRef } from 'react';
 
 const InnerNumberInput = forwardRef(function CustomNumberInput(
     props: NumberInputProps,

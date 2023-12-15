@@ -6,7 +6,7 @@ import createCache, {
 } from '@emotion/cache';
 import { CacheProvider as DefaultCacheProvider } from '@emotion/react';
 import { useServerInsertedHTML } from 'next/navigation';
-import { useState, type ReactNode } from 'react';
+import { type ReactNode, useState } from 'react';
 
 export interface NextAppDirEmotionCacheProviderProps {
     /* This is the options passed to createCache() from 'import createCache from "@emotion/cache"' */

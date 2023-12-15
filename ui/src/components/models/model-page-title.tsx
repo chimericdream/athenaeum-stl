@@ -15,15 +15,15 @@ import {
     Typography,
 } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useCallback, useState, type ChangeEvent } from 'react';
+import { type ChangeEvent, useCallback, useState } from 'react';
 
 import { RefreshIcon } from '~/components/icons/refresh';
 import { type Breadcrumb, Breadcrumbs } from '~/components/layout/breadcrumbs';
 import {
-    getModelUpdater,
-    loadModel,
     type ModelRecord,
     type ModelUpdate,
+    getModelUpdater,
+    loadModel,
 } from '~/services/athenaeum';
 
 export const ModelPageTitle = ({ id }: { id: string }) => {

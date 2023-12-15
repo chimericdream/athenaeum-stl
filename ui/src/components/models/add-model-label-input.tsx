@@ -1,28 +1,28 @@
 'use client';
 
 import {
-    TextField,
-    type FilterOptionsState,
     type AutocompleteRenderInputParams,
-    InputAdornment,
     CircularProgress,
+    type FilterOptionsState,
+    InputAdornment,
+    TextField,
 } from '@mui/material';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
+    type HTMLAttributes,
+    type SyntheticEvent,
     useCallback,
     useMemo,
     useState,
-    type SyntheticEvent,
-    type HTMLAttributes,
 } from 'react';
 
 import {
-    addLabelToModel,
-    loadLabels,
     type Label,
     type ModelRecord,
     type NewLabel,
+    addLabelToModel,
+    loadLabels,
     loadModel,
 } from '~/services/athenaeum';
 

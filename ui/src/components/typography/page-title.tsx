@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Typography, SvgIcon } from '@mui/material';
+import { Box, SvgIcon, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import type { ReactElement } from 'react';
 

@@ -1,5 +1,5 @@
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { Breadcrumbs as MuiBreadcrumbs, Link, Typography } from '@mui/material';
+import { Link, Breadcrumbs as MuiBreadcrumbs, Typography } from '@mui/material';
 import NextLink from 'next/link';
 
 export interface Breadcrumb {

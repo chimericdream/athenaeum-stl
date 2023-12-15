@@ -1,7 +1,7 @@
 import {
-    dehydrate,
     HydrationBoundary,
     QueryClient,
+    dehydrate,
 } from '@tanstack/react-query';
 import type { PropsWithChildren as PWC } from 'react';
 

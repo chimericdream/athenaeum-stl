@@ -1,9 +1,9 @@
 'use client';
 
 import {
+    type PropsWithChildren as PWC,
     createContext,
     useContext,
-    type PropsWithChildren as PWC,
 } from 'react';
 
 import { FileRecord } from '~/services/athenaeum';
