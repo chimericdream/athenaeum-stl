@@ -7,6 +7,7 @@ import {
 
 import { ModelList } from '~/components/models/model-list';
 import { PageTitle } from '~/components/typography/page-title';
+import { ModelListProvider } from '~/contexts/model-list-context';
 import { loadModels } from '~/services/athenaeum';
 
 export default async function Page() {
@@ -33,7 +34,9 @@ export default async function Page() {
             </Box>
             <Box component="div">
                 <HydrationBoundary state={dehydrate(queryClient)}>
-                    <ModelList />
+                    <ModelListProvider>
+                        <ModelList />
+                    </ModelListProvider>
                 </HydrationBoundary>
             </Box>
         </Box>

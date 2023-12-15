@@ -38,7 +38,7 @@ export default async function Page({ params }: PageProps) {
             }}
         >
             <HydrationBoundary state={dehydrate(queryClient)}>
-                <Box component="div" sx={{ width: { xs: '100%', sm: '67%' } }}>
+                <Box component="div">
                     <ModelPageTitle id={id} />
                 </Box>
                 <Box

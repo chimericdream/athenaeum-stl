@@ -1,3 +1,5 @@
+'use client';
+
 import CachedIcon from '@mui/icons-material/Cached';
 import { createStyles, makeStyles } from '@mui/styles';
 

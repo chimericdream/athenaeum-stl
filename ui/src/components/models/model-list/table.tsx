@@ -17,14 +17,11 @@ import {
 } from '@mui/x-data-grid';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import {
-    type MouseEvent,
-    type ReactElement,
-    useCallback,
-    useState,
-} from 'react';
+import { type MouseEvent, useCallback, useState } from 'react';
 
+import { ModelListToggleButtons } from '~/components/models/model-list/list-toggle-buttons';
 import { ImportedAt } from '~/components/typography/imported-at';
+import { useModelListContext } from '~/contexts/model-list-context';
 import {
     type Model,
     type ModelRecord,
@@ -32,13 +29,9 @@ import {
     updateModel,
 } from '~/services/athenaeum';
 
-export const ModelTable = ({
-    models,
-    toggleButtons,
-}: {
-    models: Model[];
-    toggleButtons: ReactElement;
-}) => {
+export const ModelTable = ({ models }: { models: Model[] }) => {
+    const { page, pageSize, updatePagination } = useModelListContext();
+
     const queryClient = useQueryClient();
     const [editMode, setEditMode] = useState(false);
 
@@ -79,6 +72,7 @@ export const ModelTable = ({
             minWidth: 450,
             flex: 1,
             editable: editMode,
+            sortable: false,
         },
         {
             field: 'id',
@@ -134,6 +128,7 @@ export const ModelTable = ({
                 <ImportedAt dateOnly dateTime={params.value} variant="body2" />
             ),
             width: 175,
+            sortable: false,
         },
     ];
 
@@ -184,7 +179,7 @@ export const ModelTable = ({
                     </ToggleButton>
                 </ToggleButtonGroup>
 
-                {toggleButtons}
+                <ModelListToggleButtons />
             </Box>
             <Box
                 component="div"
@@ -199,11 +194,8 @@ export const ModelTable = ({
                     rowSelection={false}
                     rows={models}
                     columns={cols}
-                    initialState={{
-                        pagination: {
-                            paginationModel: { page: 0, pageSize: 25 },
-                        },
-                    }}
+                    paginationModel={{ page, pageSize }}
+                    onPaginationModelChange={updatePagination}
                     pageSizeOptions={[25, 50, 100]}
                     onRowClick={handleRowClick}
                     processRowUpdate={processRowUpdate}

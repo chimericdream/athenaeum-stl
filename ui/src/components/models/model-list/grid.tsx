@@ -4,18 +4,12 @@ import { Box, Link } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import NextLink from 'next/link';
-import type { ReactElement } from 'react';
 
+import { ModelListToggleButtons } from '~/components/models/model-list/list-toggle-buttons';
 import { ModelTile } from '~/components/models/model-tile';
 import type { Model } from '~/services/athenaeum';
 
-export const ModelGrid = ({
-    models,
-    toggleButtons,
-}: {
-    models: Model[];
-    toggleButtons: ReactElement;
-}) => {
+export const ModelGrid = ({ models }: { models: Model[] }) => {
     const theme = useTheme();
 
     return (
@@ -25,14 +19,15 @@ export const ModelGrid = ({
                 sx={{
                     backgroundColor: theme.palette.background.default,
                     display: 'flex',
-                    justifyContent: 'end',
+                    justifyContent: 'space-between',
                     paddingBlock: '1rem',
                     position: 'sticky',
                     top: '4rem',
                     zIndex: 1,
                 }}
             >
-                {toggleButtons}
+                <div />
+                <ModelListToggleButtons />
             </Box>
             <Grid container spacing={2} sx={{ paddingBlock: '0.5rem' }}>
                 {models.map((model) => (
