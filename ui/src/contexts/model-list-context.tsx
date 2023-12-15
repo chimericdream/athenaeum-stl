@@ -6,11 +6,11 @@ import type {
 } from '@mui/x-data-grid';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import {
+    type MouseEvent,
+    type PropsWithChildren as PWC,
     createContext,
     useCallback,
     useContext,
-    type MouseEvent,
-    type PropsWithChildren as PWC,
 } from 'react';
 
 interface ModelListContextType {
