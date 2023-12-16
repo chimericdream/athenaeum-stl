@@ -125,7 +125,7 @@ fn scan_directory_and_import(path: &PathBuf, model_id: &Uuid, is_root: bool) {
                 "txt" | "pdf" | "zip" | "7z" => {
                     file_category = FileCategory::Support;
                 },
-                "3mf" | "dxf" | "blend" => {
+                "3mf" | "dxf" | "blend" | "scad" | "123dx" | "skp" => {
                     file_category = FileCategory::Project;
                 },
                 "jpg" | "jpeg" | "png" | "webp" | "gif" | "heic" => {
