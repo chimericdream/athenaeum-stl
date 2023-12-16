@@ -11,16 +11,19 @@ import {
     createContext,
     useCallback,
     useContext,
+    useState,
 } from 'react';
 
 import { useModelListSettings } from '~/hooks/use-model-list-settings';
 
 interface ModelListContextType {
+    filter: string | null;
     mode: 'grid' | 'list';
     order: 'asc' | 'desc';
     sort: 'name' | 'date';
     page: number;
     pageSize: 25 | 50 | 100;
+    setFilter: (filter: string | null) => void;
     updatePagination: (
         model: GridPaginationModel,
         details: GridCallbackDetails
@@ -36,17 +39,21 @@ interface ModelListContextType {
 }
 
 export const ModelListContext = createContext<ModelListContextType>({
+    filter: null,
     mode: 'list',
     order: 'asc',
     sort: 'name',
     page: 0,
     pageSize: 25,
+    setFilter: () => {},
     updatePagination: () => {},
     handleModeChange: () => {},
     handleSortOrderChange: () => {},
 });
 
 export const ModelListProvider = ({ children }: PWC) => {
+    const [filter, setFilter] = useState<string | null>(null);
+
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
@@ -102,11 +109,13 @@ export const ModelListProvider = ({ children }: PWC) => {
     );
 
     const ctx: ModelListContextType = {
+        filter,
         mode,
         order,
         sort,
         page,
         pageSize,
+        setFilter,
         updatePagination,
         handleModeChange,
         handleSortOrderChange,

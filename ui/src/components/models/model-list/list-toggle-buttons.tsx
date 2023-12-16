@@ -7,7 +7,7 @@ import StraightIcon from '@mui/icons-material/Straight';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import { Box, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { useQueryClient } from '@tanstack/react-query';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import { RefreshIcon } from '~/components/icons/refresh';
 import { StackedIcon } from '~/components/icons/stacked-icon';
@@ -87,15 +87,6 @@ export const ModelListToggleButtons = () => {
                         </StackedIcon>
                     </ToggleButton>
                 </ToggleButtonGroup>
-            </Box>
-            <Box component="div" sx={{ display: 'flex', gap: 2 }}>
-                <ToggleButton
-                    value="reload"
-                    selected={isReloading}
-                    onClick={reloadModels}
-                >
-                    <RefreshIcon isRotating={isReloading} />
-                </ToggleButton>
 
                 <ToggleButtonGroup
                     exclusive
@@ -110,6 +101,14 @@ export const ModelListToggleButtons = () => {
                         <GridViewIcon />
                     </ToggleButton>
                 </ToggleButtonGroup>
+
+                <ToggleButton
+                    value="reload"
+                    selected={isReloading}
+                    onClick={reloadModels}
+                >
+                    <RefreshIcon isRotating={isReloading} />
+                </ToggleButton>
             </Box>
         </>
     );

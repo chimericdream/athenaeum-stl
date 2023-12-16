@@ -10,7 +10,8 @@ import { Badge, Box, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import {
     DataGrid,
-    GridColDef,
+    type GridColDef,
+    type GridFilterModel,
     type GridRenderCellParams,
     type GridRowParams,
     gridClasses,
@@ -19,6 +20,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { type MouseEvent, useCallback, useState } from 'react';
 
+import { ListFilterInput } from '~/components/models/model-list/list-filter-input';
 import { ModelListToggleButtons } from '~/components/models/model-list/list-toggle-buttons';
 import { ImportedAt } from '~/components/typography/imported-at';
 import { useModelListContext } from '~/contexts/model-list-context';
@@ -30,7 +32,7 @@ import {
 } from '~/services/athenaeum';
 
 export const ModelTable = ({ models }: { models: Model[] }) => {
-    const { page, pageSize, updatePagination } = useModelListContext();
+    const { filter, page, pageSize, updatePagination } = useModelListContext();
 
     const queryClient = useQueryClient();
     const [editMode, setEditMode] = useState(false);
@@ -79,6 +81,8 @@ export const ModelTable = ({ models }: { models: Model[] }) => {
             headerName: 'Files',
             width: 188,
             sortable: false,
+            hideable: false,
+            filterable: false,
             renderCell: ({ row }: GridRenderCellParams<Model>) => (
                 <Box
                     component="div"
@@ -129,6 +133,8 @@ export const ModelTable = ({ models }: { models: Model[] }) => {
             ),
             width: 175,
             sortable: false,
+            hideable: false,
+            filterable: false,
         },
     ];
 
@@ -151,6 +157,15 @@ export const ModelTable = ({ models }: { models: Model[] }) => {
         [editMode, router]
     );
 
+    const filterModel: GridFilterModel = { items: [] };
+    if (filter) {
+        filterModel.items.push({
+            field: 'name',
+            operator: 'contains',
+            value: filter,
+        });
+    }
+
     return (
         <>
             <Box
@@ -165,19 +180,23 @@ export const ModelTable = ({ models }: { models: Model[] }) => {
                     zIndex: 1,
                 }}
             >
-                <ToggleButtonGroup
-                    exclusive
-                    aria-label="outlined primary button group"
-                    onChange={handleModeChange}
-                    value={editMode}
-                >
-                    <ToggleButton value={false} title="View mode">
-                        <VisibilityIcon />
-                    </ToggleButton>
-                    <ToggleButton value={true} title="Edit mode">
-                        <EditIcon />
-                    </ToggleButton>
-                </ToggleButtonGroup>
+                <Box component="div" sx={{ display: 'flex', gap: 2 }}>
+                    <ToggleButtonGroup
+                        exclusive
+                        aria-label="outlined primary button group"
+                        onChange={handleModeChange}
+                        value={editMode}
+                    >
+                        <ToggleButton value={false} title="View mode">
+                            <VisibilityIcon />
+                        </ToggleButton>
+                        <ToggleButton value={true} title="Edit mode">
+                            <EditIcon />
+                        </ToggleButton>
+                    </ToggleButtonGroup>
+
+                    <ListFilterInput />
+                </Box>
 
                 <ModelListToggleButtons />
             </Box>
@@ -190,10 +209,13 @@ export const ModelTable = ({ models }: { models: Model[] }) => {
                 }}
             >
                 <DataGrid
+                    disableColumnMenu
+                    disableColumnSelector
                     checkboxSelection={editMode}
                     rowSelection={false}
                     rows={models}
                     columns={cols}
+                    filterModel={filterModel}
                     paginationModel={{ page, pageSize }}
                     onPaginationModelChange={updatePagination}
                     pageSizeOptions={[25, 50, 100]}
