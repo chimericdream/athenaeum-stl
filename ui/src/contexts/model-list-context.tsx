@@ -13,6 +13,8 @@ import {
     useContext,
 } from 'react';
 
+import { useModelListSettings } from '~/hooks/use-model-list-settings';
+
 interface ModelListContextType {
     mode: 'grid' | 'list';
     order: 'asc' | 'desc';
@@ -49,11 +51,7 @@ export const ModelListProvider = ({ children }: PWC) => {
     const pathname = usePathname();
     const searchParams = useSearchParams();
 
-    const mode = searchParams.get('mode') ?? 'list';
-    const order = searchParams.get('order') ?? 'asc';
-    const sort = searchParams.get('sort') ?? 'name';
-    const page = parseInt(searchParams.get('page') ?? '0', 10);
-    const pageSize = parseInt(searchParams.get('pageSize') ?? '25', 10);
+    const { mode, order, sort, page, pageSize } = useModelListSettings();
 
     const makeQueryString = useCallback(
         (updates: { [key: string]: string }) => {
