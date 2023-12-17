@@ -1,4 +1,5 @@
-import { TextField } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import { IconButton, InputAdornment, TextField } from '@mui/material';
 
 import { useModelListContext } from '~/contexts/model-list-context';
 
@@ -7,7 +8,7 @@ export const ListFilterInput = () => {
 
     return (
         <TextField
-            value={filter}
+            value={filter ?? ''}
             onChange={(e) => setFilter(e.target.value)}
             label="Search models"
             variant="outlined"
@@ -22,6 +23,17 @@ export const ListFilterInput = () => {
                 },
             }}
             InputProps={{
+                endAdornment: (
+                    <InputAdornment position="end">
+                        <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={() => setFilter(null)}
+                            edge="end"
+                        >
+                            <CloseIcon />
+                        </IconButton>
+                    </InputAdornment>
+                ),
                 sx: {
                     lineHeight: 1.75,
                     '& input': {
