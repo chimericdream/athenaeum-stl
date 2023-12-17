@@ -18,7 +18,10 @@ export default async function Page() {
             <Box component="div">
                 <PageTitle title="All Models" />
             </Box>
-            <Box component="div">
+            <Box
+                component="div"
+                sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}
+            >
                 <ModelList />
             </Box>
         </Box>

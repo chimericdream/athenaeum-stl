@@ -203,9 +203,9 @@ export const ModelTable = ({ models }: { models: Model[] }) => {
             <Box
                 component="div"
                 sx={{
-                    height: '65rem',
+                    height: 'calc(100vh - 13.75rem)',
                     overflow: 'hidden',
-                    paddingBlock: '0.5rem',
+                    paddingBlockStart: '0.5rem',
                 }}
             >
                 <DataGrid
