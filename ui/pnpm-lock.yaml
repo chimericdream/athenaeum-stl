@@ -74,6 +74,9 @@ dependencies:
   recharts:
     specifier: 2.10.3
     version: 2.10.3(prop-types@15.8.1)(react-dom@18.2.0)(react@18.2.0)
+  temporal-polyfill:
+    specifier: 0.1.1
+    version: 0.1.1
   three:
     specifier: 0.159.0
     version: 0.159.0
@@ -7394,6 +7397,16 @@ packages:
     resolution: {integrity: sha512-GNzQvQTOIP6RyTfE2Qxb8ZVlNmw0n88vp1szwWRimP02mnTsx3Wtn5qRdqY9w2XduFNUgvOwhNnQsjwCp+kqaQ==}
     engines: {node: '>=6'}
     dev: true
+
+  /temporal-polyfill@0.1.1:
+    resolution: {integrity: sha512-/5e4EVRA0wBI/bEhWLirSjwUg1lELhQyTXxw9zNbVhqjKvI9BLczs+3wtsoD9sn3HN2ImAMW5XJQwAiXgWT+GA==}
+    dependencies:
+      temporal-spec: 0.1.0
+    dev: false
+
+  /temporal-spec@0.1.0:
+    resolution: {integrity: sha512-sMNggMeS6trCgMQuudgFHhX1gtBK3e+AT1zGrMsFYG1wlqtRT5E9rcvm3I1iNlvHpJX/3DO6L4qtWAuEl/T04Q==}
+    dev: false
 
   /test-exclude@6.0.0:
     resolution: {integrity: sha512-cAGWPIyOHU6zlmg88jwm7VRyXnMN7iV68OGAbYDk/Mh/xC/pzVPlQtY6ngoIH/5/tciuhGfvESU8GrHrcxD56w==}
