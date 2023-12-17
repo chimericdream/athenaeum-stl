@@ -122,7 +122,7 @@ fn scan_directory_and_import(path: &PathBuf, model_id: &Uuid, is_root: bool) {
 
             match path.extension().unwrap().to_str().unwrap().to_lowercase().as_str() {
                 "stl" | "obj" | "gcode" => (),
-                "txt" | "pdf" | "zip" | "7z" => {
+                "txt" | "pdf" | "zip" | "7z" | "html" => {
                     file_category = FileCategory::Support;
                 },
                 "3mf" | "dxf" | "blend" | "scad" | "123dx" | "skp" => {
