@@ -22,6 +22,13 @@ export interface ModelUpdate {
     name?: string;
 }
 
+export interface ModelMetadata {
+    model_id: string;
+    description: null | string;
+    source_url: null | string;
+    commercial_use: null | boolean;
+}
+
 export interface ModelRecord {
     id: string;
     name: string;
@@ -32,6 +39,7 @@ export interface ModelRecord {
     projects: FileRecord[];
     support_files: FileRecord[];
     labels: ModelLabel[];
+    metadata: ModelMetadata;
 }
 
 export interface NewModel {
@@ -148,6 +156,28 @@ export async function loadLabels(): Promise<Array<LabelEntry>> {
 export async function loadLabel(id: string): Promise<LabelRecord> {
     const res = await fetch(`${BASE_URL}/labels/${id}`);
     return res.json();
+}
+
+export async function updateModelMetadata({
+    id,
+    metadata,
+}: {
+    id: string;
+    metadata: ModelMetadata;
+}): Promise<ModelRecord> {
+    const response = await fetch(`${BASE_URL}/models/${id}/metadata`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(metadata),
+    });
+
+    if (!response.ok) {
+        throw new Error('Something went wrong');
+    }
+
+    return await response.json();
 }
 
 export async function updateModel({

@@ -7,6 +7,7 @@ import {
 
 import { ModelDetails } from '~/components/models/model-details';
 import { ModelLabels } from '~/components/models/model-labels';
+import { ModelMeta } from '~/components/models/model-metadata';
 import { ModelPageTitle } from '~/components/models/model-page-title';
 import { loadModel } from '~/services/athenaeum';
 
@@ -33,6 +34,7 @@ export default async function Page({ params }: PageProps) {
                 flexDirection: 'column',
                 flexGrow: 1,
                 gap: '1rem',
+                overflow: 'hidden',
                 padding: '1rem',
                 width: '100%',
             }}
@@ -51,6 +53,10 @@ export default async function Page({ params }: PageProps) {
                     <Box
                         component="div"
                         sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'start',
+                            gap: '4rem',
                             borderLeft: {
                                 xs: 0,
                                 sm: '1px solid rgba(255, 255, 255, 0.12)',
@@ -65,7 +71,12 @@ export default async function Page({ params }: PageProps) {
                             },
                         }}
                     >
-                        <ModelLabels id={id} />
+                        <Box component="div">
+                            <ModelLabels id={id} />
+                        </Box>
+                        <Box component="div">
+                            <ModelMeta id={id} />
+                        </Box>
                     </Box>
                 </Box>
             </HydrationBoundary>

@@ -2,7 +2,7 @@ use rocket::{get, patch, post, put, routes};
 use rocket::Route;
 use rocket::serde::json::Json;
 use crate::db;
-use crate::db::types::{Label, Model, ModelRecord, ModelUpdate};
+use crate::db::types::{Label, Model, ModelMetadata, ModelRecord, ModelUpdate};
 use crate::rest::labels::NewLabel;
 use crate::util::get_model_dir;
 
@@ -23,6 +23,13 @@ fn get_model(model_id: &str) -> Json<ModelRecord> {
 #[patch("/models/<model_id>", data = "<data>")]
 fn update_model(model_id: &str, data: Json<ModelUpdate>) -> Json<ModelRecord> {
     let updated_model = db::models::update_model(&model_id, &data).expect("Failed to update model");
+
+    Json(updated_model)
+}
+
+#[patch("/models/<model_id>/metadata", data = "<data>")]
+fn update_metadata(model_id: &str, data: Json<ModelMetadata>) -> Json<ModelRecord> {
+    let updated_model = db::models::update_metadata(&model_id, &data).expect("Failed to update model metadata");
 
     Json(updated_model)
 }
@@ -53,6 +60,7 @@ pub fn routes() -> Vec<Route> {
         get_models,
         get_model,
         update_model,
+        update_metadata,
         add_label_to_model,
         add_new_label_to_model,
         open_model_location,

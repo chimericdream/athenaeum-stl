@@ -35,6 +35,19 @@ pub struct ModelRecord {
     pub projects: Vec<FileRecord>,
     pub support_files: Vec<FileRecord>,
     pub labels: Vec<ModelLabel>,
+    pub metadata: Option<ModelMetadata>,
+}
+
+#[derive(Associations, AsChangeset, Deserialize, Debug, Insertable, Queryable, Selectable, Serialize)]
+#[diesel(table_name = crate::db::schema::model_metadata)]
+#[diesel(belongs_to(Model))]
+#[diesel(check_for_backend(diesel::sqlite::Sqlite))]
+#[serde(crate = "rocket::serde")]
+pub struct ModelMetadata {
+    pub model_id: String,
+    pub description: Option<String>,
+    pub source_url: Option<String>,
+    pub commercial_use: Option<bool>,
 }
 
 #[derive(Insertable)]

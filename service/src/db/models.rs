@@ -1,7 +1,7 @@
 use uuid::Uuid;
 use diesel::prelude::*;
 use crate::db::{establish_connection};
-use crate::db::types::{Model, ModelRecord, ModelUpdate, NewModel};
+use crate::db::types::{Model, ModelMetadata, ModelRecord, ModelUpdate, NewModel};
 
 pub fn add_model_to_db(name: &str, id: &Uuid) {
     let connection = &mut establish_connection();
@@ -50,6 +50,20 @@ pub fn update_model(id: &str, model: &ModelUpdate) -> Result<ModelRecord, Box<dy
     get_model(id)
 }
 
+pub fn update_metadata(id: &str, metadata: &ModelMetadata) -> Result<ModelRecord, Box<dyn std::error::Error>> {
+    use crate::db::schema::*;
+
+    let connection = &mut establish_connection();
+    diesel::insert_into(model_metadata::table)
+        .values(metadata)
+        .on_conflict(model_metadata::model_id)
+        .do_update()
+        .set(metadata)
+        .execute(connection)?;
+
+    get_model(id)
+}
+
 pub fn get_model(id: &str) -> Result<ModelRecord, Box<dyn std::error::Error>> {
     use crate::db::schema::*;
     use crate::db::types::*;
@@ -69,8 +83,14 @@ pub fn get_model(id: &str) -> Result<ModelRecord, Box<dyn std::error::Error>> {
         .select(ModelLabel::as_select())
         .load(connection)?;
 
+    let metadata = model_metadata::table
+        .filter(model_metadata::model_id.eq(id))
+        .select(ModelMetadata::as_select())
+        .get_result(connection)
+        .optional()?;
+
     let mut model_record = ModelRecord {
-        id: model.id,
+        id: model.id.clone(),
         name: model.name,
         thumbnail: model.thumbnail,
         imported_at: model.imported_at,
@@ -79,7 +99,17 @@ pub fn get_model(id: &str) -> Result<ModelRecord, Box<dyn std::error::Error>> {
         projects: vec![],
         support_files: vec![],
         labels,
+        metadata,
     };
+
+    if model_record.metadata.is_none() {
+        model_record.metadata = Some(ModelMetadata {
+            model_id: model.id.clone(),
+            description: None,
+            source_url: None,
+            commercial_use: None,
+        });
+    }
 
     for file in files {
         match file.category.as_str() {

@@ -56,9 +56,6 @@ export const ModelDetails = ({ id }: { id: string }) => {
                     </Card>
                 </Grid>
             </Grid>
-            {/*<pre>*/}
-            {/*    <code>{JSON.stringify(model, null, 2)}</code>*/}
-            {/*</pre>*/}
         </>
     );
 };
