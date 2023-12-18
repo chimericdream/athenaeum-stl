@@ -3,6 +3,7 @@ use rocket::Route;
 use rocket::serde::Deserialize;
 use rocket::serde::json::Json;
 use crate::db;
+use crate::db::labels::LabelEntry;
 use crate::db::types::Label;
 
 #[derive(Deserialize)]
@@ -12,7 +13,7 @@ pub struct NewLabel {
 }
 
 #[get("/labels")]
-fn get_labels() -> Json<Vec<Label>> {
+fn get_labels() -> Json<Vec<LabelEntry>> {
     let labels = db::labels::list_labels().expect("Failed to list labels");
 
     Json(labels)

@@ -45,14 +45,24 @@ export const AddLabelInput = () => {
         },
     });
 
+    const labelExists = useCallback(
+        (label: string) => {
+            return allLabels.some((l) => l.name === label);
+        },
+        [allLabels]
+    );
+
     // When the user actually selects a label
     const handleChange = useCallback(
         (event: SyntheticEvent, newValue: string | FilteredLabel | null) => {
             if (typeof newValue === 'string') {
-                // I probably don't want this
-                setValue({
-                    name: `${newValue}---how did this happen`,
-                });
+                if (!labelExists(newValue)) {
+                    // Create a new label
+                    mutate(newValue);
+                    setValue({
+                        name: newValue,
+                    });
+                }
             } else if (newValue?.inputValue) {
                 // Create a new label
                 mutate(newValue.inputValue);
@@ -64,7 +74,7 @@ export const AddLabelInput = () => {
                 setValue(newValue);
             }
         },
-        [mutate, setValue]
+        [labelExists, mutate, setValue]
     );
 
     // While the user is typing

@@ -66,6 +66,12 @@ export interface Label {
     name: string;
 }
 
+export interface LabelEntry {
+    id: string;
+    name: string;
+    model_count: number;
+}
+
 export type NewLabel = Omit<Label, 'id'>;
 
 export interface ModelLabel {
@@ -120,7 +126,7 @@ export async function createLabel(label: string): Promise<Label> {
     return res.json();
 }
 
-export async function loadLabels(): Promise<Array<Label>> {
+export async function loadLabels(): Promise<Array<LabelEntry>> {
     const res = await fetch(`${BASE_URL}/labels`);
     return res.json();
 }
