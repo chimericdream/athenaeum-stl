@@ -12,7 +12,7 @@ interface ModelListOverrides {
 }
 
 export const useModelList = (overrides?: ModelListOverrides) => {
-    const { mode, order, sort } = useModelListContext();
+    const { mode, order, sort, subset } = useModelListContext();
 
     const sortFunc = useCallback(
         (left: Model, right: Model) => {
@@ -43,9 +43,14 @@ export const useModelList = (overrides?: ModelListOverrides) => {
     const { data } = useQuery({ queryKey: ['models'], queryFn: loadModels });
     const models = useMemo(() => {
         const list = data ?? [];
+        const sorted = list.toSorted(sortFunc);
 
-        return list.toSorted(sortFunc);
-    }, [data, sortFunc]);
+        if (!subset) {
+            return sorted;
+        }
+
+        return sorted.filter((model) => subset.includes(model.id));
+    }, [data, sortFunc, subset]);
 
     return {
         models,

@@ -17,6 +17,7 @@ import {
 import { useModelListSettings } from '~/hooks/models/use-model-list-settings';
 
 interface ModelListContextType {
+    subset: null | string[];
     filter: string | null;
     mode: 'grid' | 'list';
     order: 'asc' | 'desc';
@@ -24,6 +25,7 @@ interface ModelListContextType {
     page: number;
     pageSize: 25 | 50 | 100;
     setFilter: (filter: string | null) => void;
+    setSubset: (subset: null | string[]) => void;
     updatePagination: (
         model: GridPaginationModel,
         details: GridCallbackDetails
@@ -39,12 +41,14 @@ interface ModelListContextType {
 }
 
 export const ModelListContext = createContext<ModelListContextType>({
+    subset: null,
     filter: null,
     mode: 'list',
     order: 'asc',
     sort: 'name',
     page: 0,
     pageSize: 25,
+    setSubset: () => {},
     setFilter: () => {},
     updatePagination: () => {},
     handleModeChange: () => {},
@@ -53,6 +57,7 @@ export const ModelListContext = createContext<ModelListContextType>({
 
 export const ModelListProvider = ({ children }: PWC) => {
     const [filter, setFilter] = useState<string | null>(null);
+    const [subset, setSubset] = useState<null | string[]>(null);
 
     const router = useRouter();
     const pathname = usePathname();
@@ -109,6 +114,7 @@ export const ModelListProvider = ({ children }: PWC) => {
     );
 
     const ctx: ModelListContextType = {
+        subset,
         filter,
         mode,
         order,
@@ -116,6 +122,7 @@ export const ModelListProvider = ({ children }: PWC) => {
         page,
         pageSize,
         setFilter,
+        setSubset,
         updatePagination,
         handleModeChange,
         handleSortOrderChange,

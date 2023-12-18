@@ -1,3 +1,4 @@
+use diesel::expression::AsExpression;
 use uuid::Uuid;
 use diesel::prelude::*;
 use rocket::serde::{Deserialize, Serialize};
@@ -10,6 +11,14 @@ pub struct LabelEntry {
     pub id: String,
     pub name: String,
     pub model_count: i64,
+}
+
+#[derive(Deserialize, Serialize)]
+#[serde(crate = "rocket::serde")]
+pub struct LabelRecord {
+    pub id: String,
+    pub name: String,
+    pub models: Vec<String>,
 }
 
 pub fn list_labels() -> Result<Vec<LabelEntry>, diesel::result::Error> {
@@ -53,6 +62,28 @@ pub fn update_label(id: &str, label: &LabelUpdate) -> Result<LabelEntry, Box<dyn
         .execute(connection)?;
 
     get_label(id)
+}
+
+pub fn get_label_details(id: &str) -> Result<LabelRecord, Box<dyn std::error::Error>> {
+    use crate::db::schema::*;
+    use crate::db::types::*;
+
+    let connection = &mut establish_connection();
+    let label = labels::table
+        .filter(labels::id.eq(id))
+        .select(Label::as_select())
+        .get_result(connection)?;
+
+    let models: Vec<String> = model_labels::table
+        .filter(model_labels::label_id.eq(id))
+        .select(model_labels::model_id.as_expression())
+        .load(connection)?;
+
+    Ok(LabelRecord {
+        id: label.id,
+        name: label.name,
+        models,
+    })
 }
 
 pub fn get_label(id: &str) -> Result<LabelEntry, Box<dyn std::error::Error>> {

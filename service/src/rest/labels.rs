@@ -3,7 +3,7 @@ use rocket::Route;
 use rocket::serde::Deserialize;
 use rocket::serde::json::Json;
 use crate::db;
-use crate::db::labels::LabelEntry;
+use crate::db::labels::{LabelEntry, LabelRecord};
 use crate::db::types::{Label, LabelUpdate};
 
 #[derive(Deserialize)]
@@ -17,6 +17,13 @@ fn get_labels() -> Json<Vec<LabelEntry>> {
     let labels = db::labels::list_labels().expect("Failed to list labels");
 
     Json(labels)
+}
+
+#[get("/labels/<label_id>")]
+fn load_label(label_id: &str) -> Json<LabelRecord> {
+    let label = db::labels::get_label_details(&label_id).expect("Failed to update model");
+
+    Json(label)
 }
 
 #[patch("/labels/<label_id>", data = "<data>")]
@@ -36,6 +43,7 @@ fn create_label(data: Json<NewLabel>) -> Json<Label> {
 pub fn routes() -> Vec<Route> {
     routes![
         get_labels,
+        load_label,
         create_label,
         update_label,
     ]

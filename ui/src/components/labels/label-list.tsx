@@ -11,7 +11,7 @@ import {
     GridRowParams,
     gridClasses,
 } from '@mui/x-data-grid';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { type MouseEvent, useCallback, useState } from 'react';
 
@@ -22,13 +22,12 @@ import { useLabelList } from '~/hooks/labels/use-label-list';
 import {
     type LabelEntry,
     type LabelUpdate,
-    loadLabels,
     updateLabel,
 } from '~/services/athenaeum';
 
 export const LabelList = () => {
     const { filter, page, pageSize, updatePagination } = useLabelListContext();
-    const { labels, settings } = useLabelList();
+    const { labels } = useLabelList();
 
     const queryClient = useQueryClient();
     const [editMode, setEditMode] = useState(false);
@@ -42,7 +41,7 @@ export const LabelList = () => {
         { id: string; label: LabelUpdate }
     >({
         mutationFn: updateLabel,
-        onSuccess: async ({ id, label }) => {
+        onSuccess: async () => {
             await queryClient.invalidateQueries({
                 queryKey: ['labels'],
                 exact: true,
@@ -71,12 +70,12 @@ export const LabelList = () => {
 
     const handleRowClick = useCallback(
         (row: GridRowParams<LabelEntry>, e: MouseEvent<HTMLElement>) => {
-            // /* @ts-expect-error -- React doesn't think `localName` exists... React is wrong */
-            // if (editMode || e.target.localName === 'input') {
-            //     return;
-            // }
-            //
-            // router.push(`/models/${row.id}`);
+            /* @ts-expect-error -- React doesn't think `localName` exists... React is wrong */
+            if (editMode || e.target.localName === 'input') {
+                return;
+            }
+
+            router.push(`/labels/${row.id}`);
         },
         [editMode, router]
     );

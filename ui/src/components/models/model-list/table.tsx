@@ -31,7 +31,13 @@ import {
     updateModel,
 } from '~/services/athenaeum';
 
-export const ModelTable = ({ models }: { models: Model[] }) => {
+export const ModelTable = ({
+    models,
+    tableHeight,
+}: {
+    models: Model[];
+    tableHeight: string;
+}) => {
     const { filter, page, pageSize, updatePagination } = useModelListContext();
 
     const queryClient = useQueryClient();
@@ -203,7 +209,7 @@ export const ModelTable = ({ models }: { models: Model[] }) => {
             <Box
                 component="div"
                 sx={{
-                    height: 'calc(100vh - 13.75rem)',
+                    height: tableHeight,
                     overflow: 'hidden',
                     paddingBlockStart: '0.5rem',
                 }}
