@@ -87,6 +87,13 @@ pub struct Label {
     pub name: String,
 }
 
+#[derive(AsChangeset, Deserialize)]
+#[diesel(table_name = crate::db::schema::labels)]
+#[serde(crate = "rocket::serde")]
+pub struct LabelUpdate<'a> {
+    pub name: Option<&'a str>,
+}
+
 #[derive(Deserialize, Insertable, Serialize)]
 #[diesel(table_name = crate::db::schema::labels)]
 #[serde(crate = "rocket::serde")]

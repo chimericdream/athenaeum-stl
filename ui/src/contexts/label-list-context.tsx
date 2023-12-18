@@ -14,13 +14,12 @@ import {
     useState,
 } from 'react';
 
-import { useModelListSettings } from '~/hooks/models/use-model-list-settings';
+import { useLabelListSettings } from '~/hooks/labels/use-label-list-settings';
 
-interface ModelListContextType {
+interface LabelListContextType {
     filter: string | null;
-    mode: 'grid' | 'list';
     order: 'asc' | 'desc';
-    sort: 'name' | 'date';
+    sort: 'name' | 'model_count';
     page: number;
     pageSize: 25 | 50 | 100;
     setFilter: (filter: string | null) => void;
@@ -28,37 +27,31 @@ interface ModelListContextType {
         model: GridPaginationModel,
         details: GridCallbackDetails
     ) => void;
-    handleModeChange: (
-        _: MouseEvent<HTMLElement>,
-        newMode: 'grid' | 'list'
-    ) => void;
     handleSortOrderChange: (
         _: MouseEvent<HTMLElement>,
         value: 'name|asc' | 'name|desc' | 'date|asc' | 'date|desc'
     ) => void;
 }
 
-export const ModelListContext = createContext<ModelListContextType>({
+export const LabelListContext = createContext<LabelListContextType>({
     filter: null,
-    mode: 'list',
     order: 'asc',
     sort: 'name',
     page: 0,
     pageSize: 25,
     setFilter: () => {},
     updatePagination: () => {},
-    handleModeChange: () => {},
     handleSortOrderChange: () => {},
 });
 
-export const ModelListProvider = ({ children }: PWC) => {
+export const LabelListProvider = ({ children }: PWC) => {
     const [filter, setFilter] = useState<string | null>(null);
 
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
 
-    const { mode, order, sort, page, pageSize } = useModelListSettings();
+    const { order, sort, page, pageSize } = useLabelListSettings();
 
     const makeQueryString = useCallback(
         (updates: { [key: string]: string }) => {
@@ -84,13 +77,6 @@ export const ModelListProvider = ({ children }: PWC) => {
         [makeQueryString, pathname, router]
     );
 
-    const handleModeChange = useCallback(
-        (_: MouseEvent<HTMLElement>, newMode: 'grid' | 'list') => {
-            router.push(`${pathname}?${makeQueryString({ mode: newMode })}`);
-        },
-        [makeQueryString, pathname, router]
-    );
-
     const handleSortOrderChange = useCallback(
         (
             _: MouseEvent<HTMLElement>,
@@ -108,32 +94,30 @@ export const ModelListProvider = ({ children }: PWC) => {
         [makeQueryString, pathname, router]
     );
 
-    const ctx: ModelListContextType = {
+    const ctx: LabelListContextType = {
         filter,
-        mode,
         order,
         sort,
         page,
         pageSize,
         setFilter,
         updatePagination,
-        handleModeChange,
         handleSortOrderChange,
-    } as ModelListContextType;
+    } as LabelListContextType;
 
     return (
-        <ModelListContext.Provider value={ctx}>
+        <LabelListContext.Provider value={ctx}>
             {children}
-        </ModelListContext.Provider>
+        </LabelListContext.Provider>
     );
 };
 
-export const useModelListContext = () => {
-    const context = useContext(ModelListContext);
+export const useLabelListContext = () => {
+    const context = useContext(LabelListContext);
 
     if (!context) {
         throw new Error(
-            'useModelListContext must be used within a ModelListProvider'
+            'useLabelListContext must be used within a LabelListProvider'
         );
     }
 

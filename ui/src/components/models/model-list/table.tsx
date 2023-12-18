@@ -227,11 +227,11 @@ export const ModelTable = ({ models }: { models: Model[] }) => {
                         },
                         [`& .${gridClasses.cell}:focus, & .${gridClasses.cell}:focus-within`]:
                             {
-                                outline: 'none',
+                                outline: 'none !important',
                             },
                         [`& .${gridClasses.columnHeader}:focus, & .${gridClasses.columnHeader}:focus-within`]:
                             {
-                                outline: 'none',
+                                outline: 'none !important',
                             },
                     }}
                 />

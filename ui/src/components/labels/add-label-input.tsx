@@ -140,6 +140,23 @@ export const AddLabelInput = () => {
                             <CircularProgress />
                         </InputAdornment>
                     ),
+                    sx: {
+                        lineHeight: 1.75,
+                        '& input': {
+                            height: '1lh',
+                            padding: '0.625rem 0 0.625rem 14px !important',
+                        },
+                    },
+                }}
+                sx={{
+                    lineHeight: 1.75,
+                    '& label': {
+                        transform: 'translate(1rem, 0.75rem) scale(1)',
+                    },
+                    '& label.Mui-focused, & label.MuiInputLabel-shrink': {
+                        transform:
+                            'translate(0.875rem, -0.5625rem) scale(0.75)',
+                    },
                 }}
             />
         ),
@@ -161,6 +178,11 @@ export const AddLabelInput = () => {
             getOptionLabel={getOptionLabel}
             renderInput={renderInput}
             renderOption={renderOption}
+            sx={{
+                '& .MuiOutlinedInput-root': {
+                    padding: 0,
+                },
+            }}
         />
     );
 };

@@ -27,7 +27,7 @@ export default async function Page() {
                 <Box
                     component="div"
                     sx={{
-                        marginBlock: '1rem',
+                        margin: '1rem 0 0.5rem 0',
                         width: { xs: '100%', sm: '50%', md: '33%' },
                     }}
                 >

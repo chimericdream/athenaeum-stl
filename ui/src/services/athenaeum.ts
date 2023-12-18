@@ -66,6 +66,10 @@ export interface Label {
     name: string;
 }
 
+export interface LabelUpdate {
+    name?: string;
+}
+
 export interface LabelEntry {
     id: string;
     name: string;
@@ -216,3 +220,27 @@ export const moveFileToModel = async ({
 
     return await response.json();
 };
+
+export async function updateLabel({
+    id,
+    label,
+}: {
+    id: string;
+    label: LabelUpdate;
+}): Promise<{ id: string; label: LabelEntry }> {
+    const response = await fetch(`${BASE_URL}/labels/${id}`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(label),
+    });
+
+    if (!response.ok) {
+        throw new Error('Something went wrong');
+    }
+
+    const json = await response.json();
+
+    return { id, label: json };
+}
