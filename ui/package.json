@@ -19,7 +19,7 @@
         "posttest": "pnpm betterer",
         "posttest:ci": "pnpm betterer:ci",
         "pre-commit": "npx lint-staged",
-        "prebuild": "pnpm test:ci",
+        "prestart": "pnpm build",
         "start": "next start",
         "test": "jest --coverage --passWithNoTests",
         "test:ci": "env-cmd -f .env.test jest --ci --coverage --passWithNoTests",

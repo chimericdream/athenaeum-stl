@@ -13,6 +13,7 @@ import {
     type HTMLAttributes,
     type SyntheticEvent,
     useCallback,
+    useMemo,
     useState,
 } from 'react';
 
@@ -34,7 +35,9 @@ export const AddLabelInput = () => {
         queryFn: () => loadLabels(),
     });
 
-    const allLabels = data ?? [];
+    const allLabels = useMemo(() => {
+        return data ?? [];
+    }, [data]);
 
     const { isPending, mutate, reset } = useMutation<Label, Error, string>({
         mutationFn: createLabel,

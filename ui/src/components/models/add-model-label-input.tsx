@@ -48,6 +48,13 @@ export const AddModelLabelInput = ({ modelId }: { modelId: string }) => {
 
     const allLabels = useMemo(() => data ?? [], [data]);
 
+    const labelExists = useCallback(
+        (label: string) => {
+            return allLabels.some((l) => l.name === label);
+        },
+        [allLabels]
+    );
+
     const { isPending, mutate, reset } = useMutation<
         ModelRecord,
         Error,
@@ -66,10 +73,18 @@ export const AddModelLabelInput = ({ modelId }: { modelId: string }) => {
     const handleChange = useCallback(
         (event: SyntheticEvent, newValue: string | FilteredLabel | null) => {
             if (typeof newValue === 'string') {
-                // I probably don't want this
-                setValue({
-                    name: `${newValue}---how did this happen`,
-                });
+                if (!labelExists(newValue)) {
+                    // Create a new label
+                    mutate({
+                        id: modelId,
+                        label: {
+                            name: newValue,
+                        },
+                    });
+                    setValue({
+                        name: newValue,
+                    });
+                }
             } else if (newValue?.inputValue) {
                 // Create a new tag, then add it to the model
                 mutate({
@@ -93,7 +108,7 @@ export const AddModelLabelInput = ({ modelId }: { modelId: string }) => {
                 setValue(newValue);
             }
         },
-        [modelId, mutate, setValue]
+        [labelExists, modelId, mutate, setValue]
     );
 
     // While the user is typing
