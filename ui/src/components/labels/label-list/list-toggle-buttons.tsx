@@ -16,9 +16,9 @@ export const LabelListToggleButtons = () => {
 
     const queryClient = useQueryClient();
 
-    const reloadModels = useCallback(async () => {
+    const reloadLabels = useCallback(async () => {
         setIsReloading(true);
-        await queryClient.invalidateQueries({ queryKey: ['models'] });
+        await queryClient.invalidateQueries({ queryKey: ['labels'] });
         setTimeout(() => setIsReloading(false), 1000);
     }, [queryClient, setIsReloading]);
 
@@ -88,7 +88,7 @@ export const LabelListToggleButtons = () => {
                 <ToggleButton
                     value="reload"
                     selected={isReloading}
-                    onClick={reloadModels}
+                    onClick={reloadLabels}
                 >
                     <RefreshIcon isRotating={isReloading} />
                 </ToggleButton>
