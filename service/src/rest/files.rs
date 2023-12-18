@@ -11,66 +11,18 @@ use uuid::Uuid;
 use crate::db;
 use crate::db::models::add_model_to_db;
 use crate::db::types::{FileRecord, FileUpdate};
-use crate::util::{ensure_tree, get_library_dir, make_id};
+use crate::util::{ensure_tree, get_file_path, make_id};
 
 #[get("/static/<model_id>/<file_type>/<file_name>")]
 async fn get_static_file(model_id: &str, file_type: &str, file_name: &str) -> Result<NamedFile, NotFound<String>> {
-    let folder_1 = model_id[0..2].to_string();
-    let folder_2 = model_id[2..4].to_string();
-
-    let library_dir = get_library_dir().expect("Failed to get library dir");
-
-    let mut final_path = library_dir.clone();
-    final_path.push(folder_1);
-    final_path.push(folder_2);
-    final_path.push(model_id);
-
-    match file_type {
-        "part" => {},
-        "image" => {
-            final_path.push("images");
-        },
-        "project" => {
-            final_path.push("projects");
-        },
-        "support" => {
-            final_path.push("support");
-        },
-        _ => {},
-    };
-
-    final_path.push(file_name);
+    let final_path = get_file_path(&model_id, &file_type, &file_name).expect("Failed to get file path");
 
     NamedFile::open(&final_path).await.map_err(|e| NotFound(e.to_string()))
 }
 
 #[get("/download/<model_id>/<file_type>/<file_name>")]
 async fn download_file(model_id: &str, file_type: &str, file_name: &str) -> Result<DownloadResponse, Status> {
-    let folder_1 = model_id[0..2].to_string();
-    let folder_2 = model_id[2..4].to_string();
-
-    let library_dir = get_library_dir().expect("Failed to get library dir");
-
-    let mut final_path = library_dir.clone();
-    final_path.push(folder_1);
-    final_path.push(folder_2);
-    final_path.push(model_id);
-
-    match file_type {
-        "part" => {},
-        "image" => {
-            final_path.push("images");
-        },
-        "project" => {
-            final_path.push("projects");
-        },
-        "support" => {
-            final_path.push("support");
-        },
-        _ => {},
-    };
-
-    final_path.push(file_name);
+    let final_path = get_file_path(&model_id, &file_type, &file_name).expect("Failed to get file path");
 
     DownloadResponse::from_file(final_path, None::<String>, None).await.map_err(|err| {
         if err.kind() == ErrorKind::NotFound {
@@ -104,42 +56,9 @@ fn move_file_to_model(file_id: &str, model_id: &str) -> Json<FileRecord> {
 
     let updated_file = db::model_files::move_file_to_new_model(&file_id, &new_model_id).expect("Failed to move file to new model");
 
-    let original_folder_1 = original_model_id[0..2].to_string();
-    let original_folder_2 = original_model_id[2..4].to_string();
-
-    let new_folder_1 = new_model_id.hyphenated().to_string().as_str()[0..2].to_string();
-    let new_folder_2 = new_model_id.hyphenated().to_string().as_str()[2..4].to_string();
-
-    let library_dir = get_library_dir().expect("Failed to get library dir");
-
-    let mut original_path = library_dir.clone();
-    original_path.push(original_folder_1);
-    original_path.push(original_folder_2);
-    original_path.push(original_model_id);
-
-    let mut new_path = library_dir.clone();
-    new_path.push(new_folder_1);
-    new_path.push(new_folder_2);
-    new_path.push(new_model_id.hyphenated().to_string().as_str());
-
-    match file.category.as_str() {
-        "part" => {},
-        "image" => {
-            original_path.push("images");
-            new_path.push("images");
-        },
-        "project" => {
-            original_path.push("projects");
-            new_path.push("projects");
-        },
-        "support" => {
-            original_path.push("support");
-            new_path.push("support");
-        },
-        _ => {},
-    };
-
-    original_path.push(&file.file_name);
+    let original_path = get_file_path(&original_model_id, file.category.as_str(), &file.file_name).expect("Failed to get original model dir");
+    let mut new_path = get_file_path(new_model_id.hyphenated().to_string().as_str(), file.category.as_str(), &file.file_name).expect("Failed to get new model dir");
+    new_path.pop();
 
     let id_str = new_model_id.hyphenated().to_string();
     let path_str = new_path.to_str().unwrap();

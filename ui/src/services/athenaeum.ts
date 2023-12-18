@@ -97,6 +97,10 @@ export async function loadModel(id: string): Promise<ModelRecord> {
     return res.json();
 }
 
+export function openModelLocation(id: string): void {
+    void fetch(`${BASE_URL}/models/${id}/open`);
+}
+
 export async function addLabelToModel({
     id,
     label,

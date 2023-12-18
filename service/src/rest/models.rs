@@ -4,6 +4,7 @@ use rocket::serde::json::Json;
 use crate::db;
 use crate::db::types::{Label, Model, ModelRecord, ModelUpdate};
 use crate::rest::labels::NewLabel;
+use crate::util::get_model_dir;
 
 #[get("/models")]
 fn get_models() -> Json<Vec<Model>> {
@@ -24,6 +25,12 @@ fn update_model(model_id: &str, data: Json<ModelUpdate>) -> Json<ModelRecord> {
     let updated_model = db::models::update_model(&model_id, &data).expect("Failed to update model");
 
     Json(updated_model)
+}
+
+#[get("/models/<model_id>/open")]
+fn open_model_location(model_id: &str) -> () {
+    let model_dir = get_model_dir(&model_id).expect("Failed to get model dir");
+    open::that(model_dir).expect("Failed to open model dir");
 }
 
 #[put("/models/<model_id>/labels", data = "<data>")]
@@ -48,5 +55,6 @@ pub fn routes() -> Vec<Route> {
         update_model,
         add_label_to_model,
         add_new_label_to_model,
+        open_model_location,
     ]
 }

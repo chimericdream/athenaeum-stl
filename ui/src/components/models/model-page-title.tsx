@@ -2,6 +2,7 @@
 
 import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
+import FolderIcon from '@mui/icons-material/Folder';
 import SaveIcon from '@mui/icons-material/Save';
 import {
     Box,
@@ -24,6 +25,7 @@ import {
     type ModelUpdate,
     getModelUpdater,
     loadModel,
+    openModelLocation,
 } from '~/services/athenaeum';
 
 export const ModelPageTitle = ({ id }: { id: string }) => {
@@ -164,13 +166,27 @@ export const ModelPageTitle = ({ id }: { id: string }) => {
                                 <EditIcon />
                             </IconButton>
                         </Box>
-                        <ToggleButton
-                            value="reload"
-                            selected={isReloading}
-                            onClick={reloadModel}
+                        <Box
+                            component="div"
+                            sx={{
+                                display: 'flex',
+                                gap: 1,
+                            }}
                         >
-                            <RefreshIcon isRotating={isReloading} />
-                        </ToggleButton>
+                            <ToggleButton
+                                value="open"
+                                onClick={() => openModelLocation(id)}
+                            >
+                                <FolderIcon />
+                            </ToggleButton>
+                            <ToggleButton
+                                value="reload"
+                                selected={isReloading}
+                                onClick={reloadModel}
+                            >
+                                <RefreshIcon isRotating={isReloading} />
+                            </ToggleButton>
+                        </Box>
                     </Box>
                 )}
             </Box>

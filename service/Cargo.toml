@@ -16,6 +16,7 @@ log = "0.4.17"
 log4rs = { version = "1.2.0", features = ["compound_policy", "console_appender", "file_appender", "rolling_file_appender", "size_trigger"] }
 notify = { version = "6.1.1", features = [] }
 notify-debouncer-mini = "0.4.1"
+open = "5.0.1"
 queues = "1.1.0"
 rocket = { version =  "0.5.0", features = ["json"] }
 rocket_cors = "0.6.0"

@@ -31,11 +31,13 @@ const Model = ({ file, flags, scale, settings }: ModelProps) => {
 
     return (
         <Canvas>
-            {flags.includes('showAxes') && <axesHelper args={[5]} />}
-            <perspectiveCamera />
-            <hemisphereLight args={['#ddd', '#555', 5]} />
-            <pointLight position={[10, 10, 10]} />
             <scene position={[0, 0, 0]} />
+            {flags.includes('showAxes') && <axesHelper args={[5]} />}
+            <hemisphereLight args={['#ddd', '#555', 5]} />
+            <perspectiveCamera
+                args={[75, window.innerWidth / window.innerHeight, 0.1, 1000]}
+                position={[2.5, 2.5, 2.5]}
+            />
             <Center>
                 <mesh
                     scale={[scale, scale, scale]}
@@ -44,10 +46,16 @@ const Model = ({ file, flags, scale, settings }: ModelProps) => {
                         y * (Math.PI / -2),
                         z * (Math.PI / -2),
                     ]}
-                    position={[0, 0, 0]}
+                    position={[-4, -5, -0.5]}
                 >
                     <primitive object={model} />
-                    <meshPhysicalMaterial color="#049ef4" />
+                    <meshPhysicalMaterial
+                        color="#049ef4"
+                        metalness={0.5}
+                        roughness={1.0}
+                        clearcoat={1.0}
+                        clearcoatRoughness={0.25}
+                    />
                 </mesh>
             </Center>
             <OrbitControls enableDamping />
