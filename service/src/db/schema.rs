@@ -40,6 +40,7 @@ diesel::table! {
         description -> Nullable<Text>,
         source_url -> Nullable<Text>,
         commercial_use -> Nullable<Bool>,
+        nsfw -> Nullable<Bool>,
     }
 }
 

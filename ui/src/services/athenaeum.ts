@@ -27,6 +27,11 @@ export interface ModelMetadata {
     description: null | string;
     source_url: null | string;
     commercial_use: null | boolean;
+    nsfw: null | boolean;
+}
+
+export interface ModelWithMetadata extends Model {
+    metadata: ModelMetadata;
 }
 
 export interface ModelRecord {
@@ -105,7 +110,7 @@ export function getStaticUrl(file: FileRecord): string {
     return `${BASE_URL}/static/${file.model_id}/${file.category}/${file.file_name}`;
 }
 
-export async function loadModels(): Promise<Array<Model>> {
+export async function loadModels(): Promise<Array<ModelWithMetadata>> {
     const res = await fetch(`${BASE_URL}/models`);
     return res.json();
 }

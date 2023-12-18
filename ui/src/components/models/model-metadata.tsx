@@ -52,6 +52,7 @@ export const ModelMeta = ({ id }: { id: string }) => {
                 description: description,
                 source_url: sourceUrl,
                 commercial_use: metadata?.commercial_use ?? false,
+                nsfw: metadata?.nsfw ?? false,
             },
         });
     }, [mutate, id, description, sourceUrl, metadata]);
@@ -117,6 +118,7 @@ export const ModelMeta = ({ id }: { id: string }) => {
             <FormControlLabel
                 disabled={isPending}
                 label="Commercial use"
+                sx={{ mb: 3 }}
                 control={
                     <Switch
                         checked={Boolean(metadata.commercial_use)}
@@ -128,6 +130,30 @@ export const ModelMeta = ({ id }: { id: string }) => {
                                     description: description,
                                     source_url: sourceUrl,
                                     commercial_use: e.target.checked,
+                                    nsfw: metadata?.nsfw ?? false,
+                                },
+                            });
+                        }}
+                    />
+                }
+            />
+            <FormControlLabel
+                disabled={isPending}
+                label="NSFW"
+                sx={{ mb: 3 }}
+                control={
+                    <Switch
+                        checked={Boolean(metadata.nsfw)}
+                        onChange={(e) => {
+                            mutate({
+                                id,
+                                metadata: {
+                                    model_id: id,
+                                    description: description,
+                                    source_url: sourceUrl,
+                                    commercial_use:
+                                        metadata?.commercial_use ?? false,
+                                    nsfw: e.target.checked,
                                 },
                             });
                         }}

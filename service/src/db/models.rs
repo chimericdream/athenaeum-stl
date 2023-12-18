@@ -1,7 +1,7 @@
 use uuid::Uuid;
 use diesel::prelude::*;
 use crate::db::{establish_connection};
-use crate::db::types::{Model, ModelMetadata, ModelRecord, ModelUpdate, NewModel};
+use crate::db::types::{Model, ModelMetadata, ModelRecord, ModelUpdate, ModelWithMetadata, NewModel};
 
 pub fn add_model_to_db(name: &str, id: &Uuid) {
     let connection = &mut establish_connection();
@@ -19,11 +19,37 @@ pub fn add_model_to_db(name: &str, id: &Uuid) {
     log::info!("\nSaved model {} with id {}", name, model.id);
 }
 
-pub fn list_models() -> Result<Vec<Model>, diesel::result::Error> {
+pub fn list_models() -> Result<Vec<ModelWithMetadata>, diesel::result::Error> {
+    use crate::db::schema::*;
     use crate::db::schema::models::dsl::*;
 
     let connection = &mut establish_connection();
-    models.load(connection)
+    let model_list = models.load::<Model>(connection);
+
+    let mut models_with_metadata = vec![];
+    for model in model_list? {
+        let metadata = model_metadata::table
+            .filter(model_metadata::model_id.eq(&model.id))
+            .select(ModelMetadata::as_select())
+            .get_result(connection)
+            .optional()?;
+
+        let model_with_metadata = ModelWithMetadata {
+            id: model.id,
+            name: model.name,
+            thumbnail: model.thumbnail,
+            imported_at: model.imported_at,
+            part_count: model.part_count,
+            image_count: model.image_count,
+            project_count: model.project_count,
+            support_file_count: model.support_file_count,
+            metadata,
+        };
+
+        models_with_metadata.push(model_with_metadata);
+    };
+
+    Ok(models_with_metadata)
 }
 
 pub fn add_label_to_model(model_id: &str, label_id: &str) -> Result<ModelRecord, Box<dyn std::error::Error>> {
@@ -108,6 +134,7 @@ pub fn get_model(id: &str) -> Result<ModelRecord, Box<dyn std::error::Error>> {
             description: None,
             source_url: None,
             commercial_use: None,
+            nsfw: None,
         });
     }
 

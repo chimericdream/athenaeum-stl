@@ -38,6 +38,20 @@ pub struct ModelRecord {
     pub metadata: Option<ModelMetadata>,
 }
 
+#[derive(Serialize)]
+#[serde(crate = "rocket::serde")]
+pub struct ModelWithMetadata {
+    pub id: String,
+    pub name: String,
+    pub thumbnail: Option<String>,
+    pub imported_at: String,
+    pub part_count: i32,
+    pub image_count: i32,
+    pub project_count: i32,
+    pub support_file_count: i32,
+    pub metadata: Option<ModelMetadata>,
+}
+
 #[derive(Associations, AsChangeset, Deserialize, Debug, Insertable, Queryable, Selectable, Serialize)]
 #[diesel(table_name = crate::db::schema::model_metadata)]
 #[diesel(belongs_to(Model))]
@@ -48,6 +62,7 @@ pub struct ModelMetadata {
     pub description: Option<String>,
     pub source_url: Option<String>,
     pub commercial_use: Option<bool>,
+    pub nsfw: Option<bool>,
 }
 
 #[derive(Insertable)]

@@ -2,12 +2,12 @@ use rocket::{get, patch, post, put, routes};
 use rocket::Route;
 use rocket::serde::json::Json;
 use crate::db;
-use crate::db::types::{Label, Model, ModelMetadata, ModelRecord, ModelUpdate};
+use crate::db::types::{Label, ModelMetadata, ModelRecord, ModelUpdate, ModelWithMetadata};
 use crate::rest::labels::NewLabel;
 use crate::util::get_model_dir;
 
 #[get("/models")]
-fn get_models() -> Json<Vec<Model>> {
+fn get_models() -> Json<Vec<ModelWithMetadata>> {
     let models = db::models::list_models().expect("Failed to list models");
 
     Json(models)

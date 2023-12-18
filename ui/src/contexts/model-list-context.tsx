@@ -24,6 +24,8 @@ interface ModelListContextType {
     sort: 'name' | 'date';
     page: number;
     pageSize: 25 | 50 | 100;
+    includeNsfw: boolean;
+    toggleNsfw: () => void;
     setFilter: (filter: string | null) => void;
     setSubset: (subset: null | string[]) => void;
     updatePagination: (
@@ -48,6 +50,8 @@ export const ModelListContext = createContext<ModelListContextType>({
     sort: 'name',
     page: 0,
     pageSize: 25,
+    includeNsfw: false,
+    toggleNsfw: () => {},
     setSubset: () => {},
     setFilter: () => {},
     updatePagination: () => {},
@@ -58,12 +62,17 @@ export const ModelListContext = createContext<ModelListContextType>({
 export const ModelListProvider = ({ children }: PWC) => {
     const [filter, setFilter] = useState<string | null>(null);
     const [subset, setSubset] = useState<null | string[]>(null);
+    const [includeNsfw, setNsfw] = useState<boolean>(false);
 
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
 
     const { mode, order, sort, page, pageSize } = useModelListSettings();
+
+    const toggleNsfw = useCallback(() => {
+        setNsfw((prev) => !prev);
+    }, [setNsfw]);
 
     const makeQueryString = useCallback(
         (updates: { [key: string]: string }) => {
@@ -121,6 +130,8 @@ export const ModelListProvider = ({ children }: PWC) => {
         sort,
         page,
         pageSize,
+        includeNsfw,
+        toggleNsfw,
         setFilter,
         setSubset,
         updatePagination,

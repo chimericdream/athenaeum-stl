@@ -12,7 +12,7 @@ interface ModelListOverrides {
 }
 
 export const useModelList = (overrides?: ModelListOverrides) => {
-    const { mode, order, sort, subset } = useModelListContext();
+    const { includeNsfw, mode, order, sort, subset } = useModelListContext();
 
     const sortFunc = useCallback(
         (left: Model, right: Model) => {
@@ -45,12 +45,19 @@ export const useModelList = (overrides?: ModelListOverrides) => {
         const list = data ?? [];
         const sorted = list.toSorted(sortFunc);
 
-        if (!subset) {
-            return sorted;
+        let filtered;
+        if (includeNsfw) {
+            filtered = sorted;
+        } else {
+            filtered = sorted.filter((model) => !model.metadata?.nsfw);
         }
 
-        return sorted.filter((model) => subset.includes(model.id));
-    }, [data, sortFunc, subset]);
+        if (!subset) {
+            return filtered;
+        }
+
+        return filtered.filter((model) => subset.includes(model.id));
+    }, [data, includeNsfw, sortFunc, subset]);
 
     return {
         models,

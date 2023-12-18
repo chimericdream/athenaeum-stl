@@ -3,6 +3,7 @@
 import AbcIcon from '@mui/icons-material/Abc';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import GridViewIcon from '@mui/icons-material/GridView';
+import NoAdultContentIcon from '@mui/icons-material/NoAdultContent';
 import StraightIcon from '@mui/icons-material/Straight';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import { Box, ToggleButton, ToggleButtonGroup } from '@mui/material';
@@ -24,12 +25,27 @@ export const ModelListToggleButtons = () => {
         setTimeout(() => setIsReloading(false), 1000);
     }, [queryClient, setIsReloading]);
 
-    const { mode, order, sort, handleModeChange, handleSortOrderChange } =
-        useModelListContext();
+    const {
+        includeNsfw,
+        mode,
+        order,
+        sort,
+        handleModeChange,
+        handleSortOrderChange,
+        toggleNsfw,
+    } = useModelListContext();
 
     return (
         <>
             <Box component="div" sx={{ display: 'flex', gap: 2 }}>
+                <ToggleButton
+                    value="nsfw"
+                    selected={!includeNsfw}
+                    onClick={toggleNsfw}
+                >
+                    <NoAdultContentIcon />
+                </ToggleButton>
+
                 <ToggleButtonGroup
                     exclusive
                     aria-label="Toggle sort mode"

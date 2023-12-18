@@ -4,6 +4,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import FilePresentIcon from '@mui/icons-material/FilePresent';
 import ImageIcon from '@mui/icons-material/Image';
 import LayersIcon from '@mui/icons-material/Layers';
+import NoAdultContentIcon from '@mui/icons-material/NoAdultContent';
 import ViewInArIcon from '@mui/icons-material/ViewInAr';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Badge, Box, ToggleButton, ToggleButtonGroup } from '@mui/material';
@@ -25,9 +26,9 @@ import { ModelListToggleButtons } from '~/components/models/model-list/list-togg
 import { ImportedAt } from '~/components/typography/imported-at';
 import { useModelListContext } from '~/contexts/model-list-context';
 import {
-    type Model,
     type ModelRecord,
     type ModelUpdate,
+    type ModelWithMetadata,
     updateModel,
 } from '~/services/athenaeum';
 
@@ -35,7 +36,7 @@ export const ModelTable = ({
     models,
     tableHeight,
 }: {
-    models: Model[];
+    models: ModelWithMetadata[];
     tableHeight: string;
 }) => {
     const { filter, page, pageSize, updatePagination } = useModelListContext();
@@ -62,7 +63,7 @@ export const ModelTable = ({
     });
 
     const processRowUpdate = useCallback(
-        (row: Model) => {
+        (row: ModelWithMetadata) => {
             mutate({
                 id: row.id,
                 model: { name: row.name },
@@ -73,7 +74,7 @@ export const ModelTable = ({
         [mutate]
     );
 
-    const cols: GridColDef<Model>[] = [
+    const cols: GridColDef<ModelWithMetadata>[] = [
         {
             field: 'name',
             headerName: 'Name',
@@ -81,6 +82,21 @@ export const ModelTable = ({
             flex: 1,
             editable: editMode,
             sortable: false,
+            renderCell: ({ row }: GridRenderCellParams<ModelWithMetadata>) => {
+                if (row.metadata?.nsfw) {
+                    return (
+                        <>
+                            {row.name}
+                            <NoAdultContentIcon
+                                color="error"
+                                sx={{ marginLeft: '0.5rem' }}
+                                titleAccess="Model is NSFW"
+                            />
+                        </>
+                    );
+                }
+                return row.name;
+            },
         },
         {
             field: 'id',
@@ -89,7 +105,7 @@ export const ModelTable = ({
             sortable: false,
             hideable: false,
             filterable: false,
-            renderCell: ({ row }: GridRenderCellParams<Model>) => (
+            renderCell: ({ row }: GridRenderCellParams<ModelWithMetadata>) => (
                 <Box
                     component="div"
                     sx={{
@@ -134,7 +150,7 @@ export const ModelTable = ({
         {
             field: 'imported_at',
             headerName: 'Imported',
-            renderCell: (params: GridRenderCellParams<Model>) => (
+            renderCell: (params: GridRenderCellParams<ModelWithMetadata>) => (
                 <ImportedAt dateOnly dateTime={params.value} variant="body2" />
             ),
             width: 175,
@@ -152,7 +168,7 @@ export const ModelTable = ({
     );
 
     const handleRowClick = useCallback(
-        (row: GridRowParams<Model>, e: MouseEvent<HTMLElement>) => {
+        (row: GridRowParams<ModelWithMetadata>, e: MouseEvent<HTMLElement>) => {
             /* @ts-expect-error -- React doesn't think `localName` exists... React is wrong */
             if (editMode || e.target.localName === 'input') {
                 return;
