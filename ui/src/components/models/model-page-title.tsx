@@ -16,7 +16,14 @@ import {
     Typography,
 } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { type ChangeEvent, useCallback, useState } from 'react';
+import {
+    type ChangeEvent,
+    type KeyboardEvent,
+    useCallback,
+    useEffect,
+    useRef,
+    useState,
+} from 'react';
 
 import { RefreshIcon } from '~/components/icons/refresh';
 import { type Breadcrumb, Breadcrumbs } from '~/components/layout/breadcrumbs';
@@ -29,6 +36,8 @@ import {
 } from '~/services/athenaeum';
 
 export const ModelPageTitle = ({ id }: { id: string }) => {
+    const inputRef = useRef<HTMLInputElement | null>(null);
+
     const queryClient = useQueryClient();
     const { data } = useQuery({
         queryKey: ['models', id],
@@ -74,6 +83,17 @@ export const ModelPageTitle = ({ id }: { id: string }) => {
         mutate({ name: name.trim() });
     }, [name, mutate]);
 
+    const handleKeyUp = useCallback(
+        (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                cancel();
+            } else if (event.key === 'Enter') {
+                save();
+            }
+        },
+        [cancel, save]
+    );
+
     const handleInput = useCallback(
         (event: ChangeEvent<HTMLInputElement>) => {
             setName(event.target.value);
@@ -92,6 +112,12 @@ export const ModelPageTitle = ({ id }: { id: string }) => {
         },
     ];
 
+    useEffect(() => {
+        if (isEditing) {
+            setTimeout(() => inputRef.current?.focus(), 250);
+        }
+    }, [isEditing]);
+
     return (
         <>
             <Box component="div">
@@ -102,6 +128,8 @@ export const ModelPageTitle = ({ id }: { id: string }) => {
                         id="edit-model-name"
                         value={name}
                         onChange={handleInput}
+                        onKeyUp={handleKeyUp}
+                        inputRef={inputRef}
                         InputProps={{
                             sx: { pr: 0 },
                             endAdornment: (
