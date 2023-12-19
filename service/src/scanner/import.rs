@@ -1,10 +1,9 @@
 use std::path::PathBuf;
 use std::fs;
-use crate::util::{ensure_tree, get_ignore_dir, get_import_dir, get_library_dir};
-use crate::db::model_files::{add_file_to_model, FileCategory};
-use crate::db::models::add_model_to_db;
 use uuid::{Uuid};
-use std::time::{SystemTime, UNIX_EPOCH};
+use crate::util::{ensure_tree, get_ignore_dir, get_import_dir, get_library_dir, get_safe_file_name};
+use crate::db::model_files::{add_file_to_model, FileCategory, get_file_category};
+use crate::db::models::add_model_to_db;
 
 fn ensure_final_dir(path: &PathBuf, model_id: &Uuid, sub_dir: Option<&str>) -> PathBuf {
     let folder_1 = model_id.simple().to_string()[0..2].to_string();
@@ -62,23 +61,6 @@ fn move_file(path: &PathBuf, final_path: &PathBuf) -> Result<(), ()> {
     }
 }
 
-fn get_safe_file_name(path: &PathBuf) -> String {
-    let base_file_name = path.file_stem().unwrap().to_str().unwrap();
-
-    let start = SystemTime::now();
-    let since_the_epoch = start
-        .duration_since(UNIX_EPOCH)
-        .expect("Time went backwards");
-    let timestamp = since_the_epoch.as_millis();
-    let mut safe_file_name = base_file_name.to_string();
-    safe_file_name.push_str("-");
-    safe_file_name.push_str( &timestamp.to_string());
-    safe_file_name.push_str(".");
-    safe_file_name.push_str(path.extension().unwrap().to_str().unwrap());
-
-    safe_file_name
-}
-
 pub fn import_single_file(path: &PathBuf, model_id: &Uuid) {
     let file_name = get_safe_file_name(&path);
     let model_name = path.file_stem().unwrap().to_str().unwrap();
@@ -117,29 +99,13 @@ fn scan_directory_and_import(path: &PathBuf, model_id: &Uuid, is_root: bool) {
         if path.is_dir() {
             scan_directory_and_import(&path, &model_id, false);
         } else {
-            let mut should_move = true;
-            let mut file_category = FileCategory::Part;
+            let file_category = get_file_category(&path.file_stem().expect("").to_str().expect(""));
 
-            match path.extension().unwrap().to_str().unwrap().to_lowercase().as_str() {
-                "stl" | "obj" | "gcode" | "3mf" | "scad" => (),
-                "txt" | "pdf" | "zip" | "7z" | "html" => {
-                    file_category = FileCategory::Support;
-                },
-                "dxf" | "blend" | "123dx" | "skp" => {
-                    file_category = FileCategory::Project;
-                },
-                "jpg" | "jpeg" | "png" | "webp" | "gif" | "heic" => {
-                    file_category = FileCategory::Image;
-                },
-                _ => {
-                    should_move = false;
-                },
-            }
-
-            if should_move {
+            if file_category.is_some() {
+                let file_cat = file_category.unwrap();
                 let file_name = get_safe_file_name(&path);
                 let file_path: Option<String>;
-                match file_category {
+                match &file_cat {
                     FileCategory::Image => {
                         file_path = Some(String::from(ensure_image_dir(&path, &model_id).to_str().unwrap()));
                     },
@@ -163,7 +129,7 @@ fn scan_directory_and_import(path: &PathBuf, model_id: &Uuid, is_root: bool) {
                 let move_result = move_file(&path, &final_path);
 
                 if move_result.is_ok() {
-                    add_file_to_model(&file_name, file_size, &model_id, file_category);
+                    add_file_to_model(&file_name, file_size, &model_id, file_cat);
                 }
             }
         }

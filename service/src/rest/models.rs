@@ -1,10 +1,15 @@
+use std::path::PathBuf;
 use rocket::{get, patch, post, put, routes};
 use rocket::Route;
 use rocket::serde::json::Json;
+use rocket::form::{Form, FromForm};
+use rocket::fs::TempFile;
+use uuid::{Uuid};
 use crate::db;
+use crate::db::model_files::{add_file_to_model, get_file_category};
 use crate::db::types::{Label, ModelMetadata, ModelRecord, ModelUpdate, ModelWithMetadata};
 use crate::rest::labels::NewLabel;
-use crate::util::get_model_dir;
+use crate::util::{ensure_tree, get_file_path, get_model_dir, get_safe_file_name};
 
 #[get("/models")]
 fn get_models() -> Json<Vec<ModelWithMetadata>> {
@@ -40,6 +45,45 @@ fn open_model_location(model_id: &str) -> () {
     open::that(model_dir).expect("Failed to open model dir");
 }
 
+#[derive(FromForm)]
+struct Upload<'r> {
+    file: TempFile<'r>,
+    file_name: &'r str,
+}
+
+#[post("/models/<model_id>/files", data = "<data>")]
+async fn upload_file_to_model(model_id: &str, mut data: Form<Upload<'_>>) -> Json<ModelRecord> {
+    let file_category = get_file_category(&data.file_name);
+
+    if file_category.is_some() {
+        let file_category = get_file_category(&data.file_name).unwrap();
+        let safe_file_name = get_safe_file_name(&PathBuf::from(&data.file_name));
+
+        let final_path = get_file_path(&model_id, &file_category.to_string(), &safe_file_name).expect("Failed to get file path");
+        let mut final_dir = final_path.clone();
+        final_dir.pop();
+        ensure_tree(&final_dir).expect("Failed to create destination directory for file");
+
+        let model_id = Uuid::parse_str(&model_id).expect("Failed to parse model id");
+
+        log::info!("Importing file {safe_file_name:?} to {final_path:?}");
+
+        let file_size = data.file.len();
+        let move_result = data.file.copy_to(&final_path).await;
+
+        if move_result.is_ok() {
+            add_file_to_model(&safe_file_name, file_size, &model_id, file_category);
+        } else {
+            log::error!("Error: {}", move_result.err().unwrap());
+            log::error!("Failed to move file {safe_file_name:?} to {final_path:?}");
+        }
+    }
+
+    let model = db::models::get_model(&model_id).expect("Failed to retrieve model");
+
+    Json(model)
+}
+
 #[put("/models/<model_id>/labels", data = "<data>")]
 fn add_label_to_model(model_id: &str, data: Json<Label>) -> Json<ModelRecord> {
     let updated_model = db::models::add_label_to_model(&model_id, &data.id).expect("Failed to add label to model");
@@ -64,5 +108,6 @@ pub fn routes() -> Vec<Route> {
         add_label_to_model,
         add_new_label_to_model,
         open_model_location,
+        upload_file_to_model,
     ]
 }

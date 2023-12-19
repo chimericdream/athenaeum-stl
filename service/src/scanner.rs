@@ -1,11 +1,11 @@
-mod import;
+pub mod import;
 
 use notify::{Config, Event, RecommendedWatcher, RecursiveMode, Watcher};
 use std::fs::{DirBuilder, rename};
 use std::{fs, io};
 use std::path::{Path, PathBuf};
 use self::import::{import_directory, import_single_file};
-use crate::util::{ensure_tree, get_ignore_dir, get_import_dir, get_library_dir, make_id};
+use crate::util::{can_import_file, ensure_tree, get_ignore_dir, get_import_dir, get_library_dir, make_id};
 
 fn create_dir(dir: &PathBuf) -> io::Result<()> {
     DirBuilder::new().recursive(true).create(&dir)?;
@@ -142,9 +142,10 @@ fn ignore_dir(path: &PathBuf) {
 }
 
 fn check_file_for_import(path: &PathBuf) {
-    match path.extension().unwrap().to_str().unwrap().to_lowercase().as_str() {
-        "stl" | "obj" | "gcode" | "3mf" | "scad" => import_file(path),
-        _ => ignore_file(path),
+    if can_import_file(path) {
+        import_file(path);
+    } else {
+        ignore_file(path);
     }
 }
 

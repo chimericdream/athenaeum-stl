@@ -1,0 +1,2 @@
+ALTER TABLE model_metadata
+    ADD COLUMN nsfw BOOLEAN DEFAULT FALSE;

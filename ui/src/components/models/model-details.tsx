@@ -1,10 +1,11 @@
 'use client';
 
-import { Box, Card, CardContent } from '@mui/material';
+import { Box, Card, CardContent, Divider } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useQuery } from '@tanstack/react-query';
 
 import { FileList } from '~/components/models/files/file-list';
+import { FileUploadTarget } from '~/components/models/files/file-upload-target';
 import { ImportedAt } from '~/components/typography/imported-at';
 import { loadModel } from '~/services/athenaeum';
 
@@ -56,6 +57,8 @@ export const ModelDetails = ({ id }: { id: string }) => {
                     </Card>
                 </Grid>
             </Grid>
+            <Divider sx={{ my: 3 }} />
+            <FileUploadTarget id={id} />
         </>
     );
 };

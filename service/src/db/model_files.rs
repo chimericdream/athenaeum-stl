@@ -1,3 +1,5 @@
+use std::fmt::Display;
+use std::path::PathBuf;
 use uuid::Uuid;
 use diesel::prelude::*;
 use std::str::FromStr;
@@ -12,6 +14,18 @@ pub enum FileCategory {
     Support
 }
 
+impl Display for FileCategory {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let str = match self {
+            FileCategory::Image => String::from("image"),
+            FileCategory::Part => String::from("part"),
+            FileCategory::Project => String::from("project"),
+            FileCategory::Support => String::from("support"),
+        };
+        write!(f, "{}", str)
+    }
+}
+
 impl FromStr for FileCategory {
     type Err = ();
 
@@ -23,6 +37,18 @@ impl FromStr for FileCategory {
             "support" => Ok(FileCategory::Support),
             _      => Err(()),
         }
+    }
+}
+
+pub fn get_file_category(file_name: &str) -> Option<FileCategory> {
+    let path = PathBuf::from(file_name);
+
+    match path.extension().unwrap().to_str().unwrap().to_lowercase().as_str() {
+        "stl" | "obj" | "gcode" | "3mf" | "scad" => Some(FileCategory::Part),
+        "txt" | "pdf" | "zip" | "7z" | "html" => Some(FileCategory::Support),
+        "dxf" | "blend" | "123dx" | "skp" | "f3d" | "step" | "f3z" => Some(FileCategory::Project),
+        "jpg" | "jpeg" | "png" | "webp" | "gif" | "heic" => Some(FileCategory::Image),
+        _ => None,
     }
 }
 

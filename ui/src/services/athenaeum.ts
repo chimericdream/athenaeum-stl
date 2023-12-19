@@ -290,3 +290,26 @@ export async function updateLabel({
 
     return { id, label: json };
 }
+
+export async function uploadFileToModel({
+    id,
+    file,
+}: {
+    id: string;
+    file: File;
+}): Promise<ModelRecord> {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('file_name', file.name);
+
+    const response = await fetch(`${BASE_URL}/models/${id}/files`, {
+        method: 'POST',
+        body: formData,
+    });
+
+    if (!response.ok) {
+        throw new Error('Something went wrong');
+    }
+
+    return await response.json();
+}

@@ -49,9 +49,11 @@
         "postcss": "8.4.32",
         "react": "18.2.0",
         "react-dom": "18.2.0",
+        "react-dropzone": "14.2.3",
         "recharts": "2.10.3",
         "temporal-polyfill": "0.1.1",
         "three": "0.159.0",
+        "throttled-queue": "2.1.4",
         "xstate": "5.3.0"
     },
     "devDependencies": {
