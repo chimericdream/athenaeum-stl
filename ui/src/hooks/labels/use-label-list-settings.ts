@@ -53,6 +53,13 @@ export const useLabelListSettings = () => {
     }, [searchParams]);
 
     const settings: LabelListSettings = useMemo(() => {
+        if (typeof window === 'undefined') {
+            return {
+                ...defaults,
+                ...qsSettings,
+            };
+        }
+
         const localSettings = JSON.parse(
             localStorage.getItem('labelListSettings') || '{}'
         );
@@ -64,7 +71,9 @@ export const useLabelListSettings = () => {
         };
     }, [qsSettings]);
 
-    localStorage.setItem('labelListSettings', JSON.stringify(settings));
+    if (typeof window !== 'undefined') {
+        localStorage.setItem('labelListSettings', JSON.stringify(settings));
+    }
 
     return settings;
 };

@@ -60,6 +60,13 @@ export const useModelListSettings = () => {
     }, [searchParams]);
 
     const settings: ModelListSettings = useMemo(() => {
+        if (typeof window === 'undefined') {
+            return {
+                ...defaults,
+                ...qsSettings,
+            };
+        }
+
         const localSettings = JSON.parse(
             localStorage.getItem('modelListSettings') || '{}'
         );
@@ -71,7 +78,9 @@ export const useModelListSettings = () => {
         };
     }, [qsSettings]);
 
-    localStorage.setItem('modelListSettings', JSON.stringify(settings));
+    if (typeof window !== 'undefined') {
+        localStorage.setItem('modelListSettings', JSON.stringify(settings));
+    }
 
     return settings;
 };
