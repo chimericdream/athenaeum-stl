@@ -2,6 +2,7 @@
 
 import LaunchIcon from '@mui/icons-material/Launch';
 import {
+    Box,
     Divider,
     FormControlLabel,
     IconButton,
@@ -99,7 +100,6 @@ export const ModelMeta = ({ id }: { id: string }) => {
                 label="Source URL"
                 onChange={handleUrlChange}
                 onBlur={handleBlur}
-                sx={{ mb: 3 }}
                 InputProps={{
                     endAdornment: (
                         <InputAdornment position="end">
@@ -115,51 +115,83 @@ export const ModelMeta = ({ id }: { id: string }) => {
                     ),
                 }}
             />
-            <FormControlLabel
-                disabled={isPending}
-                label="Commercial use"
-                sx={{ mb: 3 }}
-                control={
-                    <Switch
-                        checked={Boolean(metadata.commercial_use)}
-                        onChange={(e) => {
-                            mutate({
-                                id,
-                                metadata: {
-                                    model_id: id,
-                                    description: description,
-                                    source_url: sourceUrl,
-                                    commercial_use: e.target.checked,
-                                    nsfw: metadata?.nsfw ?? false,
-                                },
-                            });
-                        }}
-                    />
-                }
-            />
-            <FormControlLabel
-                disabled={isPending}
-                label="NSFW"
-                sx={{ mb: 3 }}
-                control={
-                    <Switch
-                        checked={Boolean(metadata.nsfw)}
-                        onChange={(e) => {
-                            mutate({
-                                id,
-                                metadata: {
-                                    model_id: id,
-                                    description: description,
-                                    source_url: sourceUrl,
-                                    commercial_use:
-                                        metadata?.commercial_use ?? false,
-                                    nsfw: e.target.checked,
-                                },
-                            });
-                        }}
-                    />
-                }
-            />
+            <Divider sx={{ my: 3 }} />
+            <Box
+                component="div"
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '1rem',
+                }}
+            >
+                <FormControlLabel
+                    disabled={isPending}
+                    label={
+                        Boolean(metadata.commercial_use) ? (
+                            <Typography variant="body1">
+                                Commercial use
+                            </Typography>
+                        ) : (
+                            <Typography
+                                variant="body1muted"
+                                sx={{ textDecoration: 'line-through' }}
+                            >
+                                Commercial use
+                            </Typography>
+                        )
+                    }
+                    control={
+                        <Switch
+                            checked={Boolean(metadata.commercial_use)}
+                            onChange={(e) => {
+                                mutate({
+                                    id,
+                                    metadata: {
+                                        model_id: id,
+                                        description: description,
+                                        source_url: sourceUrl,
+                                        commercial_use: e.target.checked,
+                                        nsfw: metadata?.nsfw ?? false,
+                                    },
+                                });
+                            }}
+                        />
+                    }
+                />
+                <FormControlLabel
+                    disabled={isPending}
+                    label={
+                        Boolean(metadata.nsfw) ? (
+                            <Typography variant="body1">NSFW</Typography>
+                        ) : (
+                            <Typography
+                                variant="body1muted"
+                                sx={{ textDecoration: 'line-through' }}
+                            >
+                                NSFW
+                            </Typography>
+                        )
+                    }
+                    control={
+                        <Switch
+                            checked={Boolean(metadata.nsfw)}
+                            onChange={(e) => {
+                                mutate({
+                                    id,
+                                    metadata: {
+                                        model_id: id,
+                                        description: description,
+                                        source_url: sourceUrl,
+                                        commercial_use:
+                                            metadata?.commercial_use ?? false,
+                                        nsfw: e.target.checked,
+                                    },
+                                });
+                            }}
+                        />
+                    }
+                />
+            </Box>
         </>
     );
 };

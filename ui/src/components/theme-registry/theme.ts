@@ -60,6 +60,8 @@ const makeColor = (color: string, contrast: string) => ({
     contrastText: contrast,
 });
 
+const defaultTheme = createTheme();
+
 export const theme = createTheme({
     breakpoints: {
         values: {
@@ -87,9 +89,25 @@ export const theme = createTheme({
     typography: {
         fontFamily: roboto.style.fontFamily,
         body3: {
+            ...defaultTheme.typography.body2,
             fontSize: '0.75rem',
             fontWeight: 400,
             lineHeight: 1,
+        },
+        body1muted: {
+            ...defaultTheme.typography.body1,
+            color: grey.A700,
+        },
+        body2muted: {
+            ...defaultTheme.typography.body2,
+            color: grey.A700,
+        },
+        body3muted: {
+            ...defaultTheme.typography.body2,
+            fontSize: '0.75rem',
+            fontWeight: 400,
+            lineHeight: 1,
+            color: grey.A700,
         },
     },
     components: {
