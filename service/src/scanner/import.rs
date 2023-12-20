@@ -99,7 +99,7 @@ fn scan_directory_and_import(path: &PathBuf, model_id: &Uuid, is_root: bool) {
         if path.is_dir() {
             scan_directory_and_import(&path, &model_id, false);
         } else {
-            let file_category = get_file_category(&path.file_stem().expect("").to_str().expect(""));
+            let file_category = get_file_category(&path.file_name().expect("").to_str().expect(""));
 
             if file_category.is_some() {
                 let file_cat = file_category.unwrap();

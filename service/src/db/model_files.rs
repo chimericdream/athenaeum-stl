@@ -5,7 +5,7 @@ use diesel::prelude::*;
 use std::str::FromStr;
 use crate::db::{establish_connection};
 use crate::db::types::{FileRecord, FileUpdate, NewFileRecord};
-use crate::util::make_id;
+use crate::util::{make_id, IMAGE_FILE_TYPES, PART_FILE_TYPES, PROJECT_FILE_TYPES, SUPPORT_FILE_TYPES};
 
 pub enum FileCategory {
     Image,
@@ -43,13 +43,26 @@ impl FromStr for FileCategory {
 pub fn get_file_category(file_name: &str) -> Option<FileCategory> {
     let path = PathBuf::from(file_name);
 
-    match path.extension().unwrap().to_str().unwrap().to_lowercase().as_str() {
-        "stl" | "obj" | "gcode" | "3mf" | "scad" => Some(FileCategory::Part),
-        "txt" | "pdf" | "zip" | "7z" | "html" => Some(FileCategory::Support),
-        "dxf" | "blend" | "123dx" | "skp" | "f3d" | "step" | "f3z" => Some(FileCategory::Project),
-        "jpg" | "jpeg" | "png" | "webp" | "gif" | "heic" => Some(FileCategory::Image),
-        _ => None,
+    let binding = path.extension().unwrap().to_str().unwrap().to_lowercase();
+    let extension = binding.as_str();
+
+    if PART_FILE_TYPES.contains(&extension) {
+        return Some(FileCategory::Part);
     }
+
+    if IMAGE_FILE_TYPES.contains(&extension) {
+        return Some(FileCategory::Image);
+    }
+
+    if PROJECT_FILE_TYPES.contains(&extension) {
+        return Some(FileCategory::Project);
+    }
+
+    if SUPPORT_FILE_TYPES.contains(&extension) {
+        return Some(FileCategory::Support);
+    }
+
+    None
 }
 
 pub fn update_file(id: &str, file: &FileUpdate) -> Result<FileRecord, Box<dyn std::error::Error>> {

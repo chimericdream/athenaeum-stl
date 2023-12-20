@@ -5,15 +5,55 @@ use std::fs::{create_dir_all};
 use std::time::{SystemTime, UNIX_EPOCH};
 use uuid::{Uuid};
 
+pub const IMAGE_FILE_TYPES: [&str; 7] = [
+    "gif",
+    "heic",
+    "jpeg",
+    "jpg",
+    "png",
+    "svg",
+    "webp",
+];
+pub const PART_FILE_TYPES: [&str; 4] = [
+    "mtl",
+    "obj",
+    "sldprt",
+    "stl",
+];
+pub const PROJECT_FILE_TYPES: [&str; 13] = [
+    "123dx",
+    "3mf",
+    "blend",
+    "dwg",
+    "dxf",
+    "f3d",
+    "f3z",
+    "gcode",
+    "lys",
+    "scad",
+    "skp",
+    "step",
+    "stp",
+];
+pub const SUPPORT_FILE_TYPES: [&str; 7] = [
+    "7z",
+    "ai",
+    "html",
+    "pdf",
+    "psd",
+    "txt",
+    "zip",
+];
+
 pub fn make_id() -> Uuid {
     Uuid::new_v4()
 }
 
 pub fn can_import_file(path: &PathBuf) -> bool {
-    match path.extension().unwrap().to_str().unwrap().to_lowercase().as_str() {
-        "stl" | "obj" | "gcode" | "3mf" | "scad" => true,
-        _ => false,
-    }
+    let binding = path.extension().unwrap().to_str().unwrap().to_lowercase();
+    let extension = binding.as_str();
+
+    PART_FILE_TYPES.contains(&extension) || PROJECT_FILE_TYPES.contains(&extension)
 }
 
 pub fn get_safe_file_name(path: &PathBuf) -> String {
