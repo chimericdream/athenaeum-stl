@@ -2,8 +2,9 @@
 
 import { Chip, Divider, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
+import { useMemo } from 'react';
 
-import { loadLabels, loadModel } from '~/services/athenaeum';
+import { LabelEntry, loadLabels, loadModel } from '~/services/athenaeum';
 
 import { AddModelLabelInput } from './add-model-label-input';
 
@@ -15,14 +16,29 @@ export const ModelLabels = ({ id }: { id: string }) => {
 
     const { data: allLabels } = useQuery({
         queryKey: ['labels'],
-        queryFn: () => loadLabels(),
+        queryFn: loadLabels,
     });
 
-    if (!model || !model.labels || !allLabels) {
+    const labels = useMemo(() => {
+        if (!model?.labels || !allLabels) {
+            return null;
+        }
+
+        const list: LabelEntry[] = [];
+
+        for (const label of model.labels) {
+            const l = allLabels.find((l) => l.id === label.label_id);
+            if (l) {
+                list.push(l);
+            }
+        }
+
+        return list.toSorted((a, b) => a.name.localeCompare(b.name));
+    }, [model, allLabels]);
+
+    if (!labels) {
         return null;
     }
-
-    const { labels } = model;
 
     return (
         <>
@@ -39,8 +55,8 @@ export const ModelLabels = ({ id }: { id: string }) => {
             )}
             {labels.map((label) => (
                 <Chip
-                    key={label.label_id}
-                    label={allLabels.find((l) => l.id === label.label_id)?.name}
+                    key={label.id}
+                    label={label.name}
                     sx={{ margin: 0.5 }}
                     variant="outlined"
                 />

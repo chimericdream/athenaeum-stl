@@ -139,7 +139,7 @@ export async function addLabelToModel({
         },
         body: JSON.stringify(label),
     });
-    return res.json();
+    return await res.json();
 }
 
 export async function createLabel(label: string): Promise<Label> {
@@ -155,12 +155,13 @@ export async function createLabel(label: string): Promise<Label> {
 
 export async function loadLabels(): Promise<Array<LabelEntry>> {
     const res = await fetch(`${BASE_URL}/labels`);
-    return res.json();
+
+    return await res.json();
 }
 
 export async function loadLabel(id: string): Promise<LabelRecord> {
     const res = await fetch(`${BASE_URL}/labels/${id}`);
-    return res.json();
+    return await res.json();
 }
 
 export async function updateModelMetadata({
