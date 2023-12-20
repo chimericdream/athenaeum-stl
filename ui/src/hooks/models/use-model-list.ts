@@ -3,12 +3,19 @@ import { useCallback, useMemo } from 'react';
 import { Temporal } from 'temporal-polyfill';
 
 import { useModelListContext } from '~/contexts/model-list-context';
-import { type Model, loadModels } from '~/services/athenaeum';
+import {
+    type Model,
+    loadDeletedModels,
+    loadModels,
+} from '~/services/athenaeum';
 import { rsToTemporal } from '~/util/dates';
 
 interface ModelListOverrides {
     mode?: 'grid' | 'list';
     order?: 'asc' | 'desc';
+    sort?: 'name' | 'date';
+    includeNsfw?: boolean;
+    isDeleted?: boolean;
 }
 
 export const useModelList = (overrides?: ModelListOverrides) => {
@@ -18,7 +25,9 @@ export const useModelList = (overrides?: ModelListOverrides) => {
         (left: Model, right: Model) => {
             let result = 0;
 
-            if (sort === 'name') {
+            const sortMethod = overrides?.sort ?? sort;
+
+            if (sortMethod === 'name') {
                 result = left.name.localeCompare(right.name, 'en-US', {
                     caseFirst: 'lower',
                     numeric: true,
@@ -26,7 +35,7 @@ export const useModelList = (overrides?: ModelListOverrides) => {
                 });
             }
 
-            if (sort === 'date') {
+            if (sortMethod === 'date') {
                 const lDate = rsToTemporal(left.imported_at);
                 const rDate = rsToTemporal(right.imported_at);
 
@@ -40,16 +49,23 @@ export const useModelList = (overrides?: ModelListOverrides) => {
         [order, overrides, sort]
     );
 
-    const { data } = useQuery({ queryKey: ['models'], queryFn: loadModels });
+    const { data } = useQuery({
+        queryKey: [overrides?.isDeleted ? 'deleted-models' : 'models'],
+        queryFn: overrides?.isDeleted ? loadDeletedModels : loadModels,
+    });
     const models = useMemo(() => {
         const list = data ?? [];
         const sorted = list.toSorted(sortFunc);
 
         let filtered;
-        if (includeNsfw) {
+        if (includeNsfw || overrides?.includeNsfw) {
             filtered = sorted;
         } else {
             filtered = sorted.filter((model) => !model.metadata?.nsfw);
+        }
+
+        if (overrides?.isDeleted) {
+            filtered = filtered.filter((model) => model.deleted);
         }
 
         if (!subset) {
@@ -57,7 +73,7 @@ export const useModelList = (overrides?: ModelListOverrides) => {
         }
 
         return filtered.filter((model) => subset.includes(model.id));
-    }, [data, includeNsfw, sortFunc, subset]);
+    }, [data, includeNsfw, overrides, sortFunc, subset]);
 
     return {
         models,

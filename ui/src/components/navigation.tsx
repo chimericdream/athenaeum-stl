@@ -1,5 +1,6 @@
 'use client';
 
+import DeleteIcon from '@mui/icons-material/Delete';
 import MenuIcon from '@mui/icons-material/Menu';
 import SettingsIcon from '@mui/icons-material/Settings';
 import ViewInArIcon from '@mui/icons-material/ViewInAr';
@@ -106,6 +107,16 @@ export const Navigation = () => {
                 <LabelsLeftNav />
                 <Divider sx={{ mt: 'auto' }} />
                 <List>
+                    <ListItemButton
+                        component={Link}
+                        href="/trash"
+                        selected={pathname === '/trash'}
+                    >
+                        <ListItemIcon>
+                            <DeleteIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Trash" />
+                    </ListItemButton>
                     <ListItemButton
                         component={Link}
                         href="/settings"

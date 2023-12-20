@@ -51,6 +51,7 @@ pub struct ModelWithMetadata {
     pub project_count: i32,
     pub support_file_count: i32,
     pub metadata: Option<ModelMetadata>,
+    pub deleted: bool,
 }
 
 #[derive(Associations, AsChangeset, Deserialize, Debug, Insertable, Queryable, Selectable, Serialize)]

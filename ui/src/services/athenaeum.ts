@@ -16,6 +16,7 @@ export interface Model {
     image_count: number;
     project_count: number;
     support_file_count: number;
+    deleted: boolean;
 }
 
 export interface ModelUpdate {
@@ -112,6 +113,11 @@ export function getStaticUrl(file: FileRecord): string {
 
 export async function loadModels(): Promise<Array<ModelWithMetadata>> {
     const res = await fetch(`${BASE_URL}/models`);
+    return res.json();
+}
+
+export async function loadDeletedModels(): Promise<Array<ModelWithMetadata>> {
+    const res = await fetch(`${BASE_URL}/models?deleted=true`);
     return res.json();
 }
 

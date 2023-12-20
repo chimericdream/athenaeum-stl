@@ -19,12 +19,12 @@ pub fn add_model_to_db(name: &str, id: &Uuid) {
     log::info!("\nSaved model {} with id {}", name, model.id);
 }
 
-pub fn list_models() -> Result<Vec<ModelWithMetadata>, diesel::result::Error> {
+pub fn list_models(is_deleted: bool) -> Result<Vec<ModelWithMetadata>, diesel::result::Error> {
     use crate::db::schema::*;
 
     let connection = &mut establish_connection();
     let model_list = models::table
-        .filter(models::deleted.ne(true))
+        .filter(models::deleted.eq(is_deleted))
         .select(Model::as_select())
         .load(connection);
 
@@ -46,6 +46,7 @@ pub fn list_models() -> Result<Vec<ModelWithMetadata>, diesel::result::Error> {
             project_count: model.project_count,
             support_file_count: model.support_file_count,
             metadata,
+            deleted: model.deleted,
         };
 
         models_with_metadata.push(model_with_metadata);

@@ -11,9 +11,11 @@ use crate::db::types::{Label, ModelMetadata, ModelRecord, ModelUpdate, ModelWith
 use crate::rest::labels::NewLabel;
 use crate::util::{ensure_tree, get_file_path, get_model_dir, get_safe_file_name};
 
-#[get("/models")]
-fn get_models() -> Json<Vec<ModelWithMetadata>> {
-    let models = db::models::list_models().expect("Failed to list models");
+#[get("/models?<deleted>")]
+fn get_models(deleted: Option<bool>) -> Json<Vec<ModelWithMetadata>> {
+    let list_deleted = deleted.unwrap_or(false);
+    println!("List deleted: {}", list_deleted);
+    let models = db::models::list_models(list_deleted).expect("Failed to list models");
 
     Json(models)
 }

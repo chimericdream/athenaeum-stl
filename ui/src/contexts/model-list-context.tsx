@@ -16,7 +16,7 @@ import {
 
 import { useModelListSettings } from '~/hooks/models/use-model-list-settings';
 
-interface ModelListContextType {
+export interface ModelListContextType {
     subset: null | string[];
     filter: string | null;
     mode: 'grid' | 'list';
