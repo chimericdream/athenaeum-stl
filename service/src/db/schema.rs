@@ -17,6 +17,7 @@ diesel::table! {
         imported_at -> Timestamp,
         model_id -> Text,
         file_size -> BigInt,
+        deleted -> Bool,
     }
 }
 
@@ -54,6 +55,7 @@ diesel::table! {
         image_count -> Integer,
         project_count -> Integer,
         support_file_count -> Integer,
+        deleted -> Bool,
     }
 }
 

@@ -14,6 +14,7 @@ pub struct Model {
     pub image_count: i32,
     pub project_count: i32,
     pub support_file_count: i32,
+    pub deleted: bool,
 }
 
 #[derive(AsChangeset, Deserialize)]
@@ -86,6 +87,7 @@ pub struct FileRecord {
     pub category: String,
     pub imported_at: String,
     pub model_id: String,
+    pub deleted: bool,
 }
 
 #[derive(AsChangeset, Deserialize)]

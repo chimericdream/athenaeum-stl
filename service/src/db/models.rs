@@ -21,10 +21,12 @@ pub fn add_model_to_db(name: &str, id: &Uuid) {
 
 pub fn list_models() -> Result<Vec<ModelWithMetadata>, diesel::result::Error> {
     use crate::db::schema::*;
-    use crate::db::schema::models::dsl::*;
 
     let connection = &mut establish_connection();
-    let model_list = models.load::<Model>(connection);
+    let model_list = models::table
+        .filter(models::deleted.ne(true))
+        .select(Model::as_select())
+        .load(connection);
 
     let mut models_with_metadata = vec![];
     for model in model_list? {
@@ -52,18 +54,18 @@ pub fn list_models() -> Result<Vec<ModelWithMetadata>, diesel::result::Error> {
     Ok(models_with_metadata)
 }
 
-pub fn add_label_to_model(model_id: &str, label_id: &str) -> Result<ModelRecord, Box<dyn std::error::Error>> {
+pub fn add_label_to_model(model_id: &str, label_id: &str) -> Option<ModelRecord> {
     use crate::db::schema::*;
 
     let connection = &mut establish_connection();
     diesel::insert_into(model_labels::table)
         .values((model_labels::model_id.eq(model_id), model_labels::label_id.eq(label_id)))
-        .execute(connection)?;
+        .execute(connection).ok()?;
 
-    get_model(model_id)
+    get_model(model_id, false)
 }
 
-pub fn update_model(id: &str, model: &ModelUpdate) -> Result<ModelRecord, Box<dyn std::error::Error>> {
+pub fn update_model(id: &str, model: &ModelUpdate) -> Option<ModelRecord> {
     use crate::db::schema::*;
 
     let connection = &mut establish_connection();
@@ -71,12 +73,12 @@ pub fn update_model(id: &str, model: &ModelUpdate) -> Result<ModelRecord, Box<dy
         .set(model)
         .filter(models::id.eq(id))
         .returning(Model::as_returning())
-        .execute(connection)?;
+        .execute(connection).ok()?;
 
-    get_model(id)
+    get_model(id, false)
 }
 
-pub fn update_metadata(id: &str, metadata: &ModelMetadata) -> Result<ModelRecord, Box<dyn std::error::Error>> {
+pub fn update_metadata(id: &str, metadata: &ModelMetadata) -> Option<ModelRecord> {
     use crate::db::schema::*;
 
     let connection = &mut establish_connection();
@@ -85,12 +87,24 @@ pub fn update_metadata(id: &str, metadata: &ModelMetadata) -> Result<ModelRecord
         .on_conflict(model_metadata::model_id)
         .do_update()
         .set(metadata)
-        .execute(connection)?;
+        .execute(connection).ok()?;
 
-    get_model(id)
+    get_model(id, false)
 }
 
-pub fn get_model(id: &str) -> Result<ModelRecord, Box<dyn std::error::Error>> {
+pub fn delete_model(id: &str) -> Result<(), Box<dyn std::error::Error>> {
+    use crate::db::schema::*;
+
+    let connection = &mut establish_connection();
+    diesel::update(models::table)
+        .set(models::deleted.eq(true))
+        .filter(models::id.eq(id))
+        .execute(connection)?;
+
+    Ok(())
+}
+
+pub fn get_model(id: &str, include_deleted: bool) -> Option<ModelRecord> {
     use crate::db::schema::*;
     use crate::db::types::*;
 
@@ -98,22 +112,27 @@ pub fn get_model(id: &str) -> Result<ModelRecord, Box<dyn std::error::Error>> {
     let model = models::table
         .filter(models::id.eq(id))
         .select(Model::as_select())
-        .get_result(connection)?;
+        .get_result(connection).ok()?;
+
+    if model.deleted && !include_deleted {
+        return None;
+    }
 
     let files = FileRecord::belonging_to(&model)
+        .filter(file_records::deleted.ne(true))
         .select(FileRecord::as_select())
-        .load(connection)?;
+        .load(connection).ok()?;
 
     let labels = model_labels::table
         .filter(model_labels::model_id.eq(id))
         .select(ModelLabel::as_select())
-        .load(connection)?;
+        .load(connection).ok()?;
 
     let metadata = model_metadata::table
         .filter(model_metadata::model_id.eq(id))
         .select(ModelMetadata::as_select())
         .get_result(connection)
-        .optional()?;
+        .optional().ok()?;
 
     let mut model_record = ModelRecord {
         id: model.id.clone(),
@@ -156,5 +175,5 @@ pub fn get_model(id: &str) -> Result<ModelRecord, Box<dyn std::error::Error>> {
         }
     }
 
-    Ok(model_record)
+    Some(model_record)
 }

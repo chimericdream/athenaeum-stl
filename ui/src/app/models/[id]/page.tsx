@@ -5,6 +5,7 @@ import {
     dehydrate,
 } from '@tanstack/react-query';
 
+import { DeleteModelButton } from '~/components/models/delete-model-button';
 import { ModelDetails } from '~/components/models/model-details';
 import { ModelLabels } from '~/components/models/model-labels';
 import { ModelMeta } from '~/components/models/model-metadata';
@@ -76,6 +77,7 @@ export default async function Page({ params }: PageProps) {
                         </Box>
                         <Box component="div">
                             <ModelMeta id={id} />
+                            <DeleteModelButton id={id} />
                         </Box>
                     </Box>
                 </Box>

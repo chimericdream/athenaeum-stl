@@ -120,6 +120,16 @@ export async function loadModel(id: string): Promise<ModelRecord> {
     return res.json();
 }
 
+export async function deleteModel(id: string): Promise<boolean> {
+    try {
+        await fetch(`${BASE_URL}/models/${id}`, { method: 'DELETE' });
+    } catch (e) {
+        return false;
+    }
+
+    return true;
+}
+
 export function openModelLocation(id: string): void {
     void fetch(`${BASE_URL}/models/${id}/open`);
 }

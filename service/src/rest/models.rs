@@ -1,5 +1,5 @@
 use std::path::PathBuf;
-use rocket::{get, patch, post, put, routes};
+use rocket::{get, delete, patch, post, put, routes};
 use rocket::Route;
 use rocket::serde::json::Json;
 use rocket::form::{Form, FromForm};
@@ -19,10 +19,19 @@ fn get_models() -> Json<Vec<ModelWithMetadata>> {
 }
 
 #[get("/models/<model_id>")]
-fn get_model(model_id: &str) -> Json<ModelRecord> {
-    let model = db::models::get_model(&model_id).expect("Failed to retrieve model");
+fn get_model(model_id: &str) -> Option<Json<ModelRecord>> {
+    let model = db::models::get_model(&model_id, false);
 
-    Json(model)
+    if model.is_none() {
+        return None;
+    }
+
+    Some(Json(model.unwrap()))
+}
+
+#[delete("/models/<model_id>")]
+fn delete_model(model_id: &str) -> () {
+    db::models::delete_model(&model_id).expect("Failed to delete model");
 }
 
 #[patch("/models/<model_id>", data = "<data>")]
@@ -52,8 +61,15 @@ struct Upload<'r> {
 }
 
 #[post("/models/<model_id>/files", data = "<data>")]
-async fn upload_file_to_model(model_id: &str, mut data: Form<Upload<'_>>) -> Json<ModelRecord> {
+async fn upload_file_to_model(model_id: &str, mut data: Form<Upload<'_>>) -> Option<Json<ModelRecord>> {
     let file_category = get_file_category(&data.file_name);
+
+    let check_model = db::models::get_model(&model_id, false);
+
+    if check_model.is_none() {
+        log::error!("Model {model_id:?} does not exist");
+        return None;
+    }
 
     if file_category.is_some() {
         let file_category = get_file_category(&data.file_name).unwrap();
@@ -79,9 +95,9 @@ async fn upload_file_to_model(model_id: &str, mut data: Form<Upload<'_>>) -> Jso
         }
     }
 
-    let model = db::models::get_model(&model_id).expect("Failed to retrieve model");
+    let model = db::models::get_model(&model_id, false).expect("Failed to retrieve model");
 
-    Json(model)
+    Some(Json(model))
 }
 
 #[put("/models/<model_id>/labels", data = "<data>")]
@@ -109,5 +125,6 @@ pub fn routes() -> Vec<Route> {
         add_new_label_to_model,
         open_model_location,
         upload_file_to_model,
+        delete_model,
     ]
 }
