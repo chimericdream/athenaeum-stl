@@ -87,17 +87,26 @@ export const Navigation = () => {
         <>
             <AppBar position="fixed" sx={{ zIndex: theme.zIndex.drawer + 1 }}>
                 <Toolbar sx={{ backgroundColor: 'background.paper' }}>
-                    <ViewInArIcon sx={{ mr: 2 }} />
-                    <Typography
-                        variant="h6"
-                        noWrap
-                        component={Link}
-                        href="/"
-                        color={theme.palette.text.primary}
-                        sx={{ flexGrow: 1, textDecoration: 'none' }}
+                    <Box
+                        component="div"
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            flexGrow: 1,
+                        }}
                     >
-                        Athenaeum STL Library
-                    </Typography>
+                        <ViewInArIcon sx={{ mr: 2 }} />
+                        <Typography
+                            variant="h6"
+                            noWrap
+                            component={Link}
+                            href="/"
+                            color={theme.palette.text.primary}
+                            sx={{ textDecoration: 'none' }}
+                        >
+                            Athenaeum STL Library
+                        </Typography>
+                    </Box>
                     <Box component="div" sx={{ display: 'flex', gap: 1 }}>
                         <Button
                             sx={{
@@ -133,15 +142,15 @@ export const Navigation = () => {
                         >
                             Labels
                         </Button>
+                        {isMobile ? (
+                            <IconButton
+                                aria-label="Toggle left navigation"
+                                onClick={toggleLeftNav}
+                            >
+                                <MenuIcon />
+                            </IconButton>
+                        ) : null}
                     </Box>
-                    {isMobile ? (
-                        <IconButton
-                            aria-label="Toggle left navigation"
-                            onClick={toggleLeftNav}
-                        >
-                            <MenuIcon />
-                        </IconButton>
-                    ) : null}
                 </Toolbar>
             </AppBar>
             <Drawer {...drawerProps}>
