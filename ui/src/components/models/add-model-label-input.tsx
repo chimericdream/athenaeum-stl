@@ -46,7 +46,13 @@ export const AddModelLabelInput = ({ modelId }: { modelId: string }) => {
         queryFn: () => loadLabels(),
     });
 
-    const allLabels = useMemo(() => data ?? [], [data]);
+    const allLabels = useMemo(() => {
+        if (!data) {
+            return [];
+        }
+
+        return data.toSorted((a, b) => a.name.localeCompare(b.name));
+    }, [data]);
 
     const labelExists = useCallback(
         (label: string) => {
