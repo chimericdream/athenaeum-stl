@@ -37,6 +37,7 @@ pub struct ModelRecord {
     pub support_files: Vec<FileRecord>,
     pub labels: Vec<ModelLabel>,
     pub metadata: Option<ModelMetadata>,
+    pub deleted: bool,
 }
 
 #[derive(Serialize)]
@@ -51,6 +52,7 @@ pub struct ModelWithMetadata {
     pub project_count: i32,
     pub support_file_count: i32,
     pub metadata: Option<ModelMetadata>,
+    pub labels: Vec<ModelLabel>,
     pub deleted: bool,
 }
 

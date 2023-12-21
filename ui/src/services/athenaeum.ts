@@ -32,6 +32,7 @@ export interface ModelMetadata {
 }
 
 export interface ModelWithMetadata extends Model {
+    labels: ModelLabel[];
     metadata: ModelMetadata;
 }
 
@@ -46,6 +47,7 @@ export interface ModelRecord {
     support_files: FileRecord[];
     labels: ModelLabel[];
     metadata: ModelMetadata;
+    deleted: boolean;
 }
 
 export interface NewModel {

@@ -1,7 +1,7 @@
 use uuid::Uuid;
 use diesel::prelude::*;
 use crate::db::{establish_connection};
-use crate::db::types::{Model, ModelMetadata, ModelRecord, ModelUpdate, ModelWithMetadata, NewModel};
+use crate::db::types::{Model, ModelLabel, ModelMetadata, ModelRecord, ModelUpdate, ModelWithMetadata, NewModel};
 
 pub fn add_model_to_db(name: &str, id: &Uuid) {
     let connection = &mut establish_connection();
@@ -36,6 +36,11 @@ pub fn list_models(is_deleted: bool) -> Result<Vec<ModelWithMetadata>, diesel::r
             .get_result(connection)
             .optional()?;
 
+        let labels = model_labels::table
+            .filter(model_labels::model_id.eq(&model.id))
+            .select(ModelLabel::as_select())
+            .load(connection);
+
         let model_with_metadata = ModelWithMetadata {
             id: model.id,
             name: model.name,
@@ -45,6 +50,7 @@ pub fn list_models(is_deleted: bool) -> Result<Vec<ModelWithMetadata>, diesel::r
             image_count: model.image_count,
             project_count: model.project_count,
             support_file_count: model.support_file_count,
+            labels: labels?,
             metadata,
             deleted: model.deleted,
         };
@@ -146,6 +152,7 @@ pub fn get_model(id: &str, include_deleted: bool) -> Option<ModelRecord> {
         support_files: vec![],
         labels,
         metadata,
+        deleted: model.deleted,
     };
 
     if model_record.metadata.is_none() {
