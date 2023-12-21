@@ -7,6 +7,7 @@ interface ModelListSettings {
     mode: 'list' | 'grid';
     order: 'asc' | 'desc';
     sort: 'name';
+    labels: 'all' | 'labeled' | 'unlabeled';
     page: number;
     pageSize: number;
 }
@@ -15,6 +16,7 @@ interface PartialModelListSettings {
     mode: 'list' | 'grid' | null;
     order: 'asc' | 'desc' | null;
     sort: 'name' | null;
+    labels: 'all' | 'labeled' | 'unlabeled' | null;
     page: number | null;
     pageSize: number | null;
 }
@@ -23,6 +25,7 @@ const defaults: ModelListSettings = {
     mode: 'list',
     order: 'asc',
     sort: 'name',
+    labels: 'all',
     page: 0,
     pageSize: 25,
 };
@@ -35,6 +38,13 @@ export const useModelListSettings = () => {
 
         if (searchParams.has('mode')) {
             retVal.mode = searchParams.get('mode') as 'list' | 'grid';
+        }
+
+        if (searchParams.has('labels')) {
+            retVal.labels = searchParams.get('labels') as
+                | 'all'
+                | 'labeled'
+                | 'unlabeled';
         }
 
         if (searchParams.has('order')) {

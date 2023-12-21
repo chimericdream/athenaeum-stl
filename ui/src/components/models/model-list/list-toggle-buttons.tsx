@@ -1,8 +1,11 @@
 'use client';
 
 import AbcIcon from '@mui/icons-material/Abc';
+import AllInclusiveIcon from '@mui/icons-material/AllInclusive';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import GridViewIcon from '@mui/icons-material/GridView';
+import LabelIcon from '@mui/icons-material/Label';
+import LabelOffIcon from '@mui/icons-material/LabelOff';
 import NoAdultContentIcon from '@mui/icons-material/NoAdultContent';
 import StraightIcon from '@mui/icons-material/Straight';
 import ViewListIcon from '@mui/icons-material/ViewList';
@@ -27,17 +30,36 @@ export const ModelListToggleButtons = () => {
 
     const {
         includeNsfw,
+        labelState,
         mode,
         order,
         sort,
         handleModeChange,
         handleSortOrderChange,
+        handleLabelStateChange,
         toggleNsfw,
     } = useModelListContext();
 
     return (
         <>
             <Box component="div" sx={{ display: 'flex', gap: 2 }}>
+                <ToggleButtonGroup
+                    exclusive
+                    aria-label="Toggle label state"
+                    onChange={handleLabelStateChange}
+                    value={labelState}
+                >
+                    <ToggleButton value="all">
+                        <AllInclusiveIcon />
+                    </ToggleButton>
+                    <ToggleButton value="labeled">
+                        <LabelIcon />
+                    </ToggleButton>
+                    <ToggleButton value="unlabeled">
+                        <LabelOffIcon />
+                    </ToggleButton>
+                </ToggleButtonGroup>
+
                 <ToggleButton
                     value="nsfw"
                     selected={!includeNsfw}

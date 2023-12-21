@@ -24,6 +24,11 @@ export interface ModelListContextType {
     sort: 'name' | 'date';
     page: number;
     pageSize: 25 | 50 | 100;
+    labelState: 'all' | 'labeled' | 'unlabeled';
+    handleLabelStateChange: (
+        _: MouseEvent<HTMLElement>,
+        value: 'all' | 'labeled' | 'unlabeled'
+    ) => void;
     includeNsfw: boolean;
     toggleNsfw: () => void;
     setFilter: (filter: string | null) => void;
@@ -50,6 +55,8 @@ export const ModelListContext = createContext<ModelListContextType>({
     sort: 'name',
     page: 0,
     pageSize: 25,
+    labelState: 'all',
+    handleLabelStateChange: () => {},
     includeNsfw: false,
     toggleNsfw: () => {},
     setSubset: () => {},
@@ -68,7 +75,8 @@ export const ModelListProvider = ({ children }: PWC) => {
     const pathname = usePathname();
     const searchParams = useSearchParams();
 
-    const { mode, order, sort, page, pageSize } = useModelListSettings();
+    const { labels, mode, order, sort, page, pageSize } =
+        useModelListSettings();
 
     const toggleNsfw = useCallback(() => {
         setNsfw((prev) => !prev);
@@ -122,6 +130,16 @@ export const ModelListProvider = ({ children }: PWC) => {
         [makeQueryString, pathname, router]
     );
 
+    const handleLabelStateChange = useCallback(
+        (
+            _: MouseEvent<HTMLElement>,
+            value: 'all' | 'labeled' | 'unlabeled'
+        ) => {
+            router.push(`${pathname}?${makeQueryString({ labels: value })}`);
+        },
+        [makeQueryString, pathname, router]
+    );
+
     const ctx: ModelListContextType = {
         subset,
         filter,
@@ -130,6 +148,8 @@ export const ModelListProvider = ({ children }: PWC) => {
         sort,
         page,
         pageSize,
+        labelState: labels,
+        handleLabelStateChange,
         includeNsfw,
         toggleNsfw,
         setFilter,

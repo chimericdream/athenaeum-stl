@@ -19,7 +19,8 @@ interface ModelListOverrides {
 }
 
 export const useModelList = (overrides?: ModelListOverrides) => {
-    const { includeNsfw, mode, order, sort, subset } = useModelListContext();
+    const { includeNsfw, labelState, mode, order, sort, subset } =
+        useModelListContext();
 
     const sortFunc = useCallback(
         (left: Model, right: Model) => {
@@ -68,12 +69,18 @@ export const useModelList = (overrides?: ModelListOverrides) => {
             filtered = filtered.filter((model) => model.deleted);
         }
 
+        if (labelState === 'labeled') {
+            filtered = filtered.filter((model) => model.labels.length > 0);
+        } else if (labelState === 'unlabeled') {
+            filtered = filtered.filter((model) => model.labels.length === 0);
+        }
+
         if (!subset) {
             return filtered;
         }
 
         return filtered.filter((model) => subset.includes(model.id));
-    }, [data, includeNsfw, overrides, sortFunc, subset]);
+    }, [data, includeNsfw, labelState, overrides, sortFunc, subset]);
 
     return {
         models,
