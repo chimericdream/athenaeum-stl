@@ -70,9 +70,9 @@ export const useModelList = (overrides?: ModelListOverrides) => {
         }
 
         if (labelState === 'labeled') {
-            filtered = filtered.filter((model) => model.labels.length > 0);
+            filtered = filtered.filter((model) => model.labels?.length > 0);
         } else if (labelState === 'unlabeled') {
-            filtered = filtered.filter((model) => model.labels.length === 0);
+            filtered = filtered.filter((model) => model.labels?.length === 0);
         }
 
         if (!subset) {
