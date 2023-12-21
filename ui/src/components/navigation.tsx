@@ -1,31 +1,38 @@
 'use client';
 
+import DashboardIcon from '@mui/icons-material/Dashboard';
 import DeleteIcon from '@mui/icons-material/Delete';
+import LabelIcon from '@mui/icons-material/Label';
 import MenuIcon from '@mui/icons-material/Menu';
 import SettingsIcon from '@mui/icons-material/Settings';
 import ViewInArIcon from '@mui/icons-material/ViewInAr';
-import AppBar from '@mui/material/AppBar';
-import Divider from '@mui/material/Divider';
-import Drawer, { DrawerProps } from '@mui/material/Drawer';
-import IconButton from '@mui/material/IconButton';
-import List from '@mui/material/List';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
+import {
+    AppBar,
+    Box,
+    Button,
+    Divider,
+    Drawer,
+    type DrawerProps,
+    IconButton,
+    List,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+    Toolbar,
+    Typography,
+} from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCallback, useState } from 'react';
 
-import { LabelsLeftNav } from '~/components/layout/left-nav/labels-left-nav';
-import { ModelsLeftNav } from '~/components/layout/left-nav/models-left-nav';
+import { useAppSidebar } from '~/contexts/app-sidebar-context';
 import { DRAWER_WIDTH } from '~/util/constants';
 
 export const Navigation = () => {
     const [leftNavOpen, setLeftNavOpen] = useState(false);
+    const { sidebarContentRef } = useAppSidebar();
 
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
@@ -91,6 +98,42 @@ export const Navigation = () => {
                     >
                         Athenaeum STL Library
                     </Typography>
+                    <Box component="div" sx={{ display: 'flex', gap: 1 }}>
+                        <Button
+                            sx={{
+                                borderColor: '#fff',
+                                color: '#fff',
+                                '&:hover': {
+                                    borderColor: theme.palette.info.main,
+                                },
+                            }}
+                            component={Link}
+                            href="/models"
+                            startIcon={<DashboardIcon />}
+                            variant={
+                                pathname === '/models' ? 'outlined' : 'text'
+                            }
+                        >
+                            Models
+                        </Button>
+                        <Button
+                            sx={{
+                                borderColor: '#fff',
+                                color: '#fff',
+                                '&:hover': {
+                                    borderColor: theme.palette.info.main,
+                                },
+                            }}
+                            component={Link}
+                            href="/labels"
+                            startIcon={<LabelIcon />}
+                            variant={
+                                pathname === '/labels' ? 'outlined' : 'text'
+                            }
+                        >
+                            Labels
+                        </Button>
+                    </Box>
                     {isMobile ? (
                         <IconButton
                             aria-label="Toggle left navigation"
@@ -103,8 +146,11 @@ export const Navigation = () => {
             </AppBar>
             <Drawer {...drawerProps}>
                 <Divider />
-                <ModelsLeftNav />
-                <LabelsLeftNav />
+                <Box
+                    component="div"
+                    id="sidebar-content"
+                    ref={sidebarContentRef}
+                />
                 <Divider sx={{ mt: 'auto' }} />
                 <List>
                     <ListItemButton
