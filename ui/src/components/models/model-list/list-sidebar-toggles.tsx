@@ -34,20 +34,39 @@ export const ListSidebarToggles = () => {
     return (
         <Box
             component="div"
-            sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 2,
-                paddingTop: '1.5rem',
-            }}
+            sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
         >
-            <Box component="div" sx={{ padding: '0 1rem' }}>
-                <Typography>Sort list</Typography>
+            <Box
+                component="div"
+                sx={{ display: 'flex', flexDirection: 'column' }}
+            >
+                <List sx={{ paddingBottom: 0 }}>
+                    <ListItem>
+                        <ListItemText
+                            primary="Sort models"
+                            primaryTypographyProps={{
+                                sx: { fontWeight: 'bold' },
+                            }}
+                        />
+                    </ListItem>
+                </List>
                 <ToggleButtonGroup
                     exclusive
+                    orientation="vertical"
                     aria-label="Toggle sort mode"
                     onChange={handleSortOrderChange}
                     value={`${sort}|${order}`}
+                    sx={{
+                        '& > *': {
+                            borderRadius: 0,
+                            borderLeftWidth: 0,
+                            borderRightWidth: 0,
+                            justifyContent: 'flex-start',
+                            paddingLeft: '1rem',
+                            gap: 3,
+                            textTransform: 'none',
+                        },
+                    }}
                 >
                     <ToggleButton value="name|asc">
                         <StackedIcon>
@@ -60,6 +79,7 @@ export const ListSidebarToggles = () => {
                                 sx={{ transform: 'translateX(0.125lh)' }}
                             />
                         </StackedIcon>
+                        <Typography>Name (asc)</Typography>
                     </ToggleButton>
                     <ToggleButton value="name|desc">
                         <StackedIcon>
@@ -73,6 +93,7 @@ export const ListSidebarToggles = () => {
                                 sx={{ transform: 'translateX(0.125lh)' }}
                             />
                         </StackedIcon>
+                        <Typography>Name (desc)</Typography>
                     </ToggleButton>
                     <ToggleButton value="date|asc">
                         <StackedIcon>
@@ -85,6 +106,7 @@ export const ListSidebarToggles = () => {
                                 sx={{ transform: 'translateX(0.125lh)' }}
                             />
                         </StackedIcon>
+                        <Typography>Imported at (asc)</Typography>
                     </ToggleButton>
                     <ToggleButton value="date|desc">
                         <StackedIcon>
@@ -98,17 +120,42 @@ export const ListSidebarToggles = () => {
                                 sx={{ transform: 'translateX(0.125lh)' }}
                             />
                         </StackedIcon>
+                        <Typography>Imported at (desc)</Typography>
                     </ToggleButton>
                 </ToggleButtonGroup>
             </Box>
 
-            <Box component="div" sx={{ padding: '0 1rem' }}>
-                <Typography>With or without labels</Typography>
+            <Box
+                component="div"
+                sx={{ display: 'flex', flexDirection: 'column' }}
+            >
+                <List sx={{ paddingBottom: 0 }}>
+                    <ListItem>
+                        <ListItemText
+                            primary="Models with labels"
+                            primaryTypographyProps={{
+                                sx: { fontWeight: 'bold' },
+                            }}
+                        />
+                    </ListItem>
+                </List>
                 <ToggleButtonGroup
                     exclusive
+                    orientation="vertical"
                     aria-label="Toggle label state"
                     onChange={handleLabelStateChange}
                     value={labelState}
+                    sx={{
+                        '& > *': {
+                            borderRadius: 0,
+                            borderLeftWidth: 0,
+                            borderRightWidth: 0,
+                            justifyContent: 'flex-start',
+                            paddingLeft: '1rem',
+                            gap: 3,
+                            textTransform: 'none',
+                        },
+                    }}
                 >
                     <ToggleButton value="all">
                         <AllInclusiveIcon />
@@ -122,12 +169,33 @@ export const ListSidebarToggles = () => {
                 </ToggleButtonGroup>
             </Box>
 
-            <Box component="div" sx={{ padding: '0 1rem' }}>
-                <Typography>Hide NSFW</Typography>
+            <Box
+                component="div"
+                sx={{ display: 'flex', flexDirection: 'column' }}
+            >
+                <List sx={{ paddingBottom: 0 }}>
+                    <ListItem>
+                        <ListItemText
+                            primary="Hide NSFW"
+                            primaryTypographyProps={{
+                                sx: { fontWeight: 'bold' },
+                            }}
+                        />
+                    </ListItem>
+                </List>
                 <ToggleButton
                     value="nsfw"
                     selected={!includeNsfw}
                     onClick={toggleNsfw}
+                    sx={{
+                        borderRadius: 0,
+                        borderLeftWidth: 0,
+                        borderRightWidth: 0,
+                        justifyContent: 'flex-start',
+                        paddingLeft: '1rem',
+                        gap: 3,
+                        textTransform: 'none',
+                    }}
                 >
                     <NoAdultContentIcon />
                 </ToggleButton>
