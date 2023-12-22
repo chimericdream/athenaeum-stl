@@ -25,6 +25,30 @@ export interface ModelListContextType {
     page: number;
     pageSize: 25 | 50 | 100;
     labelState: 'all' | 'labeled' | 'unlabeled';
+    fileFilters: {
+        parts: 'include' | 'exclude' | 'any';
+        projects: 'include' | 'exclude' | 'any';
+        images: 'include' | 'exclude' | 'any';
+        supportFiles: 'include' | 'exclude' | 'any';
+    };
+    fileFilterUpdaters: {
+        parts: (
+            _: MouseEvent<HTMLElement>,
+            value: 'include' | 'exclude' | 'any'
+        ) => void;
+        projects: (
+            _: MouseEvent<HTMLElement>,
+            value: 'include' | 'exclude' | 'any'
+        ) => void;
+        images: (
+            _: MouseEvent<HTMLElement>,
+            value: 'include' | 'exclude' | 'any'
+        ) => void;
+        supportFiles: (
+            _: MouseEvent<HTMLElement>,
+            value: 'include' | 'exclude' | 'any'
+        ) => void;
+    };
     handleLabelStateChange: (
         _: MouseEvent<HTMLElement>,
         value: 'all' | 'labeled' | 'unlabeled'
@@ -45,6 +69,7 @@ export interface ModelListContextType {
         _: MouseEvent<HTMLElement>,
         value: 'name|asc' | 'name|desc' | 'date|asc' | 'date|desc'
     ) => void;
+    reset: () => void;
 }
 
 export const ModelListContext = createContext<ModelListContextType>({
@@ -56,6 +81,18 @@ export const ModelListContext = createContext<ModelListContextType>({
     page: 0,
     pageSize: 25,
     labelState: 'all',
+    fileFilters: {
+        parts: 'any',
+        projects: 'any',
+        images: 'any',
+        supportFiles: 'any',
+    },
+    fileFilterUpdaters: {
+        parts: () => {},
+        projects: () => {},
+        images: () => {},
+        supportFiles: () => {},
+    },
     handleLabelStateChange: () => {},
     includeNsfw: false,
     toggleNsfw: () => {},
@@ -64,6 +101,7 @@ export const ModelListContext = createContext<ModelListContextType>({
     updatePagination: () => {},
     handleModeChange: () => {},
     handleSortOrderChange: () => {},
+    reset: () => {},
 });
 
 export const ModelListProvider = ({ children }: PWC) => {
@@ -75,7 +113,7 @@ export const ModelListProvider = ({ children }: PWC) => {
     const pathname = usePathname();
     const searchParams = useSearchParams();
 
-    const { labels, mode, order, sort, page, pageSize } =
+    const { fileFilters, labels, mode, order, sort, page, pageSize, reset } =
         useModelListSettings();
 
     const toggleNsfw = useCallback(() => {
@@ -140,6 +178,56 @@ export const ModelListProvider = ({ children }: PWC) => {
         [makeQueryString, pathname, router]
     );
 
+    const handlePartFilterChange = useCallback(
+        (
+            _: MouseEvent<HTMLElement>,
+            value: 'include' | 'exclude' | 'any' | null
+        ) => {
+            router.push(
+                `${pathname}?${makeQueryString({ parts: value ?? 'any' })}`
+            );
+        },
+        [makeQueryString, pathname, router]
+    );
+
+    const handleProjectFilterChange = useCallback(
+        (
+            _: MouseEvent<HTMLElement>,
+            value: 'include' | 'exclude' | 'any' | null
+        ) => {
+            router.push(
+                `${pathname}?${makeQueryString({ projects: value ?? 'any' })}`
+            );
+        },
+        [makeQueryString, pathname, router]
+    );
+
+    const handleImageFilterChange = useCallback(
+        (
+            _: MouseEvent<HTMLElement>,
+            value: 'include' | 'exclude' | 'any' | null
+        ) => {
+            router.push(
+                `${pathname}?${makeQueryString({ images: value ?? 'any' })}`
+            );
+        },
+        [makeQueryString, pathname, router]
+    );
+
+    const handleSupportFileFilterChange = useCallback(
+        (
+            _: MouseEvent<HTMLElement>,
+            value: 'include' | 'exclude' | 'any' | null
+        ) => {
+            router.push(
+                `${pathname}?${makeQueryString({
+                    supportFiles: value ?? 'any',
+                })}`
+            );
+        },
+        [makeQueryString, pathname, router]
+    );
+
     const ctx: ModelListContextType = {
         subset,
         filter,
@@ -148,6 +236,13 @@ export const ModelListProvider = ({ children }: PWC) => {
         sort,
         page,
         pageSize,
+        fileFilters,
+        fileFilterUpdaters: {
+            parts: handlePartFilterChange,
+            projects: handleProjectFilterChange,
+            images: handleImageFilterChange,
+            supportFiles: handleSupportFileFilterChange,
+        },
         labelState: labels,
         handleLabelStateChange,
         includeNsfw,
@@ -157,6 +252,7 @@ export const ModelListProvider = ({ children }: PWC) => {
         updatePagination,
         handleModeChange,
         handleSortOrderChange,
+        reset,
     } as ModelListContextType;
 
     return (

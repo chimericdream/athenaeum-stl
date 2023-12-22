@@ -19,7 +19,7 @@ interface ModelListOverrides {
 }
 
 export const useModelList = (overrides?: ModelListOverrides) => {
-    const { includeNsfw, labelState, mode, order, sort, subset } =
+    const { fileFilters, includeNsfw, labelState, mode, order, sort, subset } =
         useModelListContext();
 
     const sortFunc = useCallback(
@@ -75,12 +75,60 @@ export const useModelList = (overrides?: ModelListOverrides) => {
             filtered = filtered.filter((model) => model.labels?.length === 0);
         }
 
+        if (fileFilters.parts !== 'any') {
+            filtered = filtered.filter((model) => {
+                if (fileFilters.parts === 'include') {
+                    return model.part_count > 0;
+                }
+
+                return model.part_count === 0;
+            });
+        }
+
+        if (fileFilters.projects !== 'any') {
+            filtered = filtered.filter((model) => {
+                if (fileFilters.projects === 'include') {
+                    return model.project_count > 0;
+                }
+
+                return model.project_count === 0;
+            });
+        }
+
+        if (fileFilters.images !== 'any') {
+            filtered = filtered.filter((model) => {
+                if (fileFilters.images === 'include') {
+                    return model.image_count > 0;
+                }
+
+                return model.image_count === 0;
+            });
+        }
+
+        if (fileFilters.supportFiles !== 'any') {
+            filtered = filtered.filter((model) => {
+                if (fileFilters.supportFiles === 'include') {
+                    return model.support_file_count > 0;
+                }
+
+                return model.support_file_count === 0;
+            });
+        }
+
         if (!subset) {
             return filtered;
         }
 
         return filtered.filter((model) => subset.includes(model.id));
-    }, [data, includeNsfw, labelState, overrides, sortFunc, subset]);
+    }, [
+        data,
+        fileFilters,
+        includeNsfw,
+        labelState,
+        overrides,
+        sortFunc,
+        subset,
+    ]);
 
     return {
         models,
