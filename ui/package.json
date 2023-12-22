@@ -20,7 +20,7 @@
         "posttest:ci": "pnpm betterer:ci",
         "pre-commit": "npx lint-staged",
         "prestart": "pnpm build",
-        "start": "next start",
+        "start": "next start -p 3883",
         "test": "jest --coverage --passWithNoTests",
         "test:ci": "env-cmd -f .env.test jest --ci --coverage --passWithNoTests",
         "test:watch": "jest --watch --coverage",
