@@ -46,7 +46,7 @@ const defaults: ModelListSettings = {
         supportFiles: 'any',
     },
     page: 0,
-    pageSize: 25,
+    pageSize: 100,
     reset: () => {},
 };
 
