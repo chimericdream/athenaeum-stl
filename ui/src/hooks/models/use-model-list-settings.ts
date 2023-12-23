@@ -15,6 +15,7 @@ interface ModelListSettings {
         supportFiles: 'include' | 'exclude' | 'any';
     };
     page: number;
+    withLink: 'include' | 'exclude' | 'any';
     pageSize: number;
     reset: () => void;
 }
@@ -30,6 +31,7 @@ interface PartialModelListSettings {
         images?: 'include' | 'exclude' | 'any' | null;
         supportFiles?: 'include' | 'exclude' | 'any' | null;
     };
+    withLink: 'include' | 'exclude' | 'any' | null;
     page: number | null;
     pageSize: number | null;
 }
@@ -45,6 +47,7 @@ const defaults: ModelListSettings = {
         images: 'any',
         supportFiles: 'any',
     },
+    withLink: 'any',
     page: 0,
     pageSize: 100,
     reset: () => {},
@@ -87,6 +90,12 @@ export const useModelListSettings = () => {
                 searchParams.get('pageSize') as string,
                 10
             );
+        }
+
+        if (searchParams.has('withLink')) {
+            retVal.withLink = searchParams.get(
+                'withLink'
+            ) as ModelListSettings['withLink'];
         }
 
         retVal.fileFilters = {};

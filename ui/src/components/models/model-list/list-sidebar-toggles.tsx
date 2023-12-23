@@ -10,6 +10,7 @@ import ImageIcon from '@mui/icons-material/Image';
 import LabelIcon from '@mui/icons-material/Label';
 import LabelOffIcon from '@mui/icons-material/LabelOff';
 import LayersIcon from '@mui/icons-material/Layers';
+import LinkIcon from '@mui/icons-material/Link';
 import NoAdultContentIcon from '@mui/icons-material/NoAdultContent';
 import ReplayIcon from '@mui/icons-material/Replay';
 import StraightIcon from '@mui/icons-material/Straight';
@@ -43,6 +44,8 @@ export const ListSidebarToggles = () => {
         handleSortOrderChange,
         handleLabelStateChange,
         toggleNsfw,
+        withLink,
+        handleWithLinkChange,
         reset,
     } = useModelListContext();
 
@@ -418,6 +421,46 @@ export const ListSidebarToggles = () => {
                         </Typography>
                     </ToggleButton>
                 </ToggleButtonGroup>
+                <List sx={{ paddingTop: 0 }}>
+                    <ListItem
+                        sx={{
+                            borderBottom: `1px solid ${theme.palette.divider}`,
+                        }}
+                        secondaryAction={
+                            <ToggleButtonGroup
+                                exclusive
+                                size="small"
+                                value={withLink}
+                                onChange={handleWithLinkChange}
+                                aria-label="With source URL filter"
+                            >
+                                <ToggleButton
+                                    value="include"
+                                    aria-label="With source URL"
+                                >
+                                    <CheckIcon />
+                                </ToggleButton>
+                                <ToggleButton
+                                    value="exclude"
+                                    aria-label="Without source URL"
+                                >
+                                    <CloseIcon />
+                                </ToggleButton>
+                                <ToggleButton
+                                    value="any"
+                                    aria-label="With or without source URL"
+                                >
+                                    <AllInclusiveIcon />
+                                </ToggleButton>
+                            </ToggleButtonGroup>
+                        }
+                    >
+                        <ListItemIcon sx={{ minWidth: '3rem' }}>
+                            <LinkIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="With Source URL" />
+                    </ListItem>
+                </List>
             </Box>
         </Box>
     );

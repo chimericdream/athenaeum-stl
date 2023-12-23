@@ -34,27 +34,32 @@ export interface ModelListContextType {
     fileFilterUpdaters: {
         parts: (
             _: MouseEvent<HTMLElement>,
-            value: 'include' | 'exclude' | 'any'
+            value: 'include' | 'exclude' | 'any' | null
         ) => void;
         projects: (
             _: MouseEvent<HTMLElement>,
-            value: 'include' | 'exclude' | 'any'
+            value: 'include' | 'exclude' | 'any' | null
         ) => void;
         images: (
             _: MouseEvent<HTMLElement>,
-            value: 'include' | 'exclude' | 'any'
+            value: 'include' | 'exclude' | 'any' | null
         ) => void;
         supportFiles: (
             _: MouseEvent<HTMLElement>,
-            value: 'include' | 'exclude' | 'any'
+            value: 'include' | 'exclude' | 'any' | null
         ) => void;
     };
     handleLabelStateChange: (
         _: MouseEvent<HTMLElement>,
-        value: 'all' | 'labeled' | 'unlabeled'
+        value: 'all' | 'labeled' | 'unlabeled' | null
     ) => void;
     includeNsfw: boolean;
     toggleNsfw: () => void;
+    withLink: 'include' | 'exclude' | 'any';
+    handleWithLinkChange: (
+        _: MouseEvent<HTMLElement>,
+        value: 'include' | 'exclude' | 'any' | null
+    ) => void;
     setFilter: (filter: string | null) => void;
     setSubset: (subset: null | string[]) => void;
     updatePagination: (
@@ -95,6 +100,8 @@ export const ModelListContext = createContext<ModelListContextType>({
     },
     handleLabelStateChange: () => {},
     includeNsfw: false,
+    withLink: 'any',
+    handleWithLinkChange: () => {},
     toggleNsfw: () => {},
     setSubset: () => {},
     setFilter: () => {},
@@ -113,18 +120,31 @@ export const ModelListProvider = ({ children }: PWC) => {
     const pathname = usePathname();
     const searchParams = useSearchParams();
 
-    const { fileFilters, labels, mode, order, sort, page, pageSize, reset } =
-        useModelListSettings();
+    const {
+        fileFilters,
+        labels,
+        mode,
+        order,
+        sort,
+        page,
+        pageSize,
+        reset,
+        withLink,
+    } = useModelListSettings();
 
     const toggleNsfw = useCallback(() => {
         setNsfw((prev) => !prev);
     }, [setNsfw]);
 
     const makeQueryString = useCallback(
-        (updates: { [key: string]: string }) => {
+        (updates: { [key: string]: string }, removals: string[] = []) => {
             const params = new URLSearchParams(searchParams);
             Object.entries(updates).forEach(([name, value]) => {
                 params.set(name, value);
+            });
+
+            removals.forEach((name) => {
+                params.delete(name);
             });
 
             return params.toString();
@@ -174,6 +194,20 @@ export const ModelListProvider = ({ children }: PWC) => {
             value: 'all' | 'labeled' | 'unlabeled'
         ) => {
             router.push(`${pathname}?${makeQueryString({ labels: value })}`);
+        },
+        [makeQueryString, pathname, router]
+    );
+
+    const handleWithLinkChange = useCallback(
+        (
+            _: MouseEvent<HTMLElement>,
+            value: 'include' | 'exclude' | 'any' | null
+        ) => {
+            router.push(
+                `${pathname}?${makeQueryString({
+                    withLink: value ?? 'any',
+                })}`
+            );
         },
         [makeQueryString, pathname, router]
     );
@@ -247,6 +281,8 @@ export const ModelListProvider = ({ children }: PWC) => {
         handleLabelStateChange,
         includeNsfw,
         toggleNsfw,
+        withLink,
+        handleWithLinkChange,
         setFilter,
         setSubset,
         updatePagination,

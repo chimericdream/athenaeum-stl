@@ -19,8 +19,16 @@ interface ModelListOverrides {
 }
 
 export const useModelList = (overrides?: ModelListOverrides) => {
-    const { fileFilters, includeNsfw, labelState, mode, order, sort, subset } =
-        useModelListContext();
+    const {
+        fileFilters,
+        includeNsfw,
+        labelState,
+        mode,
+        order,
+        sort,
+        subset,
+        withLink,
+    } = useModelListContext();
 
     const sortFunc = useCallback(
         (left: Model, right: Model) => {
@@ -73,6 +81,16 @@ export const useModelList = (overrides?: ModelListOverrides) => {
             filtered = filtered.filter((model) => model.labels?.length > 0);
         } else if (labelState === 'unlabeled') {
             filtered = filtered.filter((model) => model.labels?.length === 0);
+        }
+
+        if (withLink !== 'any') {
+            filtered = filtered.filter((model) => {
+                if (withLink === 'include') {
+                    return !!model.metadata?.source_url;
+                }
+
+                return !model.metadata?.source_url;
+            });
         }
 
         if (fileFilters.parts !== 'any') {
@@ -128,6 +146,7 @@ export const useModelList = (overrides?: ModelListOverrides) => {
         overrides,
         sortFunc,
         subset,
+        withLink,
     ]);
 
     return {
