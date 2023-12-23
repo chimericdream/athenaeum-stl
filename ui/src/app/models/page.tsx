@@ -1,7 +1,12 @@
 import { Box } from '@mui/material';
+import type { Metadata } from 'next';
 
 import { ModelList } from '~/components/models/model-list';
 import { PageTitle } from '~/components/typography/page-title';
+
+export const metadata: Metadata = {
+    title: 'All Models',
+};
 
 export default async function Page() {
     return (
