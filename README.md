@@ -13,9 +13,14 @@ This project is a work in progress. Documentation coming soon.
 
 ## Planned features
 
+*Help is welcome!
+
 * So, so many things
 * Real docs
 * Website/demo
+* UX improvements
+* Code cleanup
+* Performance improvements
 
 ## MIT License
 
