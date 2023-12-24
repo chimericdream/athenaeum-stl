@@ -8,20 +8,11 @@ export const ListFilterInput = () => {
 
     return (
         <TextField
+            fullWidth
             value={filter ?? ''}
             onChange={(e) => setFilter(e.target.value)}
             label="Search models"
             variant="outlined"
-            sx={{
-                lineHeight: 1.75,
-                width: '32ch',
-                '& label': {
-                    transform: 'translate(1rem, 0.75rem) scale(1)',
-                },
-                '& label.Mui-focused, & label.MuiInputLabel-shrink': {
-                    transform: 'translate(0.875rem, -0.5625rem) scale(0.75)',
-                },
-            }}
             InputProps={{
                 endAdornment: (
                     <InputAdornment position="end">
@@ -34,13 +25,6 @@ export const ListFilterInput = () => {
                         </IconButton>
                     </InputAdornment>
                 ),
-                sx: {
-                    lineHeight: 1.75,
-                    '& input': {
-                        height: '1lh',
-                        paddingBlock: '0.625rem',
-                    },
-                },
             }}
         />
     );

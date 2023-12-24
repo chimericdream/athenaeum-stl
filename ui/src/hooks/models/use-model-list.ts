@@ -14,7 +14,7 @@ interface ModelListOverrides {
     mode?: 'grid' | 'list';
     order?: 'asc' | 'desc';
     sort?: 'name' | 'date';
-    includeNsfw?: boolean;
+    includeNsfw?: boolean | null;
     isDeleted?: boolean;
 }
 
@@ -66,11 +66,21 @@ export const useModelList = (overrides?: ModelListOverrides) => {
         const list = data ?? [];
         const sorted = list.toSorted(sortFunc);
 
-        let filtered;
-        if (includeNsfw || overrides?.includeNsfw) {
-            filtered = sorted;
-        } else {
-            filtered = sorted.filter((model) => !model.metadata?.nsfw);
+        console.log(
+            `includeNsfw: '${includeNsfw}', overrides?.includeNsfw: '${overrides?.includeNsfw}'`
+        );
+
+        let filtered = sorted;
+        if (includeNsfw !== null || (overrides?.includeNsfw ?? null) !== null) {
+            if (includeNsfw || overrides?.includeNsfw) {
+                filtered = sorted.filter((model) =>
+                    Boolean(model.metadata?.nsfw)
+                );
+            } else {
+                filtered = sorted.filter(
+                    (model) => !Boolean(model.metadata?.nsfw)
+                );
+            }
         }
 
         if (overrides?.isDeleted) {

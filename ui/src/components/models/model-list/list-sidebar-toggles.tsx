@@ -6,15 +6,16 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import FilePresentIcon from '@mui/icons-material/FilePresent';
+import GridViewIcon from '@mui/icons-material/GridView';
 import ImageIcon from '@mui/icons-material/Image';
 import LabelIcon from '@mui/icons-material/Label';
-import LabelOffIcon from '@mui/icons-material/LabelOff';
 import LayersIcon from '@mui/icons-material/Layers';
 import LinkIcon from '@mui/icons-material/Link';
 import NoAdultContentIcon from '@mui/icons-material/NoAdultContent';
 import ReplayIcon from '@mui/icons-material/Replay';
 import StraightIcon from '@mui/icons-material/Straight';
 import ViewInArIcon from '@mui/icons-material/ViewInAr';
+import ViewListIcon from '@mui/icons-material/ViewList';
 import {
     Box,
     Button,
@@ -29,12 +30,15 @@ import {
 import { useTheme } from '@mui/material/styles';
 
 import { StackedIcon } from '~/components/icons/stacked-icon';
+import { ListFilterInput } from '~/components/models/model-list/list-filter-input';
 import { useModelListContext } from '~/contexts/model-list-context';
 
 export const ListSidebarToggles = () => {
     const theme = useTheme();
 
     const {
+        mode,
+        handleModeChange,
         includeNsfw,
         labelState,
         order,
@@ -43,7 +47,7 @@ export const ListSidebarToggles = () => {
         fileFilterUpdaters,
         handleSortOrderChange,
         handleLabelStateChange,
-        toggleNsfw,
+        handleNsfwChange,
         withLink,
         handleWithLinkChange,
         reset,
@@ -69,8 +73,37 @@ export const ListSidebarToggles = () => {
                     }}
                     onClick={reset}
                 >
-                    Reset filters
+                    Reset
                 </Button>
+            </Box>
+
+            <Box component="div" sx={{ display: 'flex', padding: '0 1rem' }}>
+                <ToggleButtonGroup
+                    exclusive
+                    aria-label="Toggle between list and grid views"
+                    onChange={handleModeChange}
+                    value={mode}
+                    sx={{ width: '100%' }}
+                >
+                    <ToggleButton
+                        value="list"
+                        sx={{ display: 'flex', gap: 2, width: '50%' }}
+                    >
+                        <ViewListIcon />
+                        <Typography>List view</Typography>
+                    </ToggleButton>
+                    <ToggleButton
+                        value="grid"
+                        sx={{ display: 'flex', gap: 2, width: '50%' }}
+                    >
+                        <GridViewIcon />
+                        <Typography>Grid view</Typography>
+                    </ToggleButton>
+                </ToggleButtonGroup>
+            </Box>
+
+            <Box component="div" sx={{ display: 'flex', padding: '0 1rem' }}>
+                <ListFilterInput />
             </Box>
 
             <Box
@@ -78,7 +111,7 @@ export const ListSidebarToggles = () => {
                 sx={{ display: 'flex', flexDirection: 'column' }}
             >
                 <List sx={{ paddingBlock: 0 }}>
-                    <ListItem>
+                    <ListItem sx={{ paddingTop: 0 }}>
                         <ListItemText
                             primary="Sort"
                             primaryTypographyProps={{
@@ -89,23 +122,15 @@ export const ListSidebarToggles = () => {
                 </List>
                 <ToggleButtonGroup
                     exclusive
-                    orientation="vertical"
                     aria-label="Toggle sort mode"
                     onChange={handleSortOrderChange}
                     value={`${sort}|${order}`}
                     sx={{
-                        '& > *': {
-                            borderRadius: 0,
-                            borderLeftWidth: 0,
-                            borderRightWidth: 0,
-                            justifyContent: 'flex-start',
-                            paddingLeft: '1rem',
-                            gap: 3,
-                            textTransform: 'none',
-                        },
+                        display: 'flex',
+                        padding: '0 1rem',
                     }}
                 >
-                    <ToggleButton value="name|asc">
+                    <ToggleButton value="name|asc" sx={{ flex: 1 }}>
                         <StackedIcon>
                             <StraightIcon
                                 sx={{
@@ -116,9 +141,8 @@ export const ListSidebarToggles = () => {
                                 sx={{ transform: 'translateX(0.125lh)' }}
                             />
                         </StackedIcon>
-                        <Typography>Name (asc)</Typography>
                     </ToggleButton>
-                    <ToggleButton value="name|desc">
+                    <ToggleButton value="name|desc" sx={{ flex: 1 }}>
                         <StackedIcon>
                             <StraightIcon
                                 sx={{
@@ -130,9 +154,8 @@ export const ListSidebarToggles = () => {
                                 sx={{ transform: 'translateX(0.125lh)' }}
                             />
                         </StackedIcon>
-                        <Typography>Name (desc)</Typography>
                     </ToggleButton>
-                    <ToggleButton value="date|asc">
+                    <ToggleButton value="date|asc" sx={{ flex: 1 }}>
                         <StackedIcon>
                             <StraightIcon
                                 sx={{
@@ -143,9 +166,8 @@ export const ListSidebarToggles = () => {
                                 sx={{ transform: 'translateX(0.125lh)' }}
                             />
                         </StackedIcon>
-                        <Typography>Imported at (asc)</Typography>
                     </ToggleButton>
-                    <ToggleButton value="date|desc">
+                    <ToggleButton value="date|desc" sx={{ flex: 1 }}>
                         <StackedIcon>
                             <StraightIcon
                                 sx={{
@@ -157,7 +179,6 @@ export const ListSidebarToggles = () => {
                                 sx={{ transform: 'translateX(0.125lh)' }}
                             />
                         </StackedIcon>
-                        <Typography>Imported at (desc)</Typography>
                     </ToggleButton>
                 </ToggleButtonGroup>
             </Box>
@@ -167,7 +188,7 @@ export const ListSidebarToggles = () => {
                 sx={{ display: 'flex', flexDirection: 'column' }}
             >
                 <List sx={{ paddingBlock: 0 }}>
-                    <ListItem>
+                    <ListItem sx={{ paddingTop: 0 }}>
                         <ListItemText
                             primary="Files"
                             primaryTypographyProps={{
@@ -336,54 +357,7 @@ export const ListSidebarToggles = () => {
                 sx={{ display: 'flex', flexDirection: 'column' }}
             >
                 <List sx={{ paddingBlock: 0 }}>
-                    <ListItem>
-                        <ListItemText
-                            primary="Labels"
-                            primaryTypographyProps={{
-                                sx: { fontWeight: 'bold' },
-                            }}
-                        />
-                    </ListItem>
-                </List>
-                <ToggleButtonGroup
-                    exclusive
-                    orientation="vertical"
-                    aria-label="Toggle label state"
-                    onChange={handleLabelStateChange}
-                    value={labelState}
-                    sx={{
-                        '& > *': {
-                            borderRadius: 0,
-                            borderLeftWidth: 0,
-                            borderRightWidth: 0,
-                            justifyContent: 'flex-start',
-                            paddingLeft: '1rem',
-                            gap: 3,
-                            textTransform: 'none',
-                        },
-                    }}
-                >
-                    <ToggleButton value="all">
-                        <AllInclusiveIcon />
-                        <Typography>All models</Typography>
-                    </ToggleButton>
-                    <ToggleButton value="labeled">
-                        <LabelIcon />
-                        <Typography>Models with labels</Typography>
-                    </ToggleButton>
-                    <ToggleButton value="unlabeled">
-                        <LabelOffIcon />
-                        <Typography>Models without labels</Typography>
-                    </ToggleButton>
-                </ToggleButtonGroup>
-            </Box>
-
-            <Box
-                component="div"
-                sx={{ display: 'flex', flexDirection: 'column' }}
-            >
-                <List sx={{ paddingBlock: 0 }}>
-                    <ListItem>
+                    <ListItem sx={{ paddingTop: 0 }}>
                         <ListItemText
                             primary="Other"
                             primaryTypographyProps={{
@@ -392,39 +366,11 @@ export const ListSidebarToggles = () => {
                         />
                     </ListItem>
                 </List>
-                <ToggleButtonGroup
-                    orientation="vertical"
-                    onChange={() => {}}
-                    value={[]}
-                    sx={{
-                        '& > *': {
-                            borderRadius: 0,
-                            borderLeftWidth: 0,
-                            borderRightWidth: 0,
-                            justifyContent: 'flex-start',
-                            paddingLeft: '1rem',
-                            gap: 3,
-                            textTransform: 'none',
-                        },
-                    }}
-                >
-                    <ToggleButton
-                        value="nsfw"
-                        selected={!includeNsfw}
-                        onClick={toggleNsfw}
-                    >
-                        <NoAdultContentIcon />
-                        <Typography>
-                            {includeNsfw
-                                ? 'Showing NSFW models'
-                                : 'Hiding NSFW models'}
-                        </Typography>
-                    </ToggleButton>
-                </ToggleButtonGroup>
                 <List sx={{ paddingTop: 0 }}>
                     <ListItem
                         sx={{
                             borderBottom: `1px solid ${theme.palette.divider}`,
+                            borderTop: `1px solid ${theme.palette.divider}`,
                         }}
                         secondaryAction={
                             <ToggleButtonGroup
@@ -458,7 +404,84 @@ export const ListSidebarToggles = () => {
                         <ListItemIcon sx={{ minWidth: '3rem' }}>
                             <LinkIcon />
                         </ListItemIcon>
-                        <ListItemText primary="With Source URL" />
+                        <ListItemText primary="Has source URL" />
+                    </ListItem>
+                    <ListItem
+                        sx={{
+                            borderBottom: `1px solid ${theme.palette.divider}`,
+                        }}
+                        secondaryAction={
+                            <ToggleButtonGroup
+                                exclusive
+                                size="small"
+                                value={labelState}
+                                onChange={handleLabelStateChange}
+                                aria-label="With label filter"
+                            >
+                                <ToggleButton
+                                    value="labeled"
+                                    aria-label="With source URL"
+                                >
+                                    <CheckIcon />
+                                </ToggleButton>
+                                <ToggleButton
+                                    value="unlabeled"
+                                    aria-label="Without source URL"
+                                >
+                                    <CloseIcon />
+                                </ToggleButton>
+                                <ToggleButton
+                                    value="all"
+                                    aria-label="With or without labels"
+                                >
+                                    <AllInclusiveIcon />
+                                </ToggleButton>
+                            </ToggleButtonGroup>
+                        }
+                    >
+                        <ListItemIcon sx={{ minWidth: '3rem' }}>
+                            <LabelIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="With labels" />
+                    </ListItem>
+                    <ListItem
+                        sx={{
+                            borderBottom: `1px solid ${theme.palette.divider}`,
+                        }}
+                        secondaryAction={
+                            <ToggleButtonGroup
+                                exclusive
+                                size="small"
+                                value={includeNsfw}
+                                onChange={handleNsfwChange}
+                                aria-label="With label filter"
+                            >
+                                <ToggleButton
+                                    value={true}
+                                    aria-label="Only NSFW models"
+                                >
+                                    <CheckIcon />
+                                </ToggleButton>
+                                <ToggleButton
+                                    value={false}
+                                    aria-label="Exclude NSFW models"
+                                >
+                                    <CloseIcon />
+                                </ToggleButton>
+                                <ToggleButton
+                                    value="null"
+                                    selected={includeNsfw === null}
+                                    aria-label="All models"
+                                >
+                                    <AllInclusiveIcon />
+                                </ToggleButton>
+                            </ToggleButtonGroup>
+                        }
+                    >
+                        <ListItemIcon sx={{ minWidth: '3rem' }}>
+                            <NoAdultContentIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="NSFW" />
                     </ListItem>
                 </List>
             </Box>

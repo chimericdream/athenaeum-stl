@@ -11,10 +11,16 @@ import {
     createContext,
     useCallback,
     useContext,
+    useEffect,
     useState,
 } from 'react';
 
 import { useModelListSettings } from '~/hooks/models/use-model-list-settings';
+
+type ToggleUpdater<V = 'include' | 'exclude' | 'any'> = (
+    e: MouseEvent<HTMLElement>,
+    value: V | null
+) => void;
 
 export interface ModelListContextType {
     subset: null | string[];
@@ -32,48 +38,26 @@ export interface ModelListContextType {
         supportFiles: 'include' | 'exclude' | 'any';
     };
     fileFilterUpdaters: {
-        parts: (
-            _: MouseEvent<HTMLElement>,
-            value: 'include' | 'exclude' | 'any' | null
-        ) => void;
-        projects: (
-            _: MouseEvent<HTMLElement>,
-            value: 'include' | 'exclude' | 'any' | null
-        ) => void;
-        images: (
-            _: MouseEvent<HTMLElement>,
-            value: 'include' | 'exclude' | 'any' | null
-        ) => void;
-        supportFiles: (
-            _: MouseEvent<HTMLElement>,
-            value: 'include' | 'exclude' | 'any' | null
-        ) => void;
+        parts: ToggleUpdater;
+        projects: ToggleUpdater;
+        images: ToggleUpdater;
+        supportFiles: ToggleUpdater;
     };
-    handleLabelStateChange: (
-        _: MouseEvent<HTMLElement>,
-        value: 'all' | 'labeled' | 'unlabeled' | null
-    ) => void;
-    includeNsfw: boolean;
-    toggleNsfw: () => void;
+    handleLabelStateChange: ToggleUpdater<'all' | 'labeled' | 'unlabeled'>;
+    includeNsfw: boolean | null;
+    handleNsfwChange: ToggleUpdater<boolean | 'null'>;
     withLink: 'include' | 'exclude' | 'any';
-    handleWithLinkChange: (
-        _: MouseEvent<HTMLElement>,
-        value: 'include' | 'exclude' | 'any' | null
-    ) => void;
+    handleWithLinkChange: ToggleUpdater;
     setFilter: (filter: string | null) => void;
     setSubset: (subset: null | string[]) => void;
     updatePagination: (
         model: GridPaginationModel,
         details: GridCallbackDetails
     ) => void;
-    handleModeChange: (
-        _: MouseEvent<HTMLElement>,
-        newMode: 'grid' | 'list'
-    ) => void;
-    handleSortOrderChange: (
-        _: MouseEvent<HTMLElement>,
-        value: 'name|asc' | 'name|desc' | 'date|asc' | 'date|desc'
-    ) => void;
+    handleModeChange: ToggleUpdater<'grid' | 'list'>;
+    handleSortOrderChange: ToggleUpdater<
+        'name|asc' | 'name|desc' | 'date|asc' | 'date|desc'
+    >;
     reset: () => void;
 }
 
@@ -102,7 +86,7 @@ export const ModelListContext = createContext<ModelListContextType>({
     includeNsfw: false,
     withLink: 'any',
     handleWithLinkChange: () => {},
-    toggleNsfw: () => {},
+    handleNsfwChange: () => {},
     setSubset: () => {},
     setFilter: () => {},
     updatePagination: () => {},
@@ -113,8 +97,8 @@ export const ModelListContext = createContext<ModelListContextType>({
 
 export const ModelListProvider = ({ children }: PWC) => {
     const [filter, setFilter] = useState<string | null>(null);
-    const [subset, setSubset] = useState<null | string[]>(null);
-    const [includeNsfw, setNsfw] = useState<boolean>(false);
+    const [subset, setSubset] = useState<string[] | null>(null);
+    const [includeNsfw, setNsfw] = useState<boolean | null>(false);
 
     const router = useRouter();
     const pathname = usePathname();
@@ -131,10 +115,6 @@ export const ModelListProvider = ({ children }: PWC) => {
         reset,
         withLink,
     } = useModelListSettings();
-
-    const toggleNsfw = useCallback(() => {
-        setNsfw((prev) => !prev);
-    }, [setNsfw]);
 
     const makeQueryString = useCallback(
         (updates: { [key: string]: string }, removals: string[] = []) => {
@@ -165,10 +145,23 @@ export const ModelListProvider = ({ children }: PWC) => {
     );
 
     const handleModeChange = useCallback(
-        (_: MouseEvent<HTMLElement>, newMode: 'grid' | 'list') => {
-            router.push(`${pathname}?${makeQueryString({ mode: newMode })}`);
+        (_: MouseEvent<HTMLElement>, newMode: 'grid' | 'list' | null) => {
+            router.push(
+                `${pathname}?${makeQueryString({ mode: newMode ?? 'list' })}`
+            );
         },
         [makeQueryString, pathname, router]
+    );
+
+    const handleNsfwChange = useCallback(
+        (_: MouseEvent<HTMLElement>, newMode: boolean | 'null' | null) => {
+            if (newMode === 'null') {
+                setNsfw(null);
+                return;
+            }
+            setNsfw(newMode);
+        },
+        [setNsfw]
     );
 
     const handleSortOrderChange = useCallback(
@@ -191,9 +184,11 @@ export const ModelListProvider = ({ children }: PWC) => {
     const handleLabelStateChange = useCallback(
         (
             _: MouseEvent<HTMLElement>,
-            value: 'all' | 'labeled' | 'unlabeled'
+            value: 'all' | 'labeled' | 'unlabeled' | null
         ) => {
-            router.push(`${pathname}?${makeQueryString({ labels: value })}`);
+            router.push(
+                `${pathname}?${makeQueryString({ labels: value ?? 'all' })}`
+            );
         },
         [makeQueryString, pathname, router]
     );
@@ -262,6 +257,16 @@ export const ModelListProvider = ({ children }: PWC) => {
         [makeQueryString, pathname, router]
     );
 
+    useEffect(() => {
+        const shouldReset = searchParams.has('reset');
+        if (shouldReset) {
+            setFilter(null);
+            setSubset(null);
+            setNsfw(false);
+            router.push(pathname);
+        }
+    }, [pathname, reset, router, searchParams]);
+
     const ctx: ModelListContextType = {
         subset,
         filter,
@@ -280,7 +285,7 @@ export const ModelListProvider = ({ children }: PWC) => {
         labelState: labels,
         handleLabelStateChange,
         includeNsfw,
-        toggleNsfw,
+        handleNsfwChange,
         withLink,
         handleWithLinkChange,
         setFilter,

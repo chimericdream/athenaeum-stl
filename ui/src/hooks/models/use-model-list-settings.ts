@@ -133,7 +133,7 @@ export const useModelListSettings = () => {
         }
 
         localStorage.setItem('modelListSettings', JSON.stringify(defaults));
-        router.push(pathname);
+        router.push(`${pathname}?reset=true`);
     }, [pathname, router]);
 
     const settings: ModelListSettings = useMemo(() => {

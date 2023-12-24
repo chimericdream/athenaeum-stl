@@ -21,7 +21,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { type MouseEvent, useCallback, useState } from 'react';
 
-import { ListFilterInput } from '~/components/models/model-list/list-filter-input';
 import { ModelListToggleButtons } from '~/components/models/model-list/list-toggle-buttons';
 import { ImportedAt } from '~/components/typography/imported-at';
 import { useModelListContext } from '~/contexts/model-list-context';
@@ -216,8 +215,6 @@ export const ModelTable = ({
                             <EditIcon />
                         </ToggleButton>
                     </ToggleButtonGroup>
-
-                    <ListFilterInput />
                 </Box>
 
                 <ModelListToggleButtons />
