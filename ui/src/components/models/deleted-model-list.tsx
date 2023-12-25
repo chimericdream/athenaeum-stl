@@ -11,7 +11,7 @@ export const DeletedModelList = (props: { tableHeight?: string }) => {
         mode: 'list',
         order: 'asc',
         sort: 'name',
-        includeNsfw: true,
+        includeNsfw: null,
         isDeleted: true,
     });
 
