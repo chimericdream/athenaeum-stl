@@ -15,7 +15,21 @@ import { moveFileMachine } from '~/machines/move-file-machine';
 import { type FileRecord, moveFileToModel } from '~/services/athenaeum';
 
 export const MoveFileButtons = ({ file }: { file: FileRecord }) => {
-    const { models } = useModelList({ order: 'asc' });
+    const { models } = useModelList({
+        order: 'asc',
+        sort: 'name',
+        includeNsfw: null,
+        fileFilters: {
+            parts: 'any',
+            projects: 'any',
+            images: 'any',
+            supportFiles: 'any',
+        },
+        labelState: 'all',
+        subset: null,
+        withLink: 'any',
+        isDeleted: false,
+    });
 
     const [state, send] = useMachine(moveFileMachine);
 
