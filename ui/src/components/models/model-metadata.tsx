@@ -3,6 +3,7 @@
 import LaunchIcon from '@mui/icons-material/Launch';
 import {
     Box,
+    Button,
     Divider,
     FormControlLabel,
     IconButton,
@@ -12,7 +13,7 @@ import {
     Typography,
 } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { type ChangeEvent, useCallback, useState } from 'react';
+import { type ChangeEvent, useCallback, useEffect, useState } from 'react';
 
 import {
     type ModelMetadata,
@@ -31,8 +32,8 @@ export const ModelMeta = ({ id }: { id: string }) => {
 
     const metadata = model?.metadata;
 
-    const [description, setDescription] = useState(metadata?.description ?? '');
-    const [sourceUrl, setSourceUrl] = useState(metadata?.source_url ?? '');
+    const [description, setDescription] = useState('');
+    const [sourceUrl, setSourceUrl] = useState('');
 
     const { isPending, mutate } = useMutation<
         ModelRecord,
@@ -45,7 +46,7 @@ export const ModelMeta = ({ id }: { id: string }) => {
         },
     });
 
-    const handleBlur = useCallback(() => {
+    const handleSave = useCallback(() => {
         mutate({
             id,
             metadata: {
@@ -72,34 +73,41 @@ export const ModelMeta = ({ id }: { id: string }) => {
         [setSourceUrl]
     );
 
+    useEffect(() => {
+        setDescription(metadata?.description ?? '');
+        setSourceUrl(metadata?.source_url ?? '');
+    }, [metadata]);
+
     if (!model || !metadata) {
         return null;
     }
 
     return (
-        <>
-            <Typography variant="h6" component="h5" sx={{ mb: 3 }}>
+        <Box
+            component="div"
+            sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}
+        >
+            <Typography variant="h6" component="h5">
                 Metadata
             </Typography>
-            <Divider sx={{ my: 3 }} />
+            <Divider />
             <TextField
                 fullWidth
                 multiline
+                key={`description-${id}`}
                 disabled={isPending}
                 value={description}
                 label="Description"
                 onChange={handleDescriptionChange}
-                onBlur={handleBlur}
                 rows={6}
-                sx={{ mb: 3 }}
             />
             <TextField
                 fullWidth
+                key={`source_url-${id}`}
                 disabled={isPending}
                 value={sourceUrl}
                 label="Source URL"
                 onChange={handleUrlChange}
-                onBlur={handleBlur}
                 InputProps={{
                     endAdornment: (
                         <InputAdornment position="end">
@@ -115,7 +123,6 @@ export const ModelMeta = ({ id }: { id: string }) => {
                     ),
                 }}
             />
-            <Divider sx={{ my: 3 }} />
             <Box
                 component="div"
                 sx={{
@@ -192,6 +199,31 @@ export const ModelMeta = ({ id }: { id: string }) => {
                     }
                 />
             </Box>
-        </>
+            <Divider />
+            <Box
+                component="div"
+                sx={{ display: 'flex', justifyContent: 'end', gap: 2 }}
+            >
+                <Button
+                    variant="outlined"
+                    color="warning"
+                    disabled={isPending}
+                    onClick={() => {
+                        setDescription(metadata.description ?? '');
+                        setSourceUrl(metadata.source_url ?? '');
+                    }}
+                >
+                    Reset
+                </Button>
+                <Button
+                    color="primary"
+                    variant="contained"
+                    disabled={isPending}
+                    onClick={handleSave}
+                >
+                    Save
+                </Button>
+            </Box>
+        </Box>
     );
 };
