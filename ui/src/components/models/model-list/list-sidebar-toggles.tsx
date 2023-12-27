@@ -11,6 +11,7 @@ import ImageIcon from '@mui/icons-material/Image';
 import LabelIcon from '@mui/icons-material/Label';
 import LayersIcon from '@mui/icons-material/Layers';
 import LinkIcon from '@mui/icons-material/Link';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import NoAdultContentIcon from '@mui/icons-material/NoAdultContent';
 import ReplayIcon from '@mui/icons-material/Replay';
 import StraightIcon from '@mui/icons-material/Straight';
@@ -50,6 +51,8 @@ export const ListSidebarToggles = () => {
         handleNsfwChange,
         withLink,
         handleWithLinkChange,
+        isCommercialAllowed,
+        handleIsCommercialAllowedChange,
         reset,
     } = useModelListContext();
 
@@ -452,9 +455,47 @@ export const ListSidebarToggles = () => {
                             <ToggleButtonGroup
                                 exclusive
                                 size="small"
+                                value={isCommercialAllowed}
+                                onChange={handleIsCommercialAllowedChange}
+                                aria-label="Commercial license filter"
+                            >
+                                <ToggleButton
+                                    value="include"
+                                    aria-label="Has commercial license"
+                                >
+                                    <CheckIcon />
+                                </ToggleButton>
+                                <ToggleButton
+                                    value="exclude"
+                                    aria-label="Non-commercial license"
+                                >
+                                    <CloseIcon />
+                                </ToggleButton>
+                                <ToggleButton
+                                    value="any"
+                                    aria-label="Any license"
+                                >
+                                    <AllInclusiveIcon />
+                                </ToggleButton>
+                            </ToggleButtonGroup>
+                        }
+                    >
+                        <ListItemIcon sx={{ minWidth: '3rem' }}>
+                            <MonetizationOnIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Commercial use" />
+                    </ListItem>
+                    <ListItem
+                        sx={{
+                            borderBottom: `1px solid ${theme.palette.divider}`,
+                        }}
+                        secondaryAction={
+                            <ToggleButtonGroup
+                                exclusive
+                                size="small"
                                 value={includeNsfw}
                                 onChange={handleNsfwChange}
-                                aria-label="With label filter"
+                                aria-label="NSFW filter"
                             >
                                 <ToggleButton
                                     value={true}

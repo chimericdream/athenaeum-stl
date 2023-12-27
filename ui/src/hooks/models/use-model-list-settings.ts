@@ -16,6 +16,7 @@ interface ModelListSettings {
     };
     page: number;
     withLink: 'include' | 'exclude' | 'any';
+    isCommercialAllowed: 'include' | 'exclude' | 'any';
     pageSize: number;
     reset: () => void;
 }
@@ -32,6 +33,7 @@ interface PartialModelListSettings {
         supportFiles?: 'include' | 'exclude' | 'any' | null;
     };
     withLink: 'include' | 'exclude' | 'any' | null;
+    isCommercialAllowed: 'include' | 'exclude' | 'any' | null;
     page: number | null;
     pageSize: number | null;
 }
@@ -48,6 +50,7 @@ const defaults: ModelListSettings = {
         supportFiles: 'any',
     },
     withLink: 'any',
+    isCommercialAllowed: 'any',
     page: 0,
     pageSize: 100,
     reset: () => {},
@@ -96,6 +99,12 @@ export const useModelListSettings = () => {
             retVal.withLink = searchParams.get(
                 'withLink'
             ) as ModelListSettings['withLink'];
+        }
+
+        if (searchParams.has('isCommercialAllowed')) {
+            retVal.isCommercialAllowed = searchParams.get(
+                'isCommercialAllowed'
+            ) as ModelListSettings['isCommercialAllowed'];
         }
 
         retVal.fileFilters = {};

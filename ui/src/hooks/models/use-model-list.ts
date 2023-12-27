@@ -24,6 +24,7 @@ interface ModelListOverrides {
     labelState?: 'all' | 'labeled' | 'unlabeled';
     subset?: string[] | null;
     withLink?: 'any' | 'include' | 'exclude';
+    isCommercialAllowed?: 'any' | 'include' | 'exclude';
     isDeleted?: boolean;
 }
 
@@ -37,12 +38,14 @@ export const useModelList = (overrides?: ModelListOverrides) => {
         sort,
         subset,
         withLink,
+        isCommercialAllowed,
     } = useModelListContext();
 
     const listConfigs = useMemo(() => {
         const configs = {
             fileFilters,
             includeNsfw,
+            isCommercialAllowed,
             labelState,
             mode,
             order,
@@ -85,11 +88,15 @@ export const useModelList = (overrides?: ModelListOverrides) => {
         if (overrides?.withLink) {
             configs.withLink = overrides.withLink;
         }
+        if (overrides?.isCommercialAllowed) {
+            configs.isCommercialAllowed = overrides.isCommercialAllowed;
+        }
 
         return configs;
     }, [
         fileFilters,
         includeNsfw,
+        isCommercialAllowed,
         labelState,
         mode,
         order,
@@ -161,6 +168,16 @@ export const useModelList = (overrides?: ModelListOverrides) => {
                 }
 
                 return !model.metadata?.source_url;
+            });
+        }
+
+        if (listConfigs.isCommercialAllowed !== 'any') {
+            filtered = filtered.filter((model) => {
+                if (listConfigs.isCommercialAllowed === 'include') {
+                    return !!model.metadata?.commercial_use;
+                }
+
+                return !model.metadata?.commercial_use;
             });
         }
 

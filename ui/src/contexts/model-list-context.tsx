@@ -47,7 +47,9 @@ export interface ModelListContextType {
     includeNsfw: boolean | null;
     handleNsfwChange: ToggleUpdater<boolean | 'null'>;
     withLink: 'include' | 'exclude' | 'any';
+    isCommercialAllowed: 'include' | 'exclude' | 'any';
     handleWithLinkChange: ToggleUpdater;
+    handleIsCommercialAllowedChange: ToggleUpdater;
     setFilter: (filter: string | null) => void;
     setSubset: (subset: null | string[]) => void;
     updatePagination: (
@@ -85,7 +87,9 @@ export const ModelListContext = createContext<ModelListContextType>({
     handleLabelStateChange: () => {},
     includeNsfw: false,
     withLink: 'any',
+    isCommercialAllowed: 'any',
     handleWithLinkChange: () => {},
+    handleIsCommercialAllowedChange: () => {},
     handleNsfwChange: () => {},
     setSubset: () => {},
     setFilter: () => {},
@@ -114,6 +118,7 @@ export const ModelListProvider = ({ children }: PWC) => {
         pageSize,
         reset,
         withLink,
+        isCommercialAllowed,
     } = useModelListSettings();
 
     const makeQueryString = useCallback(
@@ -207,6 +212,20 @@ export const ModelListProvider = ({ children }: PWC) => {
         [makeQueryString, pathname, router]
     );
 
+    const handleIsCommercialAllowedChange = useCallback(
+        (
+            _: MouseEvent<HTMLElement>,
+            value: 'include' | 'exclude' | 'any' | null
+        ) => {
+            router.push(
+                `${pathname}?${makeQueryString({
+                    isCommercialAllowed: value ?? 'any',
+                })}`
+            );
+        },
+        [makeQueryString, pathname, router]
+    );
+
     const handlePartFilterChange = useCallback(
         (
             _: MouseEvent<HTMLElement>,
@@ -288,6 +307,8 @@ export const ModelListProvider = ({ children }: PWC) => {
         handleNsfwChange,
         withLink,
         handleWithLinkChange,
+        isCommercialAllowed,
+        handleIsCommercialAllowedChange,
         setFilter,
         setSubset,
         updatePagination,
