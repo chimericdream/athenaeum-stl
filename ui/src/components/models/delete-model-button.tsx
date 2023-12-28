@@ -45,7 +45,7 @@ export const DeleteModelButton = ({ id }: { id: string }) => {
                 variant="circular"
                 color="error"
                 aria-label="Delete model"
-                sx={{ position: 'absolute', bottom: '1.5rem', right: '1.5rem' }}
+                sx={{ position: 'absolute', bottom: '1rem', right: '1rem' }}
                 onClick={() => setShowConfirm((prev) => !prev)}
             >
                 <DeleteIcon />

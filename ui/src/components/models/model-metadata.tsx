@@ -6,13 +6,14 @@ import {
     Button,
     Divider,
     FormControlLabel,
-    IconButton,
-    InputAdornment,
+    Link,
     Switch,
     TextField,
     Typography,
 } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import NextLink from 'next/link';
 import { type ChangeEvent, useCallback, useEffect, useState } from 'react';
 
 import {
@@ -23,7 +24,10 @@ import {
 } from '~/services/athenaeum';
 
 export const ModelMeta = ({ id }: { id: string }) => {
+    const [editMode, setEditMode] = useState(false);
+
     const queryClient = useQueryClient();
+    const theme = useTheme();
 
     const { data: model } = useQuery({
         queryKey: ['models', id],
@@ -43,6 +47,7 @@ export const ModelMeta = ({ id }: { id: string }) => {
         mutationFn: updateModelMetadata,
         onSuccess: (model) => {
             queryClient.setQueryData(['models', id], model);
+            setEditMode(false);
         },
     });
 
@@ -85,44 +90,88 @@ export const ModelMeta = ({ id }: { id: string }) => {
     return (
         <Box
             component="div"
-            sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                flexGrow: 1,
+                gap: 3,
+                height: '1px',
+            }}
         >
             <Typography variant="h6" component="h5">
                 Metadata
             </Typography>
             <Divider />
-            <TextField
-                fullWidth
-                multiline
-                key={`description-${id}`}
-                disabled={isPending}
-                value={description}
-                label="Description"
-                onChange={handleDescriptionChange}
-                rows={6}
-            />
-            <TextField
-                fullWidth
-                key={`source_url-${id}`}
-                disabled={isPending}
-                value={sourceUrl}
-                label="Source URL"
-                onChange={handleUrlChange}
-                InputProps={{
-                    endAdornment: (
-                        <InputAdornment position="end">
-                            <IconButton
-                                href={sourceUrl}
-                                target="_blank"
-                                rel="noopener"
-                                disabled={!sourceUrl}
-                            >
-                                <LaunchIcon />
-                            </IconButton>
-                        </InputAdornment>
-                    ),
-                }}
-            />
+            {!editMode && (
+                <>
+                    <Box
+                        component="div"
+                        sx={{
+                            flexGrow: 1,
+                            overflow: 'hidden',
+                            backgroundColor: theme.palette.grey[900],
+                            padding: '1rem',
+                            borderRadius: `${theme.shape.borderRadius}px`,
+                            border: `1px solid ${theme.palette.divider}`,
+                        }}
+                    >
+                        <Box
+                            component="div"
+                            sx={{
+                                height: '100%',
+                                overflow: 'auto',
+                            }}
+                        >
+                            <pre style={{ margin: 0 }}>
+                                <code>{description}</code>
+                            </pre>
+                        </Box>
+                    </Box>
+                    {sourceUrl && (
+                        <Link
+                            component={NextLink}
+                            href={sourceUrl}
+                            target="_blank"
+                            rel="noopener"
+                            sx={{ display: 'flex', gap: '0.5rem' }}
+                        >
+                            <LaunchIcon />
+                            <span>Original source</span>
+                        </Link>
+                    )}
+                </>
+            )}
+            {editMode && (
+                <>
+                    <TextField
+                        fullWidth
+                        multiline
+                        key={`description-${id}`}
+                        disabled={isPending}
+                        value={description}
+                        label="Description"
+                        onChange={handleDescriptionChange}
+                        rows={5}
+                        InputProps={{
+                            sx: {
+                                flexGrow: 1,
+                                '& textarea': {
+                                    height: '100% !important',
+                                },
+                            },
+                        }}
+                        sx={{ flexGrow: 1 }}
+                    />
+                    <TextField
+                        fullWidth
+                        key={`source_url-${id}`}
+                        disabled={isPending}
+                        value={sourceUrl}
+                        label="Source URL"
+                        onChange={handleUrlChange}
+                    />
+                </>
+            )}
             <Box
                 component="div"
                 sx={{
@@ -204,25 +253,39 @@ export const ModelMeta = ({ id }: { id: string }) => {
                 component="div"
                 sx={{ display: 'flex', justifyContent: 'end', gap: 2 }}
             >
-                <Button
-                    variant="outlined"
-                    color="warning"
-                    disabled={isPending}
-                    onClick={() => {
-                        setDescription(metadata.description ?? '');
-                        setSourceUrl(metadata.source_url ?? '');
-                    }}
-                >
-                    Reset
-                </Button>
-                <Button
-                    color="primary"
-                    variant="contained"
-                    disabled={isPending}
-                    onClick={handleSave}
-                >
-                    Save
-                </Button>
+                {!editMode && (
+                    <Button
+                        color="primary"
+                        variant="contained"
+                        onClick={() => setEditMode(true)}
+                    >
+                        Edit
+                    </Button>
+                )}
+                {editMode && (
+                    <>
+                        <Button
+                            variant="outlined"
+                            color="warning"
+                            disabled={isPending}
+                            onClick={() => {
+                                setDescription(metadata.description ?? '');
+                                setSourceUrl(metadata.source_url ?? '');
+                                setEditMode(false);
+                            }}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            color="primary"
+                            variant="contained"
+                            disabled={isPending}
+                            onClick={handleSave}
+                        >
+                            Save
+                        </Button>
+                    </>
+                )}
             </Box>
         </Box>
     );

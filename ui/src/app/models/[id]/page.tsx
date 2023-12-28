@@ -74,6 +74,7 @@ export default async function Page({ params }: PageProps) {
                                 xs: 0,
                                 sm: '1rem',
                             },
+                            paddingBottom: '4.5rem',
                             width: {
                                 xs: '100%',
                                 sm: 'calc(33% - 1px)',
@@ -83,7 +84,14 @@ export default async function Page({ params }: PageProps) {
                         <Box component="div">
                             <ModelLabels id={id} />
                         </Box>
-                        <Box component="div">
+                        <Box
+                            component="div"
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                flexGrow: 1,
+                            }}
+                        >
                             <ModelMeta id={id} />
                             <DeleteModelButton id={id} />
                         </Box>
