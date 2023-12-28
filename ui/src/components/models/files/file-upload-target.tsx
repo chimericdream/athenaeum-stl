@@ -50,7 +50,6 @@ export const FileUploadTarget = ({ id }: { id: string }) => {
                     ? theme.palette.success.dark
                     : theme.palette.grey[900],
                 cursor: 'pointer',
-                marginBlockStart: 3,
                 paddingInline: 2,
                 textAlign: 'center',
                 height: '8rem',
