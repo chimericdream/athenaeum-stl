@@ -16,6 +16,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import NextLink from 'next/link';
 import { type ChangeEvent, useCallback, useEffect, useState } from 'react';
 
+import { Markdownify } from '~/components/typography/markdownify';
 import {
     type ModelMetadata,
     type ModelRecord,
@@ -120,11 +121,15 @@ export const ModelMeta = ({ id }: { id: string }) => {
                             sx={{
                                 height: '100%',
                                 overflow: 'auto',
+                                '& > :first-child': {
+                                    marginTop: 0,
+                                },
+                                '& > :last-child': {
+                                    marginBottom: 0,
+                                },
                             }}
                         >
-                            <pre style={{ margin: 0 }}>
-                                <code>{description}</code>
-                            </pre>
+                            <Markdownify body={description} />
                         </Box>
                     </Box>
                     {sourceUrl && (
