@@ -57,6 +57,7 @@ export const FileUploadTarget = ({ id }: { id: string }) => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
+                flexGrow: 1,
             }}
         >
             <input {...getInputProps()} />

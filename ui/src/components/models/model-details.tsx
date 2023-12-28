@@ -21,7 +21,7 @@ export const ModelDetails = ({ id }: { id: string }) => {
 
     return (
         <>
-            <Box component="div" sx={{ my: 2 }}>
+            <Box component="div">
                 <ImportedAt dateTime={model.imported_at} />
             </Box>
             <Grid container spacing={3}>
@@ -57,7 +57,7 @@ export const ModelDetails = ({ id }: { id: string }) => {
                     </Card>
                 </Grid>
             </Grid>
-            <Divider sx={{ my: 3 }} />
+            <Divider />
             <FileUploadTarget id={id} />
         </>
     );

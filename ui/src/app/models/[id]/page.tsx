@@ -48,7 +48,15 @@ export default async function Page({ params }: PageProps) {
                     component="div"
                     sx={{ display: 'flex', flexGrow: 1, gap: '1rem' }}
                 >
-                    <Box component="div" sx={{ flexGrow: 1 }}>
+                    <Box
+                        component="div"
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            flexGrow: 1,
+                            gap: '1rem',
+                        }}
+                    >
                         <ModelDetails id={id} />
                     </Box>
                     <Box
