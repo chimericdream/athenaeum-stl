@@ -3,7 +3,7 @@
 import { Box } from '@mui/material';
 import { useResizeObserver } from '@wojtekmaj/react-hooks';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
@@ -23,12 +23,10 @@ const options = {
 
 const resizeObserverOptions = {};
 
-const maxWidth = 800;
-
 export const PdfPreview = ({ file }: { file: FileRecord }) => {
     const [numPages, setNumPages] = useState<number>(0);
     const [containerRef, setContainerRef] = useState<HTMLElement | null>(null);
-    const [containerWidth, setContainerWidth] = useState<number>();
+    const [containerWidth, setContainerWidth] = useState<number>(0);
 
     const onResize = useCallback<ResizeObserverCallback>(
         (entries) => {
@@ -41,13 +39,23 @@ export const PdfPreview = ({ file }: { file: FileRecord }) => {
         [setContainerWidth]
     );
 
+    const onDocumentLoadSuccess = useCallback(
+        ({ numPages: nextNumPages }: PDFDocumentProxy): void => {
+            setNumPages(nextNumPages);
+        },
+        [setNumPages]
+    );
+
     useResizeObserver(containerRef, resizeObserverOptions, onResize);
 
-    function onDocumentLoadSuccess({
-        numPages: nextNumPages,
-    }: PDFDocumentProxy): void {
-        setNumPages(nextNumPages);
-    }
+    useEffect(() => {
+        if (!containerRef) {
+            return;
+        }
+
+        const { width } = containerRef.getBoundingClientRect();
+        setContainerWidth(width);
+    }, [containerRef, setContainerWidth]);
 
     return (
         <Box component="div" sx={{ height: '100%', overflow: 'auto' }}>
@@ -71,11 +79,7 @@ export const PdfPreview = ({ file }: { file: FileRecord }) => {
                         <Page
                             key={`page_${index + 1}`}
                             pageNumber={index + 1}
-                            width={
-                                containerWidth
-                                    ? Math.min(containerWidth, maxWidth)
-                                    : maxWidth
-                            }
+                            width={containerWidth}
                         />
                     ))}
                 </Document>
