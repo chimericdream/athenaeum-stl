@@ -23,7 +23,7 @@ export const FileListItem = ({ file }: { file: FileRecord }) => {
         file.category === FileCategory.IMAGE ||
         file.category === FileCategory.PART ||
         (file.category === FileCategory.SUPPORT &&
-            file.file_name.endsWith('txt'));
+            (file.file_name.endsWith('txt') || file.file_name.endsWith('pdf')));
 
     const showPreviewModal = canPreview && selected;
     const showNonPreviewModal = !canPreview && selected;
