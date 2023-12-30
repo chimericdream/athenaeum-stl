@@ -9,8 +9,8 @@ import queue from 'throttled-queue';
 
 import { type ModelRecord, uploadFileToModel } from '~/services/athenaeum';
 
-// Limit file uploads to 1 at a time, with a 1s delay between each
-const throttle = queue(1, 1000);
+// Limit file uploads to 1 at a time, with a 300ms delay between each
+const throttle = queue(1, 300);
 
 export const FileUploadTarget = ({ id }: { id: string }) => {
     const queryClient = useQueryClient();
