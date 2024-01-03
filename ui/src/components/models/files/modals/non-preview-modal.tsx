@@ -1,9 +1,9 @@
 'use client';
 
-import { Box, Card, CardContent, Modal, Typography } from '@mui/material';
-import { filesize } from 'filesize';
+import { Box, Card, CardContent, Modal } from '@mui/material';
 
 import { useFileRecordContext } from '~/components/models/files/file-record-context';
+import { FileDetails } from '~/components/models/files/modals/file-details';
 
 export const NonPreviewModal = ({ selected }: { selected: boolean }) => {
     const { file, deselect } = useFileRecordContext();
@@ -36,16 +36,7 @@ export const NonPreviewModal = ({ selected }: { selected: boolean }) => {
                 >
                     <CardContent sx={{ height: '100%', maxHeight: '40vh' }}>
                         <Box component="div" sx={{ padding: 2 }}>
-                            <Typography variant="body1" textOverflow="ellipsis">
-                                {file.name}
-                            </Typography>
-                            <Typography variant="body2">
-                                {file.file_size
-                                    ? filesize(file.file_size, {
-                                          round: 1,
-                                      })
-                                    : null}
-                            </Typography>
+                            <FileDetails file={file} />
                         </Box>
                     </CardContent>
                 </Card>
