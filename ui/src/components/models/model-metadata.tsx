@@ -57,8 +57,8 @@ export const ModelMeta = ({ id }: { id: string }) => {
             id,
             metadata: {
                 model_id: id,
-                description: description,
-                source_url: sourceUrl,
+                description: description.trim(),
+                source_url: sourceUrl.trim(),
                 commercial_use: metadata?.commercial_use ?? false,
                 nsfw: metadata?.nsfw ?? false,
             },
@@ -156,6 +156,13 @@ export const ModelMeta = ({ id }: { id: string }) => {
                         value={description}
                         label="Description"
                         onChange={handleDescriptionChange}
+                        onKeyUp={(e) => {
+                            if (e.key === 'Enter' && e.ctrlKey) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                handleSave();
+                            }
+                        }}
                         rows={5}
                         InputProps={{
                             sx: {
@@ -174,6 +181,13 @@ export const ModelMeta = ({ id }: { id: string }) => {
                         value={sourceUrl}
                         label="Source URL"
                         onChange={handleUrlChange}
+                        onKeyUp={(e) => {
+                            if (e.key === 'Enter') {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                handleSave();
+                            }
+                        }}
                     />
                 </>
             )}
