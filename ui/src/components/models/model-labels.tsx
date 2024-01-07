@@ -1,14 +1,22 @@
 'use client';
 
 import { Chip, Divider, Typography } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useMemo } from 'react';
 
-import { LabelEntry, loadLabels, loadModel } from '~/services/athenaeum';
+import {
+    LabelEntry,
+    type ModelRecord,
+    deleteLabelFromModel,
+    loadLabels,
+    loadModel,
+} from '~/services/athenaeum';
 
 import { AddModelLabelInput } from './add-model-label-input';
 
 export const ModelLabels = ({ id }: { id: string }) => {
+    const queryClient = useQueryClient();
+
     const { data: model } = useQuery({
         queryKey: ['models', id],
         queryFn: () => loadModel(id),
@@ -17,6 +25,17 @@ export const ModelLabels = ({ id }: { id: string }) => {
     const { data: allLabels } = useQuery({
         queryKey: ['labels'],
         queryFn: loadLabels,
+    });
+
+    const { mutate } = useMutation<
+        ModelRecord,
+        Error,
+        { id: string; label: LabelEntry }
+    >({
+        mutationFn: deleteLabelFromModel,
+        onSuccess: async (model) => {
+            queryClient.setQueryData(['models', id], model);
+        },
     });
 
     const labels = useMemo(() => {
@@ -59,6 +78,7 @@ export const ModelLabels = ({ id }: { id: string }) => {
                     label={label.name}
                     sx={{ margin: 0.5 }}
                     variant="outlined"
+                    onDelete={() => mutate({ id, label })}
                 />
             ))}
         </>

@@ -109,6 +109,13 @@ fn add_label_to_model(model_id: &str, data: Json<Label>) -> Json<ModelRecord> {
     Json(updated_model)
 }
 
+#[delete("/models/<model_id>/labels/<label_id>")]
+fn remove_label_from_model(model_id: &str, label_id: &str) -> Json<ModelRecord> {
+    let updated_model = db::models::remove_label_from_model(&model_id, &label_id).expect("Failed to remove label from model");
+
+    Json(updated_model)
+}
+
 #[post("/models/<model_id>/labels", data = "<data>")]
 fn add_new_label_to_model(model_id: &str, data: Json<NewLabel>) -> Json<ModelRecord> {
     let label = db::labels::create_label(&data.name).expect("Failed to create label");
@@ -128,5 +135,6 @@ pub fn routes() -> Vec<Route> {
         open_model_location,
         upload_file_to_model,
         delete_model,
+        remove_label_from_model,
     ]
 }

@@ -72,6 +72,18 @@ pub fn add_label_to_model(model_id: &str, label_id: &str) -> Option<ModelRecord>
     get_model(model_id, false)
 }
 
+pub fn remove_label_from_model(model_id: &str, label_id: &str) -> Option<ModelRecord> {
+    use crate::db::schema::*;
+
+    let connection = &mut establish_connection();
+    diesel::delete(model_labels::table)
+        .filter(model_labels::model_id.eq(model_id))
+        .filter(model_labels::label_id.eq(label_id))
+        .execute(connection).ok()?;
+
+    get_model(model_id, false)
+}
+
 pub fn update_model(id: &str, model: &ModelUpdate) -> Option<ModelRecord> {
     use crate::db::schema::*;
 
