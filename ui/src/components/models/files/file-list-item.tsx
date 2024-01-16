@@ -22,6 +22,9 @@ export const FileListItem = ({ file }: { file: FileRecord }) => {
     const canPreview =
         file.category === FileCategory.IMAGE ||
         file.category === FileCategory.PART ||
+        (file.category === FileCategory.PROJECT &&
+            (file.file_name.endsWith('3mf') ||
+                file.file_name.endsWith('gcode'))) ||
         (file.category === FileCategory.SUPPORT &&
             (file.file_name.endsWith('txt') || file.file_name.endsWith('pdf')));
 

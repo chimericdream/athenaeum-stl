@@ -3,7 +3,13 @@
 import { Center, OrbitControls } from '@react-three/drei';
 import { Canvas, useLoader } from '@react-three/fiber';
 import { Suspense } from 'react';
-import type { BufferGeometry, Group, NormalBufferAttributes } from 'three';
+import {
+    type BufferGeometry,
+    type Group,
+    type NormalBufferAttributes,
+} from 'three';
+import { ThreeMFLoader } from 'three/examples/jsm/loaders/3MFLoader';
+import { GCodeLoader } from 'three/examples/jsm/loaders/GCodeLoader';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 
@@ -29,9 +35,25 @@ const isBufferGeometry = (
 
 const Model = ({ file, flags, scale, settings }: ModelProps) => {
     const url = getStaticUrl(file);
-    const isStl = file.file_name.toLowerCase().endsWith('stl');
+    const extension = file.file_name.toLowerCase().split('.').pop();
+    let loader = null;
+    switch (extension) {
+        case '3mf':
+            loader = ThreeMFLoader;
+            break;
+        case 'gcode':
+            loader = GCodeLoader;
+            break;
+        case 'obj':
+            loader = OBJLoader;
+            break;
+        case 'stl':
+            loader = STLLoader;
+            break;
+        default:
+            throw new Error(`Unsupported extension ${extension}`);
+    }
 
-    const loader = isStl ? STLLoader : OBJLoader;
     const model: BufferGeometry<NormalBufferAttributes> | Group = useLoader(
         loader,
         url

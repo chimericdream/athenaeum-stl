@@ -1,13 +1,7 @@
 import { Box } from '@mui/material';
-import {
-    HydrationBoundary,
-    QueryClient,
-    dehydrate,
-} from '@tanstack/react-query';
 
 import { LabelDetails } from '~/components/labels/label-details';
 import { LabelPageTitle } from '~/components/labels/label-page-title';
-import { loadLabel } from '~/services/athenaeum';
 
 interface PageProps {
     params: {
@@ -17,12 +11,6 @@ interface PageProps {
 
 export default async function Page({ params }: PageProps) {
     const { id } = params;
-    const queryClient = new QueryClient();
-
-    await queryClient.prefetchQuery({
-        queryKey: ['labels', id],
-        queryFn: () => loadLabel(id),
-    });
 
     return (
         <Box
@@ -35,12 +23,10 @@ export default async function Page({ params }: PageProps) {
                 width: '100%',
             }}
         >
-            <HydrationBoundary state={dehydrate(queryClient)}>
-                <Box component="div">
-                    <LabelPageTitle id={id} />
-                </Box>
-                <LabelDetails id={id} />
-            </HydrationBoundary>
+            <Box component="div">
+                <LabelPageTitle id={id} />
+            </Box>
+            <LabelDetails id={id} />
         </Box>
     );
 }

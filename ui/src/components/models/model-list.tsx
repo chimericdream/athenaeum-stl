@@ -5,15 +5,21 @@ import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import { useAppSidebar } from '~/contexts/app-sidebar-context';
-import { useModelList } from '~/hooks/models/use-model-list';
+import {
+    type ModelListOverrides,
+    useModelList,
+} from '~/hooks/models/use-model-list';
 
 import { ModelGrid } from './model-list/grid';
 import { ListSidebarToggles } from './model-list/list-sidebar-toggles';
 import { ModelTable } from './model-list/table';
 
-export const ModelList = (props: { tableHeight?: string }) => {
+export const ModelList = (props: {
+    overrides?: ModelListOverrides;
+    tableHeight?: string;
+}) => {
     const [isMounted, setIsMounted] = useState(false);
-    const { models, settings } = useModelList();
+    const { models, settings } = useModelList(props.overrides);
     const { sidebarContentRef } = useAppSidebar();
 
     const { mode } = settings;

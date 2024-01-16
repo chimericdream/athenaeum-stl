@@ -10,7 +10,7 @@ import {
 } from '~/services/athenaeum';
 import { rsToTemporal } from '~/util/dates';
 
-interface ModelListOverrides {
+export interface ModelListOverrides {
     mode?: 'grid' | 'list';
     order?: 'asc' | 'desc';
     sort?: 'name' | 'date';

@@ -166,11 +166,12 @@ export async function deleteLabelFromModel({
 }: {
     id: string;
     label: Label;
-}): Promise<ModelRecord> {
+}): Promise<{ model: ModelRecord; labelId: string }> {
     const res = await fetch(`${BASE_URL}/models/${id}/labels/${label.id}`, {
         method: 'DELETE',
     });
-    return await res.json();
+    const model = await res.json();
+    return { model, labelId: label.id };
 }
 
 export async function createLabel(label: string): Promise<Label> {

@@ -33,7 +33,7 @@ export const ModelPreviewContext =
 export const ModelPreviewProvider = ({ children }: PWC) => {
     const [flags, setFlags] = useState<PreviewFlags[]>(['showAxes']);
     const [settings, setSettings] = useState<PreviewSettings>({
-        rotation: { x: 0, y: 0, z: 0 },
+        rotation: { x: 1, y: 0, z: 0 },
         scale: 5,
     });
 

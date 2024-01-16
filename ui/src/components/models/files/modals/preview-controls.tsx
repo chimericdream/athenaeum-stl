@@ -6,7 +6,9 @@ import { ScaleSlider } from '~/components/models/files/modals/controls/scale-sli
 import { FileCategory, type FileRecord } from '~/services/athenaeum';
 
 export const PreviewControls = ({ file }: { file: FileRecord }) => {
-    const hasControls = file.category === FileCategory.PART;
+    const hasControls =
+        file.category === FileCategory.PART ||
+        file.category === FileCategory.PROJECT;
 
     if (!hasControls) {
         return null;

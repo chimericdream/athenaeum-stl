@@ -28,12 +28,15 @@ export const ModelLabels = ({ id }: { id: string }) => {
     });
 
     const { mutate } = useMutation<
-        ModelRecord,
+        { model: ModelRecord; labelId: string },
         Error,
         { id: string; label: LabelEntry }
     >({
         mutationFn: deleteLabelFromModel,
-        onSuccess: async (model) => {
+        onSuccess: async ({ model, labelId }) => {
+            await queryClient.invalidateQueries({
+                queryKey: ['labels', labelId],
+            });
             queryClient.setQueryData(['models', id], model);
         },
     });
