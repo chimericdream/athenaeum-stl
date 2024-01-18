@@ -1,5 +1,5 @@
 use std::path::PathBuf;
-use std::fs;
+use std::{fs, thread, time};
 use uuid::{Uuid};
 use crate::util::{ensure_tree, get_ignore_dir, get_import_dir, get_library_dir, get_safe_file_name};
 use crate::db::model_files::{add_file_to_model, FileCategory, get_file_category};
@@ -91,6 +91,8 @@ pub fn import_directory(path: &PathBuf, model_id: &Uuid) {
 }
 
 fn scan_directory_and_import(path: &PathBuf, model_id: &Uuid, is_root: bool) {
+    let sleep_time = time::Duration::from_millis(200);
+
     let files = fs::read_dir(path).unwrap();
     for file in files {
         let entry = file.unwrap();
@@ -133,6 +135,8 @@ fn scan_directory_and_import(path: &PathBuf, model_id: &Uuid, is_root: bool) {
                 }
             }
         }
+
+        thread::sleep(sleep_time);
     }
 
     let remaining_files = fs::read_dir(path).unwrap();
